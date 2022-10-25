@@ -1,0 +1,74 @@
+{
+  "name": "react-nadh",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@ant-design/colors": "^6.0.0",
+    "@ant-design/icons": "^4.7.0",
+    "@craco/craco": "^6.4.5",
+    "@reduxjs/toolkit": "^1.8.6",
+    "antd": "^4.23.6",
+    "axios": "^0.27.2",
+    "classnames": "^2.3.2",
+    "craco-less": "^2.0.0",
+    "js-file-download": "^0.4.12",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.4",
+    "numeral": "^2.0.6",
+    "query-string": "^7.1.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-query": "^3.39.2",
+    "react-redux": "^8.0.4",
+    "react-router-dom": "^6.4.1",
+    "react-scripts": "5.0.1",
+    "read-excel-file": "^5.5.3",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "cat env-dev > .env & craco start",
+    "build": "craco build",
+    "test": "craco test",
+    "eject": "craco eject",
+    "postinstall": "bash postinstall.sh"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.js": [
+      "eslint --ext .js ./src --fix"
+    ],
+    "./src/**": [
+      "prettier --write ."
+    ]
+  },
+  "devDependencies": {
+    "eslint": "^8.26.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "prettier": "^2.7.1"
+  },
+  "engines": {
+    "node": ">=14.8.3"
+  }
+}
