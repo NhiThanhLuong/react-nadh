@@ -4,7 +4,8 @@ import { Navigate, useLocation } from "react-router-dom";
 
 const PrivateRoute = ({ children }) => {
   const location = useLocation();
-  const token = localStorage.getItem(storage.ACCESS_TOKEN);
+  // const token = localStorage.getItem(storage.ACCESS_TOKEN);
+  const token = localStorage.getItem(storage.token);
   return token ? (
     children
   ) : (

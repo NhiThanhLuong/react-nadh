@@ -1,30 +1,42 @@
+/* eslint-disable no-unused-vars */
 import { Button, Card, Checkbox, Form, Input, message, Row, Space } from "antd";
-import { login } from "features/authSlice";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
+import { LoginFailed } from "components";
 import { getLocalStorage } from "utils";
 import { storage, _LAYOUT } from "_constants";
+import { postLogin, cancelLoginFailed } from "features/authSlice";
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { token } = useSelector((state) => state.auth);
-  const [loading, setLoading] = useState(true);
+  const { token, loading, err } = useSelector(state => state.auth);
   const [isSubmiting, setIsSubmiting] = useState(false);
   const { email, password, is_save } = sessionStorage?.saved
     ? JSON.parse(sessionStorage.saved)
     : {};
 
+  const onCancelLoginFailed = () => dispatch(cancelLoginFailed());
+
   useEffect(() => {
-    if (token || getLocalStorage(storage.ACCESS_TOKEN)) {
-      navigate("/dashboard", { replace: true });
+    // if (token || getLocalStorage(storage.ACCESS_TOKEN)) {
+    if (token && !loading) {
+      navigate("/candidates", { replace: true });
     }
-    setLoading(false);
+    // setLoading(false);
   }, [token, navigate]);
 
-  const onFinish = (values) => {
+  // useEffect(() => {
+  //   dispatch(postLogin({
+  //     username: 'admin',
+  //     password: 'ABCde123@'
+  //   }))
+  // }, [])
+
+  const onFinish = values => {
     setIsSubmiting(true);
 
     let isError = false;
@@ -48,13 +60,20 @@ const Login = () => {
     values.email = values.email.trim();
     values.password = values.password.trim();
 
+    dispatch(
+      postLogin({
+        username: values.email,
+        password: values.password,
+      })
+    );
+
     //Call authenticate API -> dispatch auth info to redux store + set localstorage -> navigate
-    let info = { id: 1, name: "Trần Nguyễn Quỳnh Thi" };
-    dispatch(login({ token: "123", info }));
+    // let info = { id: 1, name: "Trần Nguyễn Quỳnh Thi" };
+    // dispatch(login({ token: "123", info }));
     setIsSubmiting(false);
-    localStorage.setItem(storage.ACCESS_TOKEN, "123");
-    localStorage.setItem("info", info);
-    navigate("/dashboard", { replace: true });
+    // localStorage.setItem(storage.ACCESS_TOKEN, "123");
+    // localStorage.setItem("info", info);
+    navigate("/candidates", { replace: true });
   };
 
   return (
@@ -110,7 +129,7 @@ const Login = () => {
                   fontWeight: 600,
                 }}
               >
-                <div>Đăng nhập hệ thống quản lý {_LAYOUT.brand}</div>
+                <div>Sign in to your account</div>
               </div>
             </Space>
           </div>
@@ -145,6 +164,8 @@ const Login = () => {
           </Row>
         </Form>
       </Card>
+      <LoginFailed err={err} onCancel={onCancelLoginFailed} />
+      {/* {err && <LoginFailed err={err}/>} */}
     </div>
   );
 };

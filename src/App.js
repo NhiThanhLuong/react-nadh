@@ -8,6 +8,8 @@ import {
   useMatch,
 } from "react-router-dom";
 import { lazy, Suspense, useEffect } from "react";
+// import { useSelector } from "react-redux";
+
 import { Loading, PrivateRoute } from "shared_components";
 import { storage } from "_constants";
 import useNav from "hooks/useNav";
@@ -26,7 +28,6 @@ function App() {
       />
     ));
   };
-
   return (
     <div className="App">
       <Suspense fallback={<Loading />}>
@@ -54,19 +55,23 @@ function App() {
 }
 
 function ContainerLayout() {
-  let { ACCESS_TOKEN } = storage;
+  // const { user_sent } = useSelector(state => state.auth);
+  let { token } = storage;
   const navigate = useNavigate();
   const match = useMatch("/");
 
   useEffect(() => {
-    let user = localStorage[ACCESS_TOKEN];
-    if (!user) navigate("/login");
+    // let user = localStorage[ACCESS_TOKEN];
+    const token = localStorage.getItem(storage.token);
+
+    // if (!user) navigate("/login");
+    if (!token) navigate("/login");
     else {
       if (match) {
-        navigate("/dashboard");
+        navigate("/candidates");
       }
     }
-  }, [match, navigate, ACCESS_TOKEN]);
+  }, [match, navigate, token]);
 
   return (
     <div className="container">

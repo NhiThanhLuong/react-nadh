@@ -40,7 +40,7 @@ const DefaultNavigate = ({ collapsed }) => {
     <Menu
       theme="dark"
       mode="inline"
-      onOpenChange={(props) => {
+      onOpenChange={props => {
         setOpenKeys(props);
       }}
       onClick={onClickMenuItem}

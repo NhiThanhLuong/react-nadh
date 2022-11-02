@@ -7,7 +7,7 @@ const User = () => {
     <div>
       <p>User</p>
       <Space direction="vertical">
-        <Link to="/dashboard">Go to dashboard page</Link>
+        <Link to="/candidates">Go to dashboard page</Link>
         <Link to="/user/1">Detail</Link>
         <Link to="/user/add">+ add user</Link>
       </Space>

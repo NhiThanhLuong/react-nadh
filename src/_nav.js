@@ -9,11 +9,11 @@ const Job = lazy(() => import("containers/Job"));
 
 const _nav = [
   {
-    key: "/dashboard",
-    label: "Dashboard",
-    title: "Dashboard",
+    key: "/candidates",
+    label: "Candidates",
+    title: "Candidates",
     icon: <DashboardOutlined />,
-    component: (props) => <Dashboard {...props} />,
+    component: props => <Dashboard {...props} />,
     action_key: "VIEW_DASHBOARD",
     display: 1,
   },
@@ -30,7 +30,7 @@ const _nav = [
         label: "Danh sách nhân viên",
         title: "Danh sách nhân viên",
         // icon: <UserOutlined />,
-        component: (props) => <User {...props} />,
+        component: props => <User {...props} />,
         action_key: "VIEW_USER",
         display: 1,
       },
@@ -39,7 +39,7 @@ const _nav = [
         label: "Công việc của tôi",
         title: "Công việc của tôi",
         // icon: <UserOutlined />,
-        component: (props) => <Job {...props} />,
+        component: props => <Job {...props} />,
         action_key: "VIEW_USER_JOB",
         display: 1,
       },
@@ -48,7 +48,7 @@ const _nav = [
         label: "Thêm nhân viên",
         title: "Thêm nhân viên",
         // icon: <UserOutlined />,
-        component: (props) => <UserAdd {...props} />,
+        component: props => <UserAdd {...props} />,
         action_key: "VIEW_USER_ADD",
       },
       {
@@ -56,7 +56,7 @@ const _nav = [
         label: "Chi tiết nhân viên",
         title: "Chi tiết nhân viên",
         // icon: <UserOutlined />,
-        component: (props) => <UserDetail {...props} />,
+        component: props => <UserDetail {...props} />,
         action_key: "VIEW_USER_DETAIL",
       },
     ],
@@ -69,15 +69,16 @@ export const getNavigation = ({
 } = {}) => {
   return navs.reduce((result, nav, index) => {
     let { children } = nav;
-    let isDisplayForNav = !!nav.display;
+    let isDisplayForNav = !!nav.display; // display in left navigation
     if (isDisplayForNav || isRoute) result.push(nav);
     if (children?.length > 0) {
-      let childNavs = getNavigation({ navs: children, isRoute }) ?? [];
+      let childNavs = getNavigation({ navs: children, isRoute }) ?? []; // recursive children
       if (isRoute) {
-        result.splice(result.length - 1);
+        if (!nav.component) result.splice(result.length - 1);
         result = [...result, ...childNavs];
       } else {
-        result[index].children = [...childNavs];
+        if (childNavs.length > 0) result[index].children = [...childNavs];
+        else delete result[index].children;
       }
     }
     return result;
