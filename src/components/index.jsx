@@ -1,8 +1,10 @@
 import CustomSearch from "./table/custom-search";
 import CustomSearchSelect from "./table/custom-search-select";
-import CustomSearchYob from "./table/custom-search-yob";
+import CustomSearchYearRange from "./table/custom-search-year-range";
 import CustomSearch2Select from "./table/custom-search-2-select";
 import CustomSearch3Select from "./table/custom-search-3-select";
+import FilterDropdownText from "./table/filter-dropdown-text";
+import FilterDropdownSelect from "./table/filter-dropdown-select";
 
 import ClearAllFilter from "./button/clear-all-filter";
 import CustomColumn from "./button/custom-column";
@@ -16,9 +18,11 @@ export {
   CustomSearch,
   FilterTags,
   CustomSearchSelect,
-  CustomSearchYob,
+  CustomSearchYearRange,
   CustomSearch2Select,
   CustomSearch3Select,
+  FilterDropdownText,
+  FilterDropdownSelect,
   ClearAllFilter,
   CustomColumn,
   UserInfo,

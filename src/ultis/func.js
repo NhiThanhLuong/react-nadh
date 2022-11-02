@@ -7,32 +7,29 @@ export const convertKeys = {
   location: "City",
   industry_id: "industry_id",
   yob: "YOB",
+  flow_status: "Activity",
   current_company_text: "Recent Company",
+  current_position_text: "Recent positions",
+  industry_years: "Year of services",
+  management_years: "Year of management",
 };
-
-// const convertKeys = [
-//   "ID",
-//   "Name",
-//   "Primary Status",
-//   "Language",
-//   "highest_education",
-//   "City",
-//   "industry_id",
-//   "YOB",
-// ];
 
 import { candidate_priority_status } from "./const";
 
 export const formatKeyFilterTags = key => convertKeys[key];
 
-export const formatValueFilterTags = (key, value, options1) => {
+export const formatValueFilterTags = (key, value, languages, activites) => {
   if (key === "priority_status")
-    return candidate_priority_status.find(item => item.key === value).label;
-
-  if (key === "language") {
+    return candidate_priority_status.find(item => item.key === value)?.label;
+  else if (key === "language") {
     return value
       .split(",")
-      .map(val => options1.find(item => item.key === +val)?.label)
+      .map(val => languages.find(item => item.key === +val)?.label)
+      .join(", ");
+  } else if (key === "flow_status") {
+    return value
+      .split(",")
+      .map(val => activites.find(item => item.id === +val)?.label)
       .join(", ");
   }
 

@@ -49,7 +49,7 @@ const CustomSearchSelect = ({
             }}
           >
             {options.map(({ key, label }) => (
-              <Option key={key} value={key} label={label}>
+              <Option key={key} value={+key} label={label}>
                 {label}
               </Option>
             ))}

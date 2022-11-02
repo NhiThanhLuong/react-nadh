@@ -13,15 +13,15 @@ const validation = (yearFrom, yearTo) => {
   }
 };
 
-const CustomSearchYob = ({
+const CustomSearchYearRange = ({
   onSearch,
   onReset,
-  yobFrom,
+  yearFrom,
   onChangeFrom,
-  yobTo,
+  yearTo,
   onChangeTo,
 }) => {
-  const isDisableSearch = validation(yobFrom, yobTo);
+  const isDisableSearch = validation(yearFrom, yearTo);
   return (
     <Card
       size="small"
@@ -48,7 +48,7 @@ const CustomSearchYob = ({
         </Col>
         <Col span={12}>
           <InputNumber
-            value={yobFrom}
+            value={yearFrom}
             onChange={onChangeFrom}
             placeholder="From"
             type="number"
@@ -62,7 +62,7 @@ const CustomSearchYob = ({
         </Col>
         <Col span={12}>
           <InputNumber
-            value={yobTo}
+            value={yearTo}
             onChange={onChangeTo}
             placeholder="To"
             type="number"
@@ -79,9 +79,9 @@ const CustomSearchYob = ({
   );
 };
 
-CustomSearchYob.propTypes = {
+CustomSearchYearRange.propTypes = {
   onSearch: PropTypes.func,
   onReset: PropTypes.func,
 };
 
-export default CustomSearchYob;
+export default CustomSearchYearRange;

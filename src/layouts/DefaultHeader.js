@@ -10,7 +10,6 @@ import { UserInfo } from "components";
 
 const DefaultHeader = () => {
   const { user_sent } = useSelector(state => state.auth);
-  console.log(JSON.parse(user_sent));
   return (
     <Container>
       <Row align="center" gutter={[0]} justify="space-between" wrap={false}>
