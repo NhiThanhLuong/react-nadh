@@ -14,7 +14,7 @@ const FilterTags = ({ data, onClose, languages, activities }) => {
     language: data.language,
     highest_education: data.highest_education,
     location: data.location,
-    industry_id: data.industry_id,
+    industry_text: data.industry_text,
     yob: data.yob,
     flow_status: data.flow_status,
     current_company_text: data.current_company_text,
@@ -24,14 +24,13 @@ const FilterTags = ({ data, onClose, languages, activities }) => {
     ...data,
   };
   deleteKeyNull(newData);
-
   return (
     <div>
       {Object.keys(newData).map(key => {
         if (Object.keys(convertKeys).indexOf(key) === -1) return;
         return (
           <Tag key={key} closable onClose={() => onClose(key)}>
-            {formatKeyFilterTags(key)} :
+            {formatKeyFilterTags(key)} : <span> </span>
             {formatValueFilterTags(key, newData[key], languages, activities)}
           </Tag>
         );

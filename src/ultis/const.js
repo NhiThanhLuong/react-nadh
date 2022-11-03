@@ -76,6 +76,7 @@ export const candidate_flow_status = [
 
 export const key_of_keys = {
   location: ["country", "city"],
+  industry: ["industry_id", "industry_type", "industry", "sector", "category"],
   yob: ["yob_from", "yob_to"],
   industry_years: ["industry_years_from", "industry_years_to"],
   management_years: ["management_years_from", "management_years_to"],

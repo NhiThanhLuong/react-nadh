@@ -5,7 +5,7 @@ export const convertKeys = {
   language: "Language",
   highest_education: "highest_education",
   location: "City",
-  industry_id: "industry_id",
+  industry_text: "Industry",
   yob: "YOB",
   flow_status: "Activity",
   current_company_text: "Recent Company",
@@ -52,8 +52,22 @@ export const formatDate = date => {
 };
 
 export const formatCity = (country, city) => {
-  if (country && city) return `${country} - ${city}`;
-  return country || city;
+  return city ? `${country} - ${city}` : country || "";
+};
+
+export const formatIndustry = (obj, industries, sectors, categories) => {
+  const { industry, sector, category } = obj;
+  const industryLable = industries.find(({ key }) => key === +industry)?.label;
+  const sectorLable = sectors.find(({ key }) => key === +sector)?.label;
+  const categoryLable = categories.find(({ key }) => key === +category)?.label;
+
+  if (category) return `${industryLable} / ${sectorLable} / ${categoryLable}`;
+  if (sector) return `${industryLable} / ${sectorLable}`;
+  return industryLable || "";
+};
+
+export const getLabelIndustry = obj => {
+  return obj.category?.label || obj.sector?.label || obj.industry?.label || "";
 };
 
 export const deleteKeyNull = obj => {
@@ -63,4 +77,10 @@ export const deleteKeyNull = obj => {
     }
   });
   return obj;
+};
+
+export const formatFilterTagRange = (sharedKey, obj, from, to) => {
+  const filterYearFrom = obj[from] ? `from ${obj[from]} ` : "";
+  const filterYearTo = obj[to] ? `to ${obj[to]}` : "";
+  obj[sharedKey] = filterYearFrom + filterYearTo;
 };

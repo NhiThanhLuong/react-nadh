@@ -18,34 +18,21 @@ const FilterDropdown2Select = ({
   options2,
   getOptions2,
 }) => {
-  const [value1, setValue1] = useState(
-    parseInt(paramsRouter[keySearch1]) || null
-  );
-  const [value2, setValue2] = useState(
-    parseInt(paramsRouter[keySearch2]) || null
-  );
+  const [value1, setValue1] = useState(+paramsRouter[keySearch1] || null);
+  const [value2, setValue2] = useState(+paramsRouter[keySearch2] || null);
 
   useEffect(() => {
     setValue1(+paramsRouter[keySearch1] || null);
     setValue2(+paramsRouter[keySearch2] || null);
   }, [paramsRouter[keySearch1], paramsRouter[keySearch2]]);
 
-  const onChangeKeySearch1 = value => {
-    setValue1(value);
+  const onChangeKeySearch1 = async value => {
+    getOptions2(value);
+    setValue1(() => value);
     setValue2(null);
     delete paramsRouter[keySearch2];
     setSearchParams(createSearchParams(paramsRouter));
-    // if (!value) setValue2(null);
-    getOptions2(value);
   };
-
-  //   const onChangeKeySearch2 = value => {
-  //     setValue2(value);
-  //     delete paramsRouter[keySearch2];
-  //     setSearchParams(createSearchParams(paramsRouter));
-  //     // if (!value) setValue2(null);
-  //     getOptions2(value);
-  //   };
 
   const onSearch = () => {
     resetPage();
