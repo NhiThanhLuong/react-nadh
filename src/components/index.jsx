@@ -4,6 +4,7 @@ import CustomSearch2Select from "./table/custom-search-2-select";
 import CustomSearch3Select from "./table/custom-search-3-select";
 import FilterDropdownText from "./table/filter-dropdown-text";
 import FilterDropdownSelect from "./table/filter-dropdown-select";
+import FilterDropdown2Select from "./table/filter-dropdown-2-select";
 import FilterDropdownRange from "./table/filter-dropdown-range";
 
 import ClearAllFilter from "./button/clear-all-filter";
@@ -22,6 +23,7 @@ export {
   CustomSearch3Select,
   FilterDropdownText,
   FilterDropdownSelect,
+  FilterDropdown2Select,
   FilterDropdownRange,
   ClearAllFilter,
   CustomColumn,

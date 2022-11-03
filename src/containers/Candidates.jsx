@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import { createSearchParams, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,6 +15,7 @@ import {
   FilterDropdownText,
   FilterDropdownSelect,
   FilterDropdownRange,
+  FilterDropdown2Select,
 } from "components";
 import { fetchCandidates } from "features/candidatesSlice";
 import { fetchLanguages } from "features/languageSlice";
@@ -194,65 +196,85 @@ const Dashboard = () => {
       title: "City",
       dataIndex: "location",
       key: "location",
-      filterDropdown: () => {
-        const [country, setCountry] = useState(
-          parseInt(paramsRouter.country) || null
-        );
-        const [city, setCity] = useState(parseInt(paramsRouter.city) || null);
+      filterDropdown: (
+        <FilterDropdown2Select
+          keySearch1="country"
+          keySearch2="city"
+          placeholder1="Select Country"
+          placeholder2="Select City"
+          paramsRouter={paramsRouter}
+          setSearchParams={setSearchParams}
+          resetPage={resetPage}
+          options1={countries}
+          options2={cities}
+          getOptions2={value =>
+            dispatch(
+              fetchCities({
+                parent_id: value,
+              })
+            )
+          }
+        />
+      ),
+      // filterDropdown: () => {
+      //   const [country, setCountry] = useState(
+      //     parseInt(paramsRouter.country) || null
+      //   );
+      //   const [city, setCity] = useState(parseInt(paramsRouter.city) || null);
 
-        const onChangeCountry = value => {
-          setCountry(value);
-          if (!value) setCity(null);
-          dispatch(
-            fetchCities({
-              parent_id: value,
-            })
-          );
-        };
+      //   const onChangeCountry = value => {
+      //     setCountry(value);
+      //     if (!value) setCity(null);
+      //     dispatch(
+      //       fetchCities({
+      //         parent_id: value,
+      //       })
+      //     );
+      //   };
 
-        const onSearch = () => {
-          resetPage();
-          const params = {
-            country,
-            city,
-          };
-          deleteKeyNull(params);
-          setSearchParams(
-            createSearchParams({
-              ...paramsRouter,
-              ...params,
-            })
-          );
-        };
-        const onReset = () => {
-          resetPage();
-          setCountry(null);
-          setCity(null);
-          delete paramsRouter.country;
-          delete paramsRouter.city;
-          setSearchParams(createSearchParams(paramsRouter));
-        };
+      //   const onSearch = () => {
+      //     resetPage();
+      //     const params = {
+      //       country,
+      //       city,
+      //     };
+      //     deleteKeyNull(params);
+      //     setSearchParams(
+      //       createSearchParams({
+      //         ...paramsRouter,
+      //         ...params,
+      //       })
+      //     );
+      //   };
+      //   const onReset = () => {
+      //     resetPage();
+      //     setCountry(null);
+      //     setCity(null);
+      //     delete paramsRouter.country;
+      //     delete paramsRouter.city;
+      //     setSearchParams(createSearchParams(paramsRouter));
+      //   };
 
-        useEffect(() => {
-          setCountry(parseInt(paramsRouter.country) || null);
-          setCity(parseInt(paramsRouter.city) || null);
-        }, [paramsRouter.country, paramsRouter.city]);
+      //   useEffect(() => {
+      //     setCountry(parseInt(paramsRouter.country) || null);
+      //     setCity(parseInt(paramsRouter.city) || null);
+      //   }, [paramsRouter.country, paramsRouter.city]);
 
-        return (
-          <CustomSearch2Select
-            placeholder1="country"
-            placeholder2="city"
-            value1={country}
-            value2={city}
-            onSearch={onSearch}
-            onChange1={onChangeCountry}
-            onChange2={val => setCity(val)}
-            onReset={onReset}
-            options1={countries}
-            options2={cities}
-          />
-        );
-      },
+      //   return (
+      //     <CustomSearch2Select
+      //       placeholder1="country"
+      //       placeholder2="city"
+      //       value1={country}
+      //       value2={city}
+      //       onSearch={onSearch}
+      //       onChange1={onChangeCountry}
+      //       onChange2={val => setCity(val)}
+      //       onReset={onReset}
+      //       options1={countries}
+      //       options2={cities}
+      //     />
+      //   );
+      // },
       filtered: true,
       filterIcon: <SearchOutlined />,
       filterSearch: false,

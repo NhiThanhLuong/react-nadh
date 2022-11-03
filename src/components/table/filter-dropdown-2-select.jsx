@@ -1,32 +1,59 @@
 import { useState, useEffect } from "react";
 import { createSearchParams } from "react-router-dom";
-// import PropTypes from 'prop-types'
+// import PropTypes from "prop-types";
 
 import CustomSearch from "./custom-search";
 import SelectSearch from "./type_search_filter/select-search";
+import { deleteKeyNull } from "ultis/func";
 
-const FilterDropdown2Select = () => {
-  const [country, setCountry] = useState(
-    parseInt(paramsRouter.country) || null
+const FilterDropdown2Select = ({
+  keySearch1,
+  keySearch2,
+  placeholder1,
+  placeholder2,
+  paramsRouter,
+  setSearchParams,
+  resetPage,
+  options1,
+  options2,
+  getOptions2,
+}) => {
+  const [value1, setValue1] = useState(
+    parseInt(paramsRouter[keySearch1]) || null
   );
-  const [city, setCity] = useState(parseInt(paramsRouter.city) || null);
+  const [value2, setValue2] = useState(
+    parseInt(paramsRouter[keySearch2]) || null
+  );
 
-  const onChangeCountry = value => {
-    setCountry(value);
-    if (!value) setCity(null);
-    dispatch(
-      fetchCities({
-        parent_id: value,
-      })
-    );
+  useEffect(() => {
+    setValue1(+paramsRouter[keySearch1] || null);
+    setValue2(+paramsRouter[keySearch2] || null);
+  }, [paramsRouter[keySearch1], paramsRouter[keySearch2]]);
+
+  const onChangeKeySearch1 = value => {
+    setValue1(value);
+    setValue2(null);
+    delete paramsRouter[keySearch2];
+    setSearchParams(createSearchParams(paramsRouter));
+    // if (!value) setValue2(null);
+    getOptions2(value);
   };
+
+  //   const onChangeKeySearch2 = value => {
+  //     setValue2(value);
+  //     delete paramsRouter[keySearch2];
+  //     setSearchParams(createSearchParams(paramsRouter));
+  //     // if (!value) setValue2(null);
+  //     getOptions2(value);
+  //   };
 
   const onSearch = () => {
     resetPage();
     const params = {
-      country,
-      city,
+      [keySearch1]: value1,
+      [keySearch2]: value2,
     };
+    !value2 && delete paramsRouter[keySearch2];
     deleteKeyNull(params);
     setSearchParams(
       createSearchParams({
@@ -37,32 +64,29 @@ const FilterDropdown2Select = () => {
   };
   const onReset = () => {
     resetPage();
-    setCountry(null);
-    setCity(null);
-    delete paramsRouter.country;
-    delete paramsRouter.city;
+    setValue1(null);
+    setValue2(null);
+    delete paramsRouter[keySearch1];
+    delete paramsRouter[keySearch2];
     setSearchParams(createSearchParams(paramsRouter));
   };
 
-  useEffect(() => {
-    setCountry(parseInt(paramsRouter.country) || null);
-    setCity(parseInt(paramsRouter.city) || null);
-  }, [paramsRouter.country, paramsRouter.city]);
   return (
-    <CustomSearch onSearch={onSearch} onReset={onReset} value={value}>
+    <CustomSearch onSearch={onSearch} onReset={onReset} value={value1}>
       <SelectSearch
-        placeholder={placeholder}
-        onChange={onChange}
-        options={options}
-        mode={isMutiple ? "multiple" : undefined}
-        value={value}
+        placeholder={placeholder1}
+        onChange={onChangeKeySearch1}
+        options={options1}
+        // mode={isMutiple ? "multiple" : undefined}
+        value={value1}
       />
       <SelectSearch
-        placeholder={placeholder}
-        onChange={onChange}
-        options={options}
-        mode={isMutiple ? "multiple" : undefined}
-        value={value}
+        isDisabled={!value1}
+        placeholder={placeholder2}
+        onChange={val => setValue2(val)}
+        options={options2}
+        // mode={isMutiple ? "multiple" : undefined}
+        value={value2}
       />
     </CustomSearch>
   );

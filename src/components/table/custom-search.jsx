@@ -1,14 +1,7 @@
 import { Card, Button, Row, Col } from "antd";
 import PropTypes from "prop-types";
 
-const CustomSearch = ({
-  value,
-  onSearch,
-  // onChange,
-  onReset,
-  // placeholder,
-  children,
-}) => {
+const CustomSearch = ({ value, onSearch, onReset, children }) => {
   return (
     <Card
       size="small"

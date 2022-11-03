@@ -4,10 +4,18 @@ import { Col, Select } from "antd";
 
 const { Option } = Select;
 
-const SelectSearch = ({ mode, onChange, placeholder, options, value }) => {
+const SelectSearch = ({
+  mode,
+  onChange,
+  placeholder,
+  options,
+  value,
+  isDisabled,
+}) => {
   return (
     <Col span={24}>
       <Select
+        disabled={isDisabled}
         mode={mode}
         allowClear
         showSearch
