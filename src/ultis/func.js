@@ -56,7 +56,7 @@ export const formatCity = (country, city) => {
   return country || city;
 };
 
-export const deleleKeyNull = obj => {
+export const deleteKeyNull = obj => {
   Object.keys(obj).forEach(key => {
     if (!obj[key]) {
       delete obj[key];

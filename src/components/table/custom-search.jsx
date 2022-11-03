@@ -1,7 +1,14 @@
-import { Card, Input, Button, Row, Col } from "antd";
+import { Card, Button, Row, Col } from "antd";
 import PropTypes from "prop-types";
 
-const CustomSearch = ({ value, onSearch, onChange, onReset, placeholder }) => {
+const CustomSearch = ({
+  value,
+  onSearch,
+  // onChange,
+  onReset,
+  // placeholder,
+  children,
+}) => {
   return (
     <Card
       size="small"
@@ -17,7 +24,7 @@ const CustomSearch = ({ value, onSearch, onChange, onReset, placeholder }) => {
         </Col>
         <Col span={12}>
           <Button
-            disabled={!value}
+            disabled={!value || value.length === 0}
             onClick={onSearch}
             type="primary"
             size="small"
@@ -26,17 +33,7 @@ const CustomSearch = ({ value, onSearch, onChange, onReset, placeholder }) => {
             Search
           </Button>
         </Col>
-        <Col span={24}>
-          <Input
-            onChange={onChange}
-            placeholder={placeholder}
-            type="text"
-            value={value}
-            style={{
-              width: "100%",
-            }}
-          />
-        </Col>
+        {children}
       </Row>
     </Card>
   );

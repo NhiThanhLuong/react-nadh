@@ -74,5 +74,12 @@ export const candidate_flow_status = [
   CLIENT_CANCELED,
 ];
 
+export const key_of_keys = {
+  location: ["country", "city"],
+  yob: ["yob_from", "yob_to"],
+  industry_years: ["industry_years_from", "industry_years_to"],
+  management_years: ["management_years_from", "management_years_to"],
+};
+
 export const imgPath = path =>
   `https://lubrytics.com:8443/nadh-mediafile/file/${path}`;

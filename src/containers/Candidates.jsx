@@ -13,23 +13,25 @@ import {
   CustomColumn,
   FilterDropdownText,
   FilterDropdownSelect,
+  FilterDropdownRange,
 } from "components";
 import { fetchCandidates } from "features/candidatesSlice";
 import { fetchLanguages } from "features/languageSlice";
 import { fetchUserPage } from "features/userPageSlice";
 import { fetchCities, fetchLocations } from "features/locationSlice";
 import { fetchIndustries, fetchSectors } from "features/categorySlice";
-import { formatDate, formatCity, deleleKeyNull } from "ultis/func";
+import { formatDate, formatCity, deleteKeyNull } from "ultis/func";
 import {
   candidate_priority_status,
   candidate_flow_status,
   defaultColor,
+  key_of_keys,
 } from "ultis/const";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
   const {
-    candidates: { count, data },
+    candidates: { count, data, loading },
     location: { countries, cities },
     category: { industries, sectors, categories },
     language: { languages },
@@ -142,7 +144,7 @@ const Dashboard = () => {
         <FilterDropdownSelect
           paramsRouter={paramsRouter}
           keySearch="priority_status"
-          placeholder="Primary Status"
+          placeholder="Select Primary Status"
           resetPage={resetPage}
           setSearchParams={setSearchParams}
           options={candidate_priority_status}
@@ -165,57 +167,13 @@ const Dashboard = () => {
         <FilterDropdownSelect
           paramsRouter={paramsRouter}
           keySearch="language"
-          placeholder="Languages"
+          placeholder="Select Languages"
           resetPage={resetPage}
           setSearchParams={setSearchParams}
           options={languages}
           isMutiple
         />
       ),
-      //   const [value, setValue] = useState(
-      //     paramsRouter.language
-      //       ? JSON.parse("[" + paramsRouter.language + "]")
-      //       : []
-      //   );
-      //   const onChange = val => {
-      //     setValue(val);
-      //   };
-      //   const onSearch = () => {
-      //     resetPage();
-      //     setSearchParams(
-      //       createSearchParams({
-      //         ...paramsRouter,
-      //         language: value + "",
-      //       })
-      //     );
-      //   };
-      //   const onReset = () => {
-      //     resetPage();
-      //     setValue([]);
-      //     delete paramsRouter.language;
-      //     setSearchParams(createSearchParams(paramsRouter));
-      //   };
-
-      //   useEffect(() => {
-      //     setValue(
-      //       paramsRouter.language
-      //         ? JSON.parse("[" + paramsRouter.language + "]")
-      //         : []
-      //     );
-      //   }, [paramsRouter.language]);
-
-      //   return (
-      //     <CustomSearchSelect
-      //       placeholder="Languages"
-      //       onSearch={onSearch}
-      //       onChange={onChange}
-      //       onReset={onReset}
-      //       value={value}
-      //       options={languages}
-      //       mode="multiple"
-      //     />
-      //   );
-      // },
       filtered: true,
       filterIcon: <SearchOutlined />,
       filterSearch: true,
@@ -258,7 +216,7 @@ const Dashboard = () => {
             country,
             city,
           };
-          deleleKeyNull(params);
+          deleteKeyNull(params);
           setSearchParams(
             createSearchParams({
               ...paramsRouter,
@@ -401,45 +359,15 @@ const Dashboard = () => {
       title: "YOB",
       dataIndex: "yob",
       key: "yob",
-      filterDropdown: () => {
-        const [yobFrom, setYobFrom] = useState();
-        const [yobTo, setYobTo] = useState();
-
-        const onSearch = () => {
-          resetPage();
-          const params = {
-            yob_from: yobFrom,
-            yob_to: yobTo,
-          };
-          deleleKeyNull(params);
-          setSearchParams(
-            createSearchParams({
-              ...paramsRouter,
-              ...params,
-            })
-          );
-        };
-
-        const onReset = () => {
-          resetPage();
-          setYobFrom();
-          setYobTo();
-          delete paramsRouter.yob_from;
-          delete paramsRouter.yob_to;
-          setSearchParams(createSearchParams(paramsRouter));
-        };
-
-        return (
-          <CustomSearchYearRange
-            yearFrom={yobFrom}
-            onChangeFrom={value => setYobFrom(value)}
-            yearTo={yobTo}
-            onChangeTo={value => setYobTo(value)}
-            onSearch={onSearch}
-            onReset={onReset}
-          />
-        );
-      },
+      filterDropdown: (
+        <FilterDropdownRange
+          paramsRouter={paramsRouter}
+          setSearchParams={setSearchParams}
+          keySearchFrom="yob_from"
+          keySearchTo="yob_to"
+          resetPage={resetPage}
+        />
+      ),
       filtered: true,
       filterIcon: <SearchOutlined />,
       filterSearch: false,
@@ -453,7 +381,7 @@ const Dashboard = () => {
         <FilterDropdownSelect
           paramsRouter={paramsRouter}
           keySearch="flow_status"
-          placeholder="Activity"
+          placeholder="Select Activity"
           resetPage={resetPage}
           setSearchParams={setSearchParams}
           options={candidate_flow_status}
@@ -531,7 +459,7 @@ const Dashboard = () => {
             industry_years_from: industryYearFrom,
             industry_years_to: industryYearTo,
           };
-          deleleKeyNull(params);
+          deleteKeyNull(params);
           setSearchParams(
             createSearchParams({
               ...paramsRouter,
@@ -579,7 +507,7 @@ const Dashboard = () => {
             management_years_from: managementYearFrom,
             management_years_to: managementYearTo,
           };
-          deleleKeyNull(params);
+          deleteKeyNull(params);
           setSearchParams(
             createSearchParams({
               ...paramsRouter,
@@ -636,9 +564,8 @@ const Dashboard = () => {
   }));
 
   const onCloseFilterTag = key => {
-    if (key === "location") {
-      delete paramsRouter.country;
-      delete paramsRouter.city;
+    if (key_of_keys[key]) {
+      key_of_keys[key].forEach(item => delete paramsRouter[item]);
     } else delete paramsRouter[key];
     setSearchParams(createSearchParams(paramsRouter));
   };
@@ -694,6 +621,7 @@ const Dashboard = () => {
         activities={filterTags.flow_status ? candidate_flow_status : undefined}
       />
       <Table
+        loading={loading}
         columns={columns}
         dataSource={dataSource}
         pagination={{

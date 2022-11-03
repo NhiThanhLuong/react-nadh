@@ -3,6 +3,7 @@ import { createSearchParams } from "react-router-dom";
 
 // import PropTypes from 'prop-types'
 import CustomSearch from "./custom-search";
+import InputSearch from "./type_search_filter/input-search";
 
 const FilterDropdownText = ({
   paramsRouter,
@@ -34,13 +35,13 @@ const FilterDropdownText = ({
   }, [paramsRouter[keySearch]]);
 
   return (
-    <CustomSearch
-      placeholder={placeholder}
-      value={value}
-      onSearch={onSearch}
-      onChange={e => setValue(e.target.value)}
-      onReset={onReset}
-    />
+    <CustomSearch value={value} onSearch={onSearch} onReset={onReset}>
+      <InputSearch
+        value={value}
+        placeholder={placeholder}
+        onChange={e => setValue(e.target.value)}
+      />
+    </CustomSearch>
   );
 };
 

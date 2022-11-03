@@ -1,7 +1,7 @@
 import { lazy } from "react";
 import { DashboardOutlined, UserOutlined } from "@ant-design/icons";
 import _ from "lodash";
-const Dashboard = lazy(() => import("containers/Dashboard"));
+const Candidates = lazy(() => import("containers/Candidates"));
 const User = lazy(() => import("containers/User"));
 const UserDetail = lazy(() => import("containers/UserDetail"));
 const UserAdd = lazy(() => import("containers/UserAdd"));
@@ -13,7 +13,7 @@ const _nav = [
     label: "Candidates",
     title: "Candidates",
     icon: <DashboardOutlined />,
-    component: props => <Dashboard {...props} />,
+    component: props => <Candidates {...props} />,
     action_key: "VIEW_DASHBOARD",
     display: 1,
   },

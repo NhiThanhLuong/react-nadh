@@ -2,7 +2,7 @@ import { Tag } from "antd";
 import {
   formatKeyFilterTags,
   formatValueFilterTags,
-  deleleKeyNull,
+  deleteKeyNull,
   convertKeys,
 } from "ultis/func";
 
@@ -23,7 +23,7 @@ const FilterTags = ({ data, onClose, languages, activities }) => {
     management_years: data.management_years,
     ...data,
   };
-  deleleKeyNull(newData);
+  deleteKeyNull(newData);
 
   return (
     <div>

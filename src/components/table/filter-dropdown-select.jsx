@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { createSearchParams } from "react-router-dom";
 // import PropTypes from 'prop-types'
 
-import CustomSearchSelect from "./custom-search-select";
+import CustomSearch from "./custom-search";
+import SelectSearch from "./type_search_filter/select-search";
 
 const FilterDropdownSelect = ({
   paramsRouter,
@@ -50,15 +51,15 @@ const FilterDropdownSelect = ({
   }, [paramsRouter[keySearch]]);
 
   return (
-    <CustomSearchSelect
-      placeholder={placeholder}
-      onSearch={onSearch}
-      onChange={onChange}
-      onReset={onReset}
-      options={options}
-      value={value}
-      mode={isMutiple ? "multiple" : undefined}
-    />
+    <CustomSearch onSearch={onSearch} onReset={onReset} value={value}>
+      <SelectSearch
+        placeholder={placeholder}
+        onChange={onChange}
+        options={options}
+        mode={isMutiple ? "multiple" : undefined}
+        value={value}
+      />
+    </CustomSearch>
   );
 };
 
