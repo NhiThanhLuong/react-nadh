@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { createSearchParams, useSearchParams } from "react-router-dom";
+import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Table, Typography } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
@@ -484,7 +485,7 @@ const Candidates = () => {
         languages={filterTags.language ? languages : undefined}
         activities={filterTags.flow_status ? candidate_flow_status : undefined}
       />
-      <Table
+      <StyledTable
         loading={loading}
         columns={columns}
         dataSource={dataSource}
@@ -508,5 +509,11 @@ const Candidates = () => {
     </div>
   );
 };
+
+const StyledTable = styled(props => <Table {...props} />)`
+  && tbody > tr:hover > td {
+    background-color: ${defaultColor.hover};
+  }
+`;
 
 export default Candidates;

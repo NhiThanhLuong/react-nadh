@@ -52,9 +52,6 @@ const FilterDropdown3Select = ({
     setValue1(value);
     setValue2(null);
     setValue3(null);
-    delete paramsRouter[keySearch2];
-    delete paramsRouter[keySearch3];
-    setSearchParams(createSearchParams(paramsRouter));
     getOptions2({
       parent_id: value,
       type: 2,
@@ -64,8 +61,6 @@ const FilterDropdown3Select = ({
   const onChangeKeySearch2 = value => {
     setValue2(value);
     setValue3(null);
-    delete paramsRouter[keySearch3];
-    setSearchParams(createSearchParams(paramsRouter));
     getOptions3({
       parent_id: value,
       type: 3,

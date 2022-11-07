@@ -36,6 +36,7 @@ export const candidate_priority_status = [
 
 export const defaultColor = {
   color: "rgb(24, 144, 255)",
+  hover: "#e5f7fe",
 };
 
 const RAW = { id: 1, key: "1", label: "Raw" };
@@ -84,3 +85,90 @@ export const key_of_keys = {
 
 export const imgPath = path =>
   `https://lubrytics.com:8443/nadh-mediafile/file/${path}`;
+
+export const DAYS_RANGE = Array.from({ length: 31 }, (_, i) => i + 1);
+
+export const MONTHS = [
+  {
+    key: 1,
+    label: "Jan",
+  },
+  {
+    key: 2,
+    label: "Feb",
+  },
+  {
+    key: 3,
+    label: "Mar",
+  },
+  {
+    key: 4,
+    label: "Apr",
+  },
+  {
+    key: 5,
+    label: "May",
+  },
+  {
+    key: 6,
+    label: "Jun",
+  },
+  {
+    key: 7,
+    label: "Jul",
+  },
+  {
+    key: 8,
+    label: "Aug",
+  },
+  {
+    key: 9,
+    label: "Sep",
+  },
+  {
+    key: 10,
+    label: "Oct",
+  },
+  {
+    key: 11,
+    label: "Nov",
+  },
+  {
+    key: 12,
+    label: "Dec",
+  },
+];
+
+export const GENDERS = [
+  {
+    key: 1,
+    label: "Male",
+  },
+  {
+    key: 2,
+    label: "Female",
+  },
+  {
+    key: 3,
+    label: "Complicated",
+  },
+];
+
+export const MARITAL_STATUS = [
+  {
+    key: 1,
+    label: "Yes",
+  },
+  {
+    key: -1,
+    label: "No",
+  },
+];
+
+export const RELOCATING_WILLINGNESS = [
+  ...MARITAL_STATUS,
+  {
+    key: 2,
+    label: "Available",
+  },
+];

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 import { createSearchParams } from "react-router-dom";
 // import PropTypes from "prop-types";
@@ -27,11 +28,9 @@ const FilterDropdown2Select = ({
   }, [paramsRouter[keySearch1], paramsRouter[keySearch2]]);
 
   const onChangeKeySearch1 = async value => {
+    setValue2(null);
     getOptions2(value);
     setValue1(() => value);
-    setValue2(null);
-    delete paramsRouter[keySearch2];
-    setSearchParams(createSearchParams(paramsRouter));
   };
 
   const onSearch = () => {

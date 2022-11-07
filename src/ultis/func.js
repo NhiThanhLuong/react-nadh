@@ -84,3 +84,25 @@ export const formatFilterTagRange = (sharedKey, obj, from, to) => {
   const filterYearTo = obj[to] ? `to ${obj[to]}` : "";
   obj[sharedKey] = filterYearFrom + filterYearTo;
 };
+
+export function pad2(number) {
+  return (number < 10 ? "0" : "") + number;
+}
+
+export const years = (startYear = 1960) => {
+  var currentYear = new Date().getFullYear(),
+    years = [];
+  while (startYear <= currentYear) {
+    years.push(startYear++);
+  }
+  return years;
+};
+
+export const formatDDMMYYYY = date => {
+  date = new Date(date);
+  const dd = date.getDate();
+  const mm = date.getMonth() + 1;
+  const yyyy = date.getFullYear();
+
+  return `${dd}/${mm}/${yyyy}`;
+};

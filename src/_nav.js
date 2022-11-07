@@ -2,6 +2,10 @@ import { lazy } from "react";
 import { DashboardOutlined, UserOutlined } from "@ant-design/icons";
 import _ from "lodash";
 const Candidates = lazy(() => import("containers/Candidates"));
+const DetailCandidate = lazy(() =>
+  import("containers/candidate/detail-candidate")
+);
+const Clients = lazy(() => import("containers/Clients"));
 const User = lazy(() => import("containers/User"));
 const UserDetail = lazy(() => import("containers/UserDetail"));
 const UserAdd = lazy(() => import("containers/UserAdd"));
@@ -14,8 +18,39 @@ const _nav = [
     title: "Candidates",
     icon: <DashboardOutlined />,
     component: props => <Candidates {...props} />,
-    action_key: "VIEW_DASHBOARD",
+    action_key: "VIEW_CANDIDATES",
     display: 1,
+    children: [
+      {
+        key: "/candidate/:id",
+        label: "Danh sách nhân viên",
+        title: "Danh sách nhân viên",
+        // icon: <UserOutlined />,
+        component: props => <DetailCandidate {...props} />,
+        action_key: "VIEW_DETAIL_CANDIDATE",
+        display: 1,
+      },
+    ],
+  },
+  {
+    key: "/clients",
+    label: "Clients",
+    title: "Clients",
+    icon: <DashboardOutlined />,
+    component: props => <Clients {...props} />,
+    action_key: "VIEW_CLIENTS",
+    display: 1,
+    children: [
+      {
+        key: "/candidates/list12",
+        label: "Danh sách nhân viên",
+        title: "Danh sách nhân viên",
+        // icon: <UserOutlined />,
+        component: props => <User {...props} />,
+        action_key: "VIEW_USER",
+        display: 1,
+      },
+    ],
   },
   {
     key: "/user",

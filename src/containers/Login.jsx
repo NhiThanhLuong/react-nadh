@@ -1,5 +1,15 @@
 /* eslint-disable no-unused-vars */
-import { Button, Card, Checkbox, Form, Input, message, Row, Space } from "antd";
+import {
+  Button,
+  Card,
+  Checkbox,
+  Form,
+  Input,
+  message,
+  Row,
+  Space,
+  notification,
+} from "antd";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -75,6 +85,17 @@ const Login = () => {
     // localStorage.setItem("info", info);
     navigate("/candidates", { replace: true });
   };
+  const loginFailedNoti = () => {
+    notification["error"]({
+      message: "Login Failed",
+      placement: "topRight",
+      duration: 3,
+      maxCount: 1,
+      description: err,
+    });
+  };
+
+  !loading && err && loginFailedNoti();
 
   return (
     <div
@@ -164,7 +185,7 @@ const Login = () => {
           </Row>
         </Form>
       </Card>
-      <LoginFailed err={err} onCancel={onCancelLoginFailed} />
+      {/* {err && <LoginFailed err={err} />} */}
       {/* {err && <LoginFailed err={err}/>} */}
     </div>
   );

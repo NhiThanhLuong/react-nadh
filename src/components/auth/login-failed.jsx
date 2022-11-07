@@ -1,16 +1,22 @@
 // import PropTypes from 'prop-types'
-import { Modal } from "antd";
+import { notification } from "antd";
 
-const LoginFailed = ({ err, onCancel }) => {
+const LoginFailed = ({ err }) => {
   return (
-    <Modal
-      title="Login Failed"
-      open={!!err}
-      onOk={onCancel}
-      onCancel={onCancel}
-    >
-      <span>{err}</span>
-    </Modal>
+    <div>
+      {notification.error({
+        message: "Login Failed",
+        description: err,
+      })}
+    </div>
+    // <Modal
+    //   title="Login Failed"
+    //   open={!!err}
+    //   onOk={onCancel}
+    //   onCancel={onCancel}
+    // >
+    //   <span>{err}</span>
+    // </Modal>
   );
 };
 
