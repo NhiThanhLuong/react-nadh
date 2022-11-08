@@ -23,7 +23,7 @@ import { postLogin, cancelLoginFailed } from "features/authSlice";
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { token, loading, err } = useSelector(state => state.auth);
+  const { token, loading } = useSelector(state => state.auth);
   const [isSubmiting, setIsSubmiting] = useState(false);
   const { email, password, is_save } = sessionStorage?.saved
     ? JSON.parse(sessionStorage.saved)
@@ -85,17 +85,6 @@ const Login = () => {
     // localStorage.setItem("info", info);
     navigate("/candidates", { replace: true });
   };
-  const loginFailedNoti = () => {
-    notification["error"]({
-      message: "Login Failed",
-      placement: "topRight",
-      duration: 3,
-      maxCount: 1,
-      description: err,
-    });
-  };
-
-  !loading && err && loginFailedNoti();
 
   return (
     <div
@@ -185,8 +174,6 @@ const Login = () => {
           </Row>
         </Form>
       </Card>
-      {/* {err && <LoginFailed err={err} />} */}
-      {/* {err && <LoginFailed err={err}/>} */}
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { storage } from "_constants";
+import { toast } from "react-toastify";
 
 import { testLogin } from "ultis/api";
 
@@ -45,10 +46,15 @@ export const authSlice = createSlice({
       localStorage.setItem("user_sent", JSON.stringify(payload.user_sent));
       state.token = payload.token;
       state.user_sent = JSON.stringify(payload.user_sent);
+      toast.success("Login successful", {
+        position: "top-right",
+      });
     },
     [postLogin.rejected.type]: state => {
       state.loading = false;
-      state.err = "Username or password is wrong!";
+      toast.error("Username or password is wrong", {
+        position: "top-right",
+      });
     },
   },
 });

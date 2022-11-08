@@ -68,7 +68,7 @@ export const candidatesSlice = createSlice({
     },
     [fetchEditDetailCandidate.rejected.type]: state => {
       state.isLoadingSoft = false;
-      toast.success("Duplicated Soft Skills value", {
+      toast.error("Duplicated Soft Skills value", {
         position: "top-right",
       });
     },
