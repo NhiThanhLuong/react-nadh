@@ -23,3 +23,12 @@ p {
   line-height: 24px;
   margin: 0;
 }
+
+/* Atomic css */
+.capitalize {
+  text-transform: capitalize;
+}
+
+.w-full {
+  width: 100%;
+}

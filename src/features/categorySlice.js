@@ -25,7 +25,7 @@ export const fetchCategory = createAsyncThunk(
     })
 );
 
-export const authSlice = createSlice({
+export const categorySlice = createSlice({
   name: "category",
   initialState: {
     loading: false,
@@ -59,5 +59,5 @@ export const authSlice = createSlice({
   },
 });
 
-const { reducer } = authSlice;
+const { reducer } = categorySlice;
 export default reducer;

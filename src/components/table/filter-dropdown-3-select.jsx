@@ -120,6 +120,8 @@ const FilterDropdown3Select = ({
     delete paramsRouter[keySearch1];
     delete paramsRouter[keySearch2];
     delete paramsRouter[keySearch3];
+    delete paramsRouter[keyIdFilter];
+    delete paramsRouter[keyTypeFilter];
     setSearchParams(createSearchParams(paramsRouter));
   };
 

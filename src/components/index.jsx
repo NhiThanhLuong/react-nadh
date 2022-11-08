@@ -14,6 +14,7 @@ import UserInfo from "./auth/user-info";
 import LoginFailed from "./auth/login-failed";
 
 import FilterTags from "./table/filter-tags";
+import notifiMsg from "./notification";
 
 export {
   CustomSearch,
@@ -29,4 +30,5 @@ export {
   CustomColumn,
   UserInfo,
   LoginFailed,
+  notifiMsg,
 };

@@ -2,34 +2,34 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getPropertyValues } from "ultis/api";
 import { getPropertyKeyLabel } from "ultis/func";
 
-export const fetchLanguages = createAsyncThunk(
-  "language/fetchLanguages",
+export const fetchDegrees = createAsyncThunk(
+  "degree/fetchDegrees",
   async params =>
     await getPropertyValues({
       params: {
         ...params,
-        property_name: "language",
+        property_name: "degree",
       },
     })
 );
 
-export const languageSlice = createSlice({
-  name: "language",
+export const degreeSlice = createSlice({
+  name: "degree",
   initialState: {
     loading: false,
-    languages: [],
+    degrees: [],
   },
   reducers: {},
   extraReducers: {
-    [fetchLanguages.pending.type]: state => {
+    [fetchDegrees.pending.type]: state => {
       state.loading = true;
     },
-    [fetchLanguages.fulfilled.type]: (state, { payload }) => {
+    [fetchDegrees.fulfilled.type]: (state, { payload }) => {
       state.loading = false;
-      state.languages = getPropertyKeyLabel(payload.data);
+      state.degrees = getPropertyKeyLabel(payload.data);
     },
   },
 });
 
-const { reducer } = languageSlice;
+const { reducer } = degreeSlice;
 export default reducer;

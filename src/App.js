@@ -8,6 +8,8 @@ import {
   useMatch,
 } from "react-router-dom";
 import { lazy, Suspense, useEffect } from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // import { useSelector } from "react-redux";
 
 import { Loading, PrivateRoute } from "shared_components";
@@ -30,6 +32,7 @@ function App() {
   };
   return (
     <div className="App">
+      <ToastContainer />
       <Suspense fallback={<Loading />}>
         <Router>
           <Routes>

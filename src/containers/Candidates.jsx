@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { createSearchParams, useSearchParams } from "react-router-dom";
+import { useEffect, useState, useMemo } from "react";
+import { Link, createSearchParams, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Table, Typography } from "antd";
@@ -37,7 +37,6 @@ import {
   defaultColor,
   key_of_keys,
 } from "ultis/const";
-import { useMemo } from "react";
 
 const Candidates = () => {
   const dispatch = useDispatch();
@@ -108,7 +107,16 @@ const Candidates = () => {
     setCurrentPage(1);
   };
 
-  const filterTags = { ...paramsRouter };
+  useEffect(() => {
+    filterTags.industry_text = formatIndustry(
+      filterTags,
+      industries,
+      sectors,
+      categories
+    );
+  }, [searchParams, countries]);
+
+  const filterTags = useMemo(() => ({ ...paramsRouter }), [searchParams]);
 
   // Filter Location
   const filterCountry =
@@ -122,12 +130,15 @@ const Candidates = () => {
   filterTags.location = formatCity(filterCountry, filterCity);
 
   // Filter Industry
-  filterTags.industry_text = formatIndustry(
-    filterTags,
-    industries,
-    sectors,
-    categories
-  );
+  useEffect(() => {}, [searchParams]);
+
+  // filterTags.industry_text = formatIndustry(
+  //   filterTags,
+  //   industries,
+  //   sectors,
+  //   categories
+  // );
+
   // Filter YOB
   formatFilterTagRange("yob", filterTags, "yob_from", "yob_to");
 
@@ -166,7 +177,11 @@ const Candidates = () => {
         ),
         filtered: !!paramsRouter.candidate_id,
         filterIcon: <SearchOutlined style={{ color: "inherit" }} />,
-        render: text => <span style={defaultColor}>{text}</span>,
+        render: text => (
+          <Link to={`/candidate/${text}`} style={defaultColor}>
+            {text}
+          </Link>
+        ),
       },
       // Name
       {
@@ -184,15 +199,16 @@ const Candidates = () => {
           />
         ),
         filterIcon: <SearchOutlined />,
-        render: text => (
-          <span
+        render: (text, record) => (
+          <Link
+            to={`/candidate/${record.candidate_id}`}
             style={{
               textTransform: "capitalize",
               ...defaultColor,
             }}
           >
             {text}
-          </span>
+          </Link>
         ),
       },
       // Primary Status

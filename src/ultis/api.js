@@ -27,6 +27,20 @@ export const getPropertyValues = async params => {
   return await axiosClient.get("/api/property_values", params);
 };
 
+export const postPropertyNationality = async value => {
+  return await axiosClient.post(`/api/property_values`, {
+    name: "nationality",
+    value,
+  });
+};
+
+export const postPropertyPosition = async value => {
+  return await axiosClient.post(`/api/property_values`, {
+    name: "position",
+    value,
+  });
+};
+
 export const getDetailCandidate = async id => {
   return await axiosClient.get(`/api/candidates/${id}`);
 };

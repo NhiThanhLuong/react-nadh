@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getLocations } from "ultis/api";
+import { getPropertyKeyLabel } from "ultis/func";
 
 export const fetchLocations = createAsyncThunk(
   "location/fetchLocations",
@@ -17,12 +18,22 @@ export const fetchCities = createAsyncThunk(
     })
 );
 
-export const authSlice = createSlice({
+export const fetchDistricts = createAsyncThunk(
+  "location/fetchDistricts",
+  async params =>
+    await getLocations({
+      type: 2,
+      params,
+    })
+);
+
+export const locationSlice = createSlice({
   name: "location",
   initialState: {
     loading: false,
     countries: [],
     cities: [],
+    districts: [],
   },
   reducers: {},
   extraReducers: {
@@ -31,11 +42,9 @@ export const authSlice = createSlice({
     },
     [fetchLocations.fulfilled.type]: (state, { payload }) => {
       state.loading = false;
-      state.countries = payload.data?.map(({ key, label }) => ({
-        key,
-        label,
-      }));
+      state.countries = getPropertyKeyLabel(payload.data);
     },
+
     [fetchCities.pending.type]: state => {
       state.loading = true;
     },
@@ -43,8 +52,16 @@ export const authSlice = createSlice({
       state.loading = false;
       state.cities = payload.data;
     },
+
+    [fetchDistricts.pending.type]: state => {
+      state.loading = true;
+    },
+    [fetchDistricts.fulfilled.type]: (state, { payload }) => {
+      state.loading = false;
+      state.districts = payload.data;
+    },
   },
 });
 
-const { reducer } = authSlice;
+const { reducer } = locationSlice;
 export default reducer;

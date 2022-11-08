@@ -9,7 +9,7 @@ export const fetchUserPage = createAsyncThunk(
     })
 );
 
-export const authSlice = createSlice({
+export const userPageSlice = createSlice({
   name: "userPage",
   initialState: {
     loading: false,
@@ -27,5 +27,5 @@ export const authSlice = createSlice({
   },
 });
 
-const { reducer } = authSlice;
+const { reducer } = userPageSlice;
 export default reducer;

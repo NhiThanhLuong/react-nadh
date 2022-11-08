@@ -1,16 +1,35 @@
 /* eslint-disable no-unused-vars */
 // import PropTypes from 'prop-types'
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Form, Input, Row, Col, Card, Select, Radio, Button } from "antd";
+import {
+  Form,
+  Input,
+  Row,
+  Col,
+  Card,
+  Select,
+  Radio,
+  Button,
+  Divider,
+  InputNumber,
+} from "antd";
 import { FaMinusCircle } from "react-icons/fa";
 import { PlusOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
+import styled from "styled-components";
 
 import {
   fetchDetailCandidate,
   fetchEditDetailCandidate,
 } from "features/candidatesSlice";
+import {
+  fetchCities,
+  fetchDistricts,
+  fetchLocations,
+} from "features/locationSlice";
+import { fetchNationality, postNationality } from "features/nationalitySlice";
+import { fetchPosition, postPosition } from "features/positionSlice";
 import {
   candidate_priority_status,
   DAYS_RANGE,
@@ -20,6 +39,9 @@ import {
   RELOCATING_WILLINGNESS,
 } from "ultis/const";
 import { pad2, formatDate, years, formatDDMMYYYY } from "ultis/func";
+import validator from "ultis/validate";
+import { fetchDegrees } from "features/degreeSlice";
+import { fetchSoftSkills } from "features/skillSlice";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -41,14 +63,29 @@ const DetailCandidate = () => {
 
   const [form] = Form.useForm();
 
+  const [nationalitySearch, setNationalitySearch] = useState();
+  const [positionSearch, setPositionSearch] = useState();
+
   const {
     candidates: { detailData, loading },
-    location: { countries, cities },
+    location: { countries, cities, districts },
+    nationality: { nationalities, loading: isLoadingNation },
+    position: { positions },
+    degree: { degrees },
+    skill: { softSkills },
   } = useSelector(state => state);
 
   useEffect(() => {
     dispatch(fetchDetailCandidate(id));
-    console.log("form values", form.getFieldsValue());
+    dispatch(
+      fetchLocations({
+        type: 4,
+      })
+    );
+    dispatch(fetchNationality());
+    dispatch(fetchPosition());
+    dispatch(fetchDegrees());
+    dispatch(fetchSoftSkills());
   }, []);
 
   const onFinish = values => {
@@ -69,7 +106,73 @@ const DetailCandidate = () => {
 
   const onValuesChange = (changedValues, allValues) => {
     console.log("changedValues", changedValues);
+    if (changedValues?.addresses) {
+      const { addresses } = form.getFieldsValue();
+      changedValues?.addresses.forEach((item, index) => {
+        if (item.country > 0) {
+          addresses[index].city = {};
+          addresses[index].district = {};
+          dispatch(
+            fetchCities({
+              parent_id: item.country,
+            })
+          );
+        }
+      });
+      changedValues?.addresses.forEach((item, index) => {
+        if (item.city > 0) {
+          addresses[index].district = {};
+          dispatch(
+            fetchDistricts({
+              parent_id: item.city,
+            })
+          );
+        }
+      });
+    }
+
+    console.log(form.getFieldsValue());
     console.log("allValues", allValues);
+  };
+
+  const onSearchNationality = value => {
+    setNationalitySearch(() => value);
+    dispatch(
+      fetchNationality({
+        value,
+      })
+    );
+  };
+
+  const onSearchPosition = value => {
+    setPositionSearch(() => value);
+    dispatch(
+      fetchPosition({
+        value,
+      })
+    );
+  };
+
+  const onAddNationality = () => {
+    dispatch(postNationality(nationalitySearch));
+  };
+
+  const onAddPosition = () => {
+    dispatch(postPosition(positionSearch));
+  };
+
+  const onChangeSoftSkill = value => {
+    const values = value.map(item =>
+      softSkills.find(({ key }) => key === item)
+    );
+    dispatch(
+      fetchEditDetailCandidate({
+        id: detailData?.id,
+        params: {
+          soft_skills: values,
+        },
+      })
+    );
   };
 
   return (
@@ -85,7 +188,7 @@ const DetailCandidate = () => {
               onFinishFailed={onFinishFailed}
               layout="vertical"
               initialValues={{
-                overview: detailData?.overview_text_new,
+                overview_text_new: detailData?.overview_text_new,
                 first_name: detailData?.first_name,
                 last_name: detailData?.last_name,
                 priority_status: detailData?.priority_status,
@@ -97,17 +200,35 @@ const DetailCandidate = () => {
                 createdAt: formatDDMMYYYY(detailData?.createdAt),
                 emails: detailData?.emails,
                 phones: detailData?.phones,
+                addresses: detailData?.addresses,
+                prefer_position: detailData?.prefer_position,
+                highest_education: detailData?.highest_education,
+                industry_years: detailData?.industry_years || 0,
+                management_years: detailData?.management_years || 0,
+                direct_reports: detailData?.direct_reports || 0,
+                soft_skills: detailData?.soft_skills || [],
+                functions_skills: detailData?.functions_skills || [],
               }}
             >
               <Button onClick={() => console.log(form.getFieldsValue())}>
                 test
               </Button>
-              <Card style={{ marginBottom: 16 }}>
-                <Item name="overview" label="Overview">
+              {/* Overview */}
+              <Card
+                title={<span style={{ color: "#465f7b" }}>Overview</span>}
+                style={{ marginBottom: 16 }}
+              >
+                <Item name="overview_text_new">
                   <Input.TextArea placeholder="Overview" />
                 </Item>
               </Card>
-              <Card title="Personal Information" style={{ marginBottom: 16 }}>
+              {/* Personal Information */}
+              <Card
+                title={
+                  <span style={{ color: "#465f7b" }}>Personal Information</span>
+                }
+                style={{ marginBottom: 16 }}
+              >
                 {/* First & Last Name */}
                 <Row gutter={(16, 16)}>
                   <Col span={12}>
@@ -121,7 +242,10 @@ const DetailCandidate = () => {
                         },
                       ]}
                     >
-                      <Input placeholder="Please enter the first name" />
+                      <Input
+                        placeholder="Please enter the first name"
+                        className="capitalize"
+                      />
                     </Item>
                   </Col>
                   <Col span={12}>
@@ -135,7 +259,10 @@ const DetailCandidate = () => {
                         },
                       ]}
                     >
-                      <Input placeholder="Please enter the last name" />
+                      <Input
+                        placeholder="Please enter the last name"
+                        className="capitalize"
+                      />
                     </Item>
                   </Col>
                 </Row>
@@ -143,7 +270,10 @@ const DetailCandidate = () => {
                 <Row gutter={(16, 16)}>
                   <Col span={12}>
                     <Item name="middle_name" label="Middle Name">
-                      <Input placeholder="Please Input Middle Name" />
+                      <Input
+                        placeholder="Please Input Middle Name"
+                        className="capitalize"
+                      />
                     </Item>
                   </Col>
                   <Col span={12}>
@@ -282,11 +412,11 @@ const DetailCandidate = () => {
                 <Row gutter={(16, 16)}>
                   <Col span={12}>
                     <Item name="creator_full_name" label="Created by">
-                      <Input disabled />
+                      <Input disabled className="capitalize" />
                     </Item>
                   </Col>
                   <Col span={12}>
-                    <Item name="createdAt" label="Created by">
+                    <Item name="createdAt" label="Created on">
                       <Input disabled />
                     </Item>
                   </Col>
@@ -297,7 +427,6 @@ const DetailCandidate = () => {
                     <Item label="Email" required>
                       <Form.List name="emails" label="Email" required>
                         {(fields, { add, remove }) => {
-                          console.log(fields);
                           return (
                             <div>
                               {fields.map(field => (
@@ -323,16 +452,18 @@ const DetailCandidate = () => {
                                       style={{ margin: 0 }}
                                     >
                                       <Input
+                                        placeholder="ex: abc@email.com"
                                         style={{
                                           width: "65%",
                                         }}
                                       />
                                     </Form.Item>
                                   </Col>
-                                  <FaMinusCircle
-                                    color="red"
-                                    onClick={() => remove(field.name)}
-                                  />
+                                  {fields.length > 1 ? (
+                                    <FaMinusCircleRemove
+                                      onClick={() => remove(field.name)}
+                                    />
+                                  ) : null}
                                 </Row>
                               ))}
                               <Button
@@ -363,7 +494,7 @@ const DetailCandidate = () => {
                     <Item label="Mobile Phone" required>
                       <Form.List name="phones" label="Email" required>
                         {(fields, { add, remove }) => {
-                          console.log(fields);
+                          //   console.log(fields);
                           return (
                             <div>
                               {fields.map(({ key, name, ...restField }) => (
@@ -377,16 +508,17 @@ const DetailCandidate = () => {
                                       {...restField}
                                       name={[name, "number"]}
                                       style={{ margin: 0 }}
+                                      rules={validator("number")}
                                     >
                                       <Input
+                                        placeholder="ex: 0981345782"
                                         style={{
                                           width: "65%",
                                         }}
                                       />
                                     </Form.Item>
                                   </Col>
-                                  <FaMinusCircle
-                                    color="red"
+                                  <FaMinusCircleRemove
                                     onClick={() => remove(name)}
                                   />
                                 </Row>
@@ -419,7 +551,7 @@ const DetailCandidate = () => {
                     <Item label="Address">
                       <Form.List name="addresses">
                         {(fields, { add, remove }) => {
-                          console.log(fields);
+                          //   console.log(fields);
                           return (
                             <div>
                               {fields.map(({ key, name, ...restField }) => (
@@ -429,14 +561,15 @@ const DetailCandidate = () => {
                                   style={{ marginBottom: 16 }}
                                 >
                                   <Col span={22}>
-                                    <Row>
+                                    <Row gutter={(16, 16)}>
                                       <Col span={8}>
                                         <Form.Item
                                           {...restField}
-                                          name={[name, "country", "key"]}
+                                          name={[name, "country"]}
                                           style={{ margin: 0 }}
                                         >
                                           <Select
+                                            placeholder="Country"
                                             allowClear
                                             showSearch
                                             optionFilterProp="label"
@@ -444,24 +577,89 @@ const DetailCandidate = () => {
                                               width: "100%",
                                             }}
                                           >
-                                            {candidate_priority_status.map(
-                                              ({ key, label }) => (
-                                                <Option
-                                                  key={key}
-                                                  value={+key}
-                                                  label={label}
-                                                >
-                                                  {label}
-                                                </Option>
-                                              )
-                                            )}
+                                            {countries.map(country => (
+                                              <Option
+                                                key={country.key}
+                                                value={country.key}
+                                                label={country.label}
+                                              >
+                                                {country.label}
+                                              </Option>
+                                            ))}
+                                          </Select>
+                                        </Form.Item>
+                                      </Col>
+                                      <Col span={8}>
+                                        <Form.Item
+                                          {...restField}
+                                          name={[name, "city"]}
+                                          style={{ margin: 0 }}
+                                        >
+                                          <Select
+                                            placeholder="City"
+                                            allowClear
+                                            showSearch
+                                            optionFilterProp="label"
+                                            style={{
+                                              width: "100%",
+                                            }}
+                                          >
+                                            {cities.map(city => (
+                                              <Option
+                                                key={city.key}
+                                                value={city.key}
+                                                label={city.label}
+                                              >
+                                                {city.label}
+                                              </Option>
+                                            ))}
+                                          </Select>
+                                        </Form.Item>
+                                      </Col>
+                                      <Col span={8}>
+                                        <Form.Item
+                                          {...restField}
+                                          name={[name, "district"]}
+                                          style={{ margin: 0 }}
+                                        >
+                                          <Select
+                                            placeholder="District"
+                                            allowClear
+                                            showSearch
+                                            optionFilterProp="label"
+                                            style={{
+                                              width: "100%",
+                                            }}
+                                          >
+                                            {districts.map(district => (
+                                              <Option
+                                                key={district.key}
+                                                value={district.key}
+                                                label={district.label}
+                                              >
+                                                {district.label}
+                                              </Option>
+                                            ))}
                                           </Select>
                                         </Form.Item>
                                       </Col>
                                     </Row>
+                                    <Row style={{ marginTop: 8 }}>
+                                      <Col span={24}>
+                                        <Form.Item
+                                          {...restField}
+                                          name={[name, "address"]}
+                                          style={{ margin: 0 }}
+                                        >
+                                          <Input placeholder="ex: 2 Hai Trieu, Bitexco Financial Tower" />
+                                        </Form.Item>
+                                      </Col>
+                                    </Row>
                                   </Col>
-                                  <FaMinusCircle
-                                    color="red"
+                                  <FaMinusCircleRemove
+                                    style={{
+                                      marginLeft: 16,
+                                    }}
                                     onClick={() => remove(name)}
                                   />
                                 </Row>
@@ -488,6 +686,197 @@ const DetailCandidate = () => {
                     </Item>
                   </Col>
                 </Row>
+                {/* Nationality */}
+                <Row gutter={(16, 16)}>
+                  <Col span={24}>
+                    <Item name="nationality" label="Nationality">
+                      <Select
+                        mode="multiple"
+                        placeholder="Select or add your nationality"
+                        allowClear
+                        showSearch
+                        optionFilterProp="label"
+                        style={{
+                          width: "100%",
+                        }}
+                        onSearch={onSearchNationality}
+                        dropdownRender={originNode => (
+                          <>
+                            {originNode}
+                            <Divider dashed style={{ margin: 0 }} />
+                            <AddSelect onClick={onAddNationality}>
+                              <PlusOutlined />
+                              Add nationality
+                            </AddSelect>
+                          </>
+                        )}
+                      >
+                        {nationalities.map(({ key, label }) => (
+                          <Option key={key} value={+key} label={label}>
+                            {label}
+                          </Option>
+                        ))}
+                      </Select>
+                    </Item>
+                  </Col>
+                </Row>
+                {/* Position */}
+                <Row gutter={(16, 16)}>
+                  <Col span={24}>
+                    <Item
+                      name={["prefer_position", "positions"]}
+                      label="Position"
+                    >
+                      <Select
+                        mode="multiple"
+                        placeholder="Select or add your position applied"
+                        allowClear
+                        showSearch
+                        optionFilterProp="label"
+                        style={{
+                          width: "100%",
+                        }}
+                        onSearch={onSearchPosition}
+                        dropdownRender={originNode => (
+                          <>
+                            {originNode}
+                            <Divider dashed style={{ margin: 0 }} />
+                            <AddSelect onClick={onAddPosition}>
+                              <PlusOutlined />
+                              Add position
+                            </AddSelect>
+                          </>
+                        )}
+                      >
+                        {positions.map(({ key, label }) => (
+                          <Option key={key} value={+key} label={label}>
+                            {label}
+                          </Option>
+                        ))}
+                      </Select>
+                    </Item>
+                  </Col>
+                </Row>
+                {/* Highest education */}
+                <Row gutter={(16, 16)}>
+                  <Col span={24}>
+                    <Item name="highest_education" label="Highest Education">
+                      <Select
+                        allowClear
+                        showSearch
+                        optionFilterProp="label"
+                        style={{
+                          width: "100%",
+                        }}
+                      >
+                        {degrees.map(({ key, label }) => (
+                          <Option key={key} value={+key} label={label}>
+                            {label}
+                          </Option>
+                        ))}
+                      </Select>
+                    </Item>
+                  </Col>
+                </Row>
+                {/* Industry years && management years */}
+                <Row gutter={(16, 16)}>
+                  <Col span={12}>
+                    <Item
+                      name="industry_years"
+                      label="Industry Year of Services"
+                      rules={validator("number")}
+                    >
+                      <InputNumber
+                        min={0}
+                        max={60}
+                        placeholder="0"
+                        className="w-full"
+                      />
+                    </Item>
+                  </Col>
+                  <Col span={12}>
+                    <Item
+                      name="management_years"
+                      label="Year of Management"
+                      rules={validator("number")}
+                    >
+                      <InputNumber
+                        min={0}
+                        max={60}
+                        placeholder="0"
+                        className="w-full"
+                      />
+                    </Item>
+                  </Col>
+                </Row>
+                {/* Direct Reports */}
+                <Row gutter={(16, 16)}>
+                  <Col span={12}>
+                    <Item
+                      name="direct_reports"
+                      label="No. of Direct Reports"
+                      rules={validator("number")}
+                    >
+                      <InputNumber min={0} placeholder="0" className="w-full" />
+                    </Item>
+                  </Col>
+                </Row>
+              </Card>
+              {/* Skills And Industry */}
+              <Card
+                title={
+                  <span style={{ color: "#465f7b" }}>Skills And Industry</span>
+                }
+                style={{ marginBottom: 16 }}
+              >
+                {/* Soft skills and Functions Skills */}
+                <Row gutter={(16, 16)}>
+                  <Col span={12}>
+                    <Item name="soft_skills" label="Soft skills">
+                      <Select
+                        mode="multiple"
+                        placeholder="Select your soft skills"
+                        allowClear
+                        showSearch
+                        optionFilterProp="label"
+                        style={{
+                          width: "100%",
+                        }}
+                        onChange={onChangeSoftSkill}
+                      >
+                        {softSkills.map(({ key, label }) => (
+                          <Option key={key} value={+key} label={label}>
+                            {label}
+                          </Option>
+                        ))}
+                      </Select>
+                    </Item>
+                  </Col>
+                  <Col span={12}>
+                    {/* <Item
+                      name="functions_skills"
+                      label="Job functions skills"
+                    >
+                        <Select
+                        mode="multiple"
+                        placeholder="Select your job functions skills"
+                        allowClear
+                        showSearch
+                        optionFilterProp="label"
+                        style={{
+                          width: "100%",
+                        }}
+                        // onChange={onChangeSoftSkill}
+                      >
+                        {softSkills.map(({ key, label }) => (
+                          <Option key={key} value={+key} label={label}>
+                            {label}
+                          </Option>
+                        ))}
+                      </Select>
+                    </Item> */}
+                  </Col>
+                </Row>
               </Card>
               <Item>
                 <Button type="primary" htmlType="submit">
@@ -503,5 +892,15 @@ const DetailCandidate = () => {
 };
 
 DetailCandidate.propTypes = {};
+
+const FaMinusCircleRemove = styled(FaMinusCircle)`
+  cursor: pointer;
+  color: red;
+`;
+
+const AddSelect = styled.div`
+  padding: 4px 8px;
+  cursor: pointer;
+`;
 
 export default DetailCandidate;

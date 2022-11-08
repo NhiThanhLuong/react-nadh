@@ -4,6 +4,7 @@ import {
   getDetailCandidate,
   putDetailCandidate,
 } from "ultis/api";
+import { toast } from "react-toastify";
 
 export const fetchCandidates = createAsyncThunk(
   "candidates/fetchCandidates",
@@ -27,10 +28,11 @@ export const fetchEditDetailCandidate = createAsyncThunk(
   async ({ id, params }) => await putDetailCandidate(id, params)
 );
 
-export const authSlice = createSlice({
+export const candidatesSlice = createSlice({
   name: "candidates",
   initialState: {
     loading: false,
+    isLoadingSoft: false,
     count: 0,
     data: [],
     detailData: undefined,
@@ -56,14 +58,22 @@ export const authSlice = createSlice({
     },
     // Put Detail Candidate
     [fetchEditDetailCandidate.pending.type]: state => {
-      state.loading = true;
+      state.isLoadingSoft = true;
     },
-    [fetchEditDetailCandidate.fulfilled.type]: (state, { payload }) => {
-      state.loading = false;
-      state.detailData = payload;
+    [fetchEditDetailCandidate.fulfilled.type]: state => {
+      state.isLoadingSoft = false;
+      toast.success("Successfully updated", {
+        position: "top-right",
+      });
+    },
+    [fetchEditDetailCandidate.rejected.type]: state => {
+      state.isLoadingSoft = false;
+      toast.success("Duplicated Soft Skills value", {
+        position: "top-right",
+      });
     },
   },
 });
 
-const { reducer } = authSlice;
+const { reducer } = candidatesSlice;
 export default reducer;

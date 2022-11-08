@@ -106,3 +106,9 @@ export const formatDDMMYYYY = date => {
 
   return `${dd}/${mm}/${yyyy}`;
 };
+
+export const getPropertyKeyLabel = arr =>
+  arr?.map(({ key, label }) => ({
+    key,
+    label,
+  }));

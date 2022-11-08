@@ -7,6 +7,7 @@ import {
 } from "ultis/func";
 
 const FilterTags = ({ data, onClose, languages, activities }) => {
+  console.log("data", data.industry_text);
   const newData = {
     candidate_id: data.candidate_id,
     full_name: data.full_name,
