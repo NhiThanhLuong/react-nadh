@@ -4,6 +4,7 @@ import moment from "moment";
 import React, { useState, useRef, useEffect, Suspense } from "react";
 import { Outlet } from "react-router-dom";
 import DefaultHeader from "layouts/DefaultHeader";
+import DefaultNavigate from "layouts/DefaultNavigate";
 import useWindowSize from "hooks/useWindowSize";
 import { Container, Loading } from "shared_components";
 
@@ -45,6 +46,7 @@ export default function DefaultLayout() {
         >
           <DefaultHeader />
         </Header>
+        <DefaultNavigate />
         <Content>
           <Container
             style={{ paddingTop: "15px", paddingBottom: "15px" }}

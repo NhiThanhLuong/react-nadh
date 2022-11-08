@@ -38,8 +38,9 @@ const DefaultNavigate = ({ collapsed }) => {
 
   return (
     <Menu
-      theme="dark"
-      mode="inline"
+      // theme="dark"
+      // mode="inline"
+      mode="horizontal"
       onOpenChange={props => {
         setOpenKeys(props);
       }}
