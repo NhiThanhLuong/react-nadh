@@ -97,6 +97,8 @@ const Candidates = () => {
     );
   }, []);
 
+  console.log(currentPage);
+
   useEffect(() => {
     const newParamsRouter = { ...paramsRouter };
     delete newParamsRouter.industry;
@@ -106,6 +108,7 @@ const Candidates = () => {
     columns.forEach(item => {
       item.filtered = !!paramsRouter[item.dataIndex];
     });
+    setCurrentPage(+paramsRouter.page || 1);
   }, [searchParams]);
 
   const resetPage = () => {
@@ -113,6 +116,7 @@ const Candidates = () => {
     setCurrentPage(1);
   };
 
+  // Filter Industry
   useEffect(() => {
     filterTags.industry_text = formatIndustry(
       filterTags,
@@ -134,16 +138,6 @@ const Candidates = () => {
     cities.find(({ key }) => key === +filterTags.city)?.label;
 
   filterTags.location = formatCity(filterCountry, filterCity);
-
-  // Filter Industry
-  useEffect(() => {}, [searchParams]);
-
-  // filterTags.industry_text = formatIndustry(
-  //   filterTags,
-  //   industries,
-  //   sectors,
-  //   categories
-  // );
 
   // Filter YOB
   formatFilterTagRange("yob", filterTags, "yob_from", "yob_to");
@@ -492,6 +486,16 @@ const Candidates = () => {
     setSearchParams({});
   };
 
+  const onChangePage = page => {
+    setCurrentPage(page);
+    setSearchParams(
+      createSearchParams({
+        ...paramsRouter,
+        page,
+      })
+    );
+  };
+
   return (
     <div style={{ marginTop: 100 }}>
       {/* <Link to="/user/list">Go to User page</Link> */}
@@ -528,15 +532,7 @@ const Candidates = () => {
           total: count,
           showQuickJumper: true,
           current: currentPage,
-          onChange: page => {
-            setCurrentPage(page);
-            setSearchParams(
-              createSearchParams({
-                ...paramsRouter,
-                page,
-              })
-            );
-          },
+          onChange: onChangePage,
         }}
       />
     </div>

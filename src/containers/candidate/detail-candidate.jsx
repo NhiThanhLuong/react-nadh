@@ -172,6 +172,7 @@ const DetailCandidate = () => {
       const { addresses } = form.getFieldsValue();
       changedValues?.addresses.forEach((item, index) => {
         if (item.country > 0) {
+          console.log(index);
           addresses[index].city = {};
           addresses[index].district = {};
           dispatch(

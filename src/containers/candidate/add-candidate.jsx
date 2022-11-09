@@ -62,6 +62,10 @@ const AddCandidate = () => {
 
   const [form] = Form.useForm();
 
+  const [dayBirth, setDayBirth] = useState(null);
+  const [monBirth, setMonBirth] = useState(null);
+  const [yearBirth, setYearBirth] = useState(null);
+
   const [fieldValues, setFieldValues] = useState({});
 
   const {
@@ -166,6 +170,11 @@ const AddCandidate = () => {
       })
     );
     setFieldValues(() => ({}));
+  };
+
+  const onChangeBirthDay = () => {
+    console.log("change");
+    form.validateFields(["day_of_birth", "month_of_birth", "year_of_birth"]);
   };
 
   const onSearchNationality = value => {
@@ -287,8 +296,28 @@ const AddCandidate = () => {
               <Item name="dob" label="Birthday">
                 <Row gutter={16}>
                   <Col span={8}>
-                    <Item name="day_of_birth">
+                    <Item
+                      name="day_of_birth"
+                      rules={[
+                        ({ getFieldValue }) => ({
+                          validator(_, value) {
+                            if (
+                              value ||
+                              (!getFieldValue("month_of_birth") &&
+                                !getFieldValue("year_of_birth"))
+                            ) {
+                              return Promise.resolve();
+                            }
+
+                            return Promise.reject(
+                              new Error("Please select Day!")
+                            );
+                          },
+                        }),
+                      ]}
+                    >
                       <Select
+                        onChange={onChangeBirthDay}
                         placeholder="Date"
                         allowClear
                         showSearch
@@ -306,8 +335,28 @@ const AddCandidate = () => {
                     </Item>
                   </Col>
                   <Col span={8}>
-                    <Item name="month_of_birth">
+                    <Item
+                      name="month_of_birth"
+                      rules={[
+                        ({ getFieldValue }) => ({
+                          validator(_, value) {
+                            if (
+                              value ||
+                              (!getFieldValue("day_of_birth") &&
+                                !getFieldValue("year_of_birth"))
+                            ) {
+                              return Promise.resolve();
+                            }
+
+                            return Promise.reject(
+                              new Error("Please select Month")
+                            );
+                          },
+                        }),
+                      ]}
+                    >
                       <Select
+                        onChange={onChangeBirthDay}
                         placeholder="Month"
                         allowClear
                         showSearch
@@ -325,8 +374,28 @@ const AddCandidate = () => {
                     </Item>
                   </Col>
                   <Col span={8}>
-                    <Item name="year_of_birth">
+                    <Item
+                      name="year_of_birth"
+                      rules={[
+                        ({ getFieldValue }) => ({
+                          validator(_, value) {
+                            if (
+                              value ||
+                              (!getFieldValue("day_of_birth") &&
+                                !getFieldValue("month_of_birth"))
+                            ) {
+                              return Promise.resolve();
+                            }
+
+                            return Promise.reject(
+                              new Error("Please select Year")
+                            );
+                          },
+                        }),
+                      ]}
+                    >
                       <Select
+                        onChange={onChangeBirthDay}
                         placeholder="Year"
                         allowClear
                         showSearch
@@ -829,3 +898,81 @@ const AddSelect = styled.div`
 `;
 
 export default AddCandidate;
+
+// {
+//   "first_name": "adfasdfasdfasf",
+//   "last_name": "asdfasdfasdfdas",
+//   "middle_name": "asddasdasdas",
+//   "priority_status": -2,
+//   "dob": "1963-02-02",
+//   "relocating_willingness": -1,
+//   "source": "asdfdsfdsafasdfas",
+//   "industry_years": 3,
+//   "management_years": 4,
+//   "direct_reports": 5,
+//   "nationality": [
+//       {
+//           "key": "602",
+//           "label": "Afghan"
+//       },
+//       {
+//           "key": "603",
+//           "label": "Albanian"
+//       }
+//   ],
+//   "prefer_position": {
+//       "positions": [
+//           {
+//               "key": "2122",
+//               "label": "account"
+//           },
+//           {
+//               "key": "544",
+//               "label": "Account Executive"
+//           },
+//           {
+//               "key": 2132,
+//               "label": "a"
+//           },
+//           {
+//               "key": "507",
+//               "label": "Accounts Payable Clerk"
+//           }
+//       ]
+//   },
+//   "highest_education": {
+//       "key": "383",
+//       "label": "Bachelor"
+//   },
+//   "phones": [
+//       {
+//           "number": 34455,
+//           "current": -1,
+//           "phone_code": {
+//               "key": 1280
+//           }
+//       }
+//   ],
+//   "emails": [
+//       "asdfdsafsafdasfs@gmail.com"
+//   ],
+//   "current_emails": [],
+//   "addresses": [
+//       {
+//           "address": "asdfdasfasfasfasfasf",
+//           "country": {
+//               "key": "1280",
+//               "label": "Viet Nam"
+//           },
+//           "city": {
+//               "key": "2",
+//               "label": "Ba Ria - Vung Tau"
+//           },
+//           "district": {
+//               "key": "77",
+//               "label": "Dat Do"
+//           }
+//       }
+//   ],
+//   "type": 3
+// }
