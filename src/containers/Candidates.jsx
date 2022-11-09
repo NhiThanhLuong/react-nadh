@@ -8,7 +8,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import {
   FilterTags,
   ClearAllFilter,
-  CustomColumn,
+  // CustomColumn,
   FilterDropdownText,
   FilterDropdownSelect,
   FilterDropdownRange,
@@ -182,6 +182,7 @@ const Candidates = () => {
             {text}
           </Link>
         ),
+        width: 150,
       },
       // Name
       {
@@ -494,7 +495,7 @@ const Candidates = () => {
         </Typography.Title>
         <ClearAllFilter onClick={onClearAllFilter} />
       </Row>
-      <CustomColumn />
+      {/* <CustomColumn /> */}
       <FilterTags
         data={filterTags}
         onClose={onCloseFilterTag}

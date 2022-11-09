@@ -60,8 +60,9 @@ export const candidatesSlice = createSlice({
     [fetchEditDetailCandidate.pending.type]: state => {
       state.isLoadingSoft = true;
     },
-    [fetchEditDetailCandidate.fulfilled.type]: state => {
+    [fetchEditDetailCandidate.fulfilled.type]: (state, { payload }) => {
       state.isLoadingSoft = false;
+      state.detailData = payload;
       toast.success("Successfully updated", {
         position: "top-right",
       });

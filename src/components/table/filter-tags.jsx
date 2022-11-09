@@ -25,11 +25,16 @@ const FilterTags = ({ data, onClose, languages, activities }) => {
   };
   deleteKeyNull(newData);
   return (
-    <div>
+    <div style={{ margin: "8px 0" }}>
       {Object.keys(newData).map(key => {
         if (Object.keys(convertKeys).indexOf(key) === -1) return;
         return (
-          <Tag key={key} closable onClose={() => onClose(key)}>
+          <Tag
+            key={key}
+            closable
+            onClose={() => onClose(key)}
+            style={{ fontSize: "14px" }}
+          >
             {formatKeyFilterTags(key)} : <span> </span>
             {formatValueFilterTags(key, newData[key], languages, activities)}
           </Tag>

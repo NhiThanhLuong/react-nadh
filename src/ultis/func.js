@@ -107,8 +107,21 @@ export const formatDDMMYYYY = date => {
   return `${dd}/${mm}/${yyyy}`;
 };
 
+export const format_day_month_year_to_date = (d, m, y) =>
+  `${y}-${pad2(m)}-${pad2(d)}`;
+
 export const getPropertyKeyLabel = arr =>
   arr?.map(({ key, label }) => ({
     key,
     label,
   }));
+
+export function isEmpty(obj) {
+  return Object.keys(obj).length === 0;
+}
+
+export const get_obj_key_label_from_key = (options, key) =>
+  options.find(item => item.key === key);
+
+export const get_array_obj_key_label_from_array_key = (options, key_arr) =>
+  key_arr.map(key => get_obj_key_label_from_key(options, key));

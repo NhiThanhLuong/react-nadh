@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { lazy } from "react";
 import { DashboardOutlined, UserOutlined } from "@ant-design/icons";
 import _ from "lodash";
@@ -7,9 +8,9 @@ const DetailCandidate = lazy(() =>
 );
 const Clients = lazy(() => import("containers/Clients"));
 const User = lazy(() => import("containers/User"));
-const UserDetail = lazy(() => import("containers/UserDetail"));
-const UserAdd = lazy(() => import("containers/UserAdd"));
-const Job = lazy(() => import("containers/Job"));
+// const UserDetail = lazy(() => import("containers/UserDetail"));
+// const UserAdd = lazy(() => import("containers/UserAdd"));
+// const Job = lazy(() => import("containers/Job"));
 
 const _nav = [
   {
@@ -53,50 +54,50 @@ const _nav = [
       },
     ],
   },
-  {
-    key: "/user",
-    label: "Nhân viên",
-    title: "Nhân viên",
-    icon: <UserOutlined />,
-    action_key: "VIEW_USER",
-    display: 1,
-    children: [
-      {
-        key: "/user/list",
-        label: "Danh sách nhân viên",
-        title: "Danh sách nhân viên",
-        // icon: <UserOutlined />,
-        component: props => <User {...props} />,
-        action_key: "VIEW_USER",
-        display: 1,
-      },
-      {
-        key: "/user/job",
-        label: "Công việc của tôi",
-        title: "Công việc của tôi",
-        // icon: <UserOutlined />,
-        component: props => <Job {...props} />,
-        action_key: "VIEW_USER_JOB",
-        display: 1,
-      },
-      {
-        key: "/user/add",
-        label: "Thêm nhân viên",
-        title: "Thêm nhân viên",
-        // icon: <UserOutlined />,
-        component: props => <UserAdd {...props} />,
-        action_key: "VIEW_USER_ADD",
-      },
-      {
-        key: "/user/:id",
-        label: "Chi tiết nhân viên",
-        title: "Chi tiết nhân viên",
-        // icon: <UserOutlined />,
-        component: props => <UserDetail {...props} />,
-        action_key: "VIEW_USER_DETAIL",
-      },
-    ],
-  },
+  // {
+  //   key: "/user",
+  //   label: "Nhân viên",
+  //   title: "Nhân viên",
+  //   icon: <UserOutlined />,
+  //   action_key: "VIEW_USER",
+  //   display: 1,
+  //   children: [
+  //     {
+  //       key: "/user/list",
+  //       label: "Danh sách nhân viên",
+  //       title: "Danh sách nhân viên",
+  //       // icon: <UserOutlined />,
+  //       component: props => <User {...props} />,
+  //       action_key: "VIEW_USER",
+  //       display: 1,
+  //     },
+  //     {
+  //       key: "/user/job",
+  //       label: "Công việc của tôi",
+  //       title: "Công việc của tôi",
+  //       // icon: <UserOutlined />,
+  //       component: props => <Job {...props} />,
+  //       action_key: "VIEW_USER_JOB",
+  //       display: 1,
+  //     },
+  //     {
+  //       key: "/user/add",
+  //       label: "Thêm nhân viên",
+  //       title: "Thêm nhân viên",
+  //       // icon: <UserOutlined />,
+  //       component: props => <UserAdd {...props} />,
+  //       action_key: "VIEW_USER_ADD",
+  //     },
+  //     {
+  //       key: "/user/:id",
+  //       label: "Chi tiết nhân viên",
+  //       title: "Chi tiết nhân viên",
+  //       // icon: <UserOutlined />,
+  //       component: props => <UserDetail {...props} />,
+  //       action_key: "VIEW_USER_DETAIL",
+  //     },
+  //   ],
+  // },
 ];
 
 export const getNavigation = ({

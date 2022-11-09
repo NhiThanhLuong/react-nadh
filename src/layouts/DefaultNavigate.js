@@ -55,10 +55,10 @@ const DefaultNavigate = ({ collapsed }) => {
       }
       style={{
         borderRight: 0,
-        paddingBottom: "25px",
-        flexGrow: 1,
-        overflowY: "auto",
-        overflowX: "hidden",
+        // paddingBottom: "25px",
+        // flexGrow: 1,
+        // overflowY: "auto",
+        // overflowX: "hidden",
       }}
       items={navs ?? undefined}
     />
