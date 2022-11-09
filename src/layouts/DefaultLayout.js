@@ -38,6 +38,10 @@ export default function DefaultLayout() {
         <Header
           className="site-layout-background"
           style={{
+            position: "fixed",
+            width: "100%",
+            top: 0,
+            zIndex: 20,
             padding: 0,
             height: "60px",
             backgroundImage:

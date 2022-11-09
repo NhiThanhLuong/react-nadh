@@ -49,7 +49,10 @@ import {
 } from "ultis/func";
 import validator from "ultis/validate";
 import { fetchDegrees } from "features/degreeSlice";
-import { fetchSoftSkills } from "features/skillSlice";
+import {
+  fetchSoftSkills,
+  putSoftSkillDetailCandidate,
+} from "features/skillSlice";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -123,14 +126,39 @@ const DetailCandidate = () => {
         delete fieldValues.year_of_birth;
     }
 
-    console.log("fieldValues", fieldValues);
+    if (fieldValues.emails) {
+      const { emails } = form.getFieldsValue();
+      fieldValues.emails = emails;
+    }
+
+    if (fieldValues.phones) {
+      const { phones } = form.getFieldsValue();
+      fieldValues.phones = phones.map(item => ({
+        ...item,
+        current: -1,
+        phone_code: {
+          key: 1280,
+          label: "Viet Nam",
+          extra: { code: "VN", dial_code: "+84" },
+        },
+      }));
+    }
+
+    if (fieldValues.prefer_position) {
+      fieldValues.prefer_position.positions =
+        get_array_obj_key_label_from_array_key(
+          positions,
+          fieldValues.prefer_position.positions
+        );
+    }
+
     dispatch(
       fetchEditDetailCandidate({
         id: detailData.id,
         params: fieldValues,
       })
     );
-    dispatch(fetchDetailCandidate(id));
+    setFieldValues(() => ({}));
   };
 
   const onFinishFailed = errorInfo => {
@@ -199,7 +227,7 @@ const DetailCandidate = () => {
     const values = get_array_obj_key_label_from_array_key(softSkills, value);
 
     dispatch(
-      fetchEditDetailCandidate({
+      putSoftSkillDetailCandidate({
         id: detailData?.id,
         params: {
           soft_skills: values,
@@ -213,13 +241,11 @@ const DetailCandidate = () => {
     setFieldValues(() => ({}));
   };
 
-  console.log(detailData?.middle_name);
-
   return (
     <div>
       <Row>
         <Col span={16}>
-          {!loading && !!detailData ? (
+          {!loading && detailData?.candidate_id === id ? (
             <>
               <RowTitle>
                 <Link to="/candidates">Candidates List /</Link>
@@ -228,7 +254,7 @@ const DetailCandidate = () => {
                     marginLeft: 8,
                   }}
                 >
-                  {detailData.candidate_id} - {detailData.full_name}
+                  {id} - {detailData.full_name}
                 </span>
               </RowTitle>
               <Form
@@ -251,6 +277,7 @@ const DetailCandidate = () => {
                   gender: detailData?.gender,
                   martial_status: detailData?.extra?.martial_status,
                   relocating_willingness: detailData?.relocating_willingness,
+                  source: detailData?.source,
                   creator_full_name: detailData?.creator?.full_name,
                   createdAt: formatDDMMYYYY(detailData?.createdAt),
                   emails: detailData?.emails,
@@ -335,18 +362,8 @@ const DetailCandidate = () => {
                       </Item>
                     </Col>
                     <Col span={12}>
-                      <Item
-                        name="priority_status"
-                        label="Primary status"
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please select primary status!",
-                          },
-                        ]}
-                      >
+                      <Item name="priority_status" label="Primary status">
                         <Select
-                          allowClear
                           showSearch
                           optionFilterProp="label"
                           style={{
@@ -498,7 +515,11 @@ const DetailCandidate = () => {
                         </Select>
                       </Item>
                     </Col>
-                    <Col span={12}></Col>
+                    <Col span={12}>
+                      <Item name="source" label="Source">
+                        <Input placeholder="Please input source" />
+                      </Item>
+                    </Col>
                   </Row>
                   {/* Creator */}
                   <Row gutter={(16, 16)}>
@@ -1020,7 +1041,13 @@ const RowSubmit = styled(Row)`
 `;
 
 const RowTitle = styled(Row)`
+  position: sticky;
+  top: 105px;
+  left: 0px;
+  z-index: 10;
+  line-height: 3;
   font-size: 14px;
+  background-color: rgb(244, 244, 244);
   a {
     color: rgba(0, 0, 0, 0.45);
     &:hover {

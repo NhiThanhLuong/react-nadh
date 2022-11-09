@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getPropertyValues } from "ultis/api";
+import { getPropertyValues, putDetailCandidate } from "ultis/api";
 import { getPropertyKeyLabel } from "ultis/func";
+import { toast } from "react-toastify";
 
 export const fetchSoftSkills = createAsyncThunk(
   "skill/fetchSoftSkills",
@@ -11,6 +12,11 @@ export const fetchSoftSkills = createAsyncThunk(
         property_name: "soft_skills",
       },
     })
+);
+
+export const putSoftSkillDetailCandidate = createAsyncThunk(
+  "skill/putSoftSkillDetailCandidate",
+  async ({ id, params }) => await putDetailCandidate(id, params)
 );
 
 export const skillSlice = createSlice({
@@ -27,6 +33,24 @@ export const skillSlice = createSlice({
     [fetchSoftSkills.fulfilled.type]: (state, { payload }) => {
       state.loading = false;
       state.softSkills = getPropertyKeyLabel(payload.data);
+    },
+
+    // Put Detail Candidate
+    [putSoftSkillDetailCandidate.pending.type]: state => {
+      state.loading = true;
+    },
+    [putSoftSkillDetailCandidate.fulfilled.type]: (state, { payload }) => {
+      state.loading = false;
+      state.detailData = payload;
+      toast.success("Successfully updated", {
+        position: "top-right",
+      });
+    },
+    [putSoftSkillDetailCandidate.rejected.type]: state => {
+      state.loading = false;
+      toast.error("Duplicated Soft Skills value", {
+        position: "top-right",
+      });
     },
   },
 });

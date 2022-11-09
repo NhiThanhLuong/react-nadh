@@ -54,7 +54,11 @@ const DefaultNavigate = ({ collapsed }) => {
           : openKeys ?? getKeysFromPathname(location.pathname)
       }
       style={{
+        position: "fixed",
+        width: "100%",
+        top: 60,
         borderRight: 0,
+        zIndex: 10,
         // paddingBottom: "25px",
         // flexGrow: 1,
         // overflowY: "auto",

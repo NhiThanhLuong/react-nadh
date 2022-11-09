@@ -32,7 +32,6 @@ export const candidatesSlice = createSlice({
   name: "candidates",
   initialState: {
     loading: false,
-    isLoadingSoft: false,
     count: 0,
     data: [],
     detailData: undefined,
@@ -58,18 +57,18 @@ export const candidatesSlice = createSlice({
     },
     // Put Detail Candidate
     [fetchEditDetailCandidate.pending.type]: state => {
-      state.isLoadingSoft = true;
+      state.loading = true;
     },
     [fetchEditDetailCandidate.fulfilled.type]: (state, { payload }) => {
-      state.isLoadingSoft = false;
+      state.loading = false;
       state.detailData = payload;
       toast.success("Successfully updated", {
         position: "top-right",
       });
     },
     [fetchEditDetailCandidate.rejected.type]: state => {
-      state.isLoadingSoft = false;
-      toast.error("Duplicated Soft Skills value", {
+      state.loading = false;
+      toast.error("Update error", {
         position: "top-right",
       });
     },
