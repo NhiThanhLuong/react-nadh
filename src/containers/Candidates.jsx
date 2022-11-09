@@ -1,9 +1,14 @@
 import { useEffect, useState, useMemo } from "react";
-import { Link, createSearchParams, useSearchParams } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  createSearchParams,
+  useSearchParams,
+} from "react-router-dom";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { Row, Table, Typography } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { Row, Table, Typography, Button } from "antd";
+import { SearchOutlined, PlusOutlined } from "@ant-design/icons";
 
 import {
   FilterTags,
@@ -40,6 +45,7 @@ import {
 
 const Candidates = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {
     candidates: { count, data, loading },
     location: { countries, cities },
@@ -487,13 +493,23 @@ const Candidates = () => {
   };
 
   return (
-    <div>
+    <div style={{ marginTop: 100 }}>
       {/* <Link to="/user/list">Go to User page</Link> */}
       <Row align="middle" justify="space-between">
         <Typography.Title type="secondary" level={4} style={{ margin: 0 }}>
           Candidate Lists ({count})
         </Typography.Title>
-        <ClearAllFilter onClick={onClearAllFilter} />
+        <div>
+          <ClearAllFilter onClick={onClearAllFilter} />
+          <Button
+            onClick={() => navigate("/candidate-add", { replace: true })}
+            icon={<PlusOutlined />}
+            style={{ marginLeft: 8 }}
+            type="primary"
+          >
+            Create Candidate
+          </Button>
+        </div>
       </Row>
       {/* <CustomColumn /> */}
       <FilterTags

@@ -3,6 +3,7 @@ import {
   getCandidates,
   getDetailCandidate,
   putDetailCandidate,
+  postCandidate,
 } from "ultis/api";
 import { toast } from "react-toastify";
 
@@ -26,6 +27,11 @@ export const fetchDetailCandidate = createAsyncThunk(
 export const fetchEditDetailCandidate = createAsyncThunk(
   "candidates/putDetailCandidate",
   async ({ id, params }) => await putDetailCandidate(id, params)
+);
+
+export const fetchPostCandidate = createAsyncThunk(
+  "candidates/fetchPostCandidate",
+  postCandidate
 );
 
 export const candidatesSlice = createSlice({
@@ -69,6 +75,23 @@ export const candidatesSlice = createSlice({
     [fetchEditDetailCandidate.rejected.type]: state => {
       state.loading = false;
       toast.error("Update error", {
+        position: "top-right",
+      });
+    },
+    // Post Candidate
+    [fetchPostCandidate.pending.type]: state => {
+      state.loading = true;
+    },
+    [fetchPostCandidate.fulfilled.type]: state => {
+      state.loading = false;
+      // state.detailData = payload;
+      toast.success("Successfully Created Candidate", {
+        position: "top-right",
+      });
+    },
+    [fetchPostCandidate.rejected.type]: state => {
+      state.loading = false;
+      toast.error("Create error", {
         position: "top-right",
       });
     },

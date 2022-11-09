@@ -7,6 +7,10 @@ export const testLogin = async (username, password) => {
   });
 };
 
+export const postCandidate = async params => {
+  return await axiosClient.post("/api/candidates", params);
+};
+
 export const getCandidates = async params => {
   return await axiosClient.get("/api/candidates", params);
 };
