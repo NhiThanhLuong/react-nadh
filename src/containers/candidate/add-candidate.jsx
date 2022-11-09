@@ -34,6 +34,7 @@ import {
   isEmpty,
   get_array_obj_key_label_from_array_key,
   format_day_month_year_to_date,
+  getPropertyKeyLabelObj,
 } from "ultis/func";
 import validator from "ultis/validate";
 import { fetchPostCandidate } from "features/candidatesSlice";
@@ -42,6 +43,7 @@ import {
   fetchSoftSkills,
   putSoftSkillDetailCandidate,
 } from "features/skillSlice";
+import { fetchCities, fetchDistricts } from "features/locationSlice";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -78,38 +80,19 @@ const AddCandidate = () => {
   const onValuesChange = (changedValues, allValues) => {
     setFieldValues(prevState => ({ ...prevState, ...changedValues }));
 
-    // if (changedValues?.addresses) {
-    //   const { addresses } = form.getFieldsValue();
-    //   changedValues?.addresses.forEach((item, index) => {
-    //     if (item.country > 0) {
-    //       addresses[index].city = {};
-    //       addresses[index].district = {};
-    //       dispatch(
-    //         fetchCities({
-    //           parent_id: item.country,
-    //         })
-    //       );
-    //     }
-    //   });
-    //   changedValues?.addresses.forEach((item, index) => {
-    //     if (item.city > 0) {
-    //       addresses[index].district = {};
-    //       dispatch(
-    //         fetchDistricts({
-    //           parent_id: item.city,
-    //         })
-    //       );
-    //     }
-    //   });
-    // }
-
-    // console.log(form.getFieldsValue());
+    ;
     console.log("allValues", allValues);
   };
 
   const onFinish = values => {
     console.log("values", values);
     console.log("fieldValues", fieldValues);
+
+    if (fieldValues.addresses) fieldValues.addresses = form.getFieldsValue().addresses.map(item => {
+      if (isEmpty(item.city)) delete item.city
+      if (isEmpty(item.district)) delete item.district
+      return item
+    })
 
     if (fieldValues.nationality)
       fieldValues.nationality = get_array_obj_key_label_from_array_key(
@@ -173,9 +156,41 @@ const AddCandidate = () => {
   };
 
   const onChangeBirthDay = () => {
-    console.log("change");
     form.validateFields(["day_of_birth", "month_of_birth", "year_of_birth"]);
   };
+
+  const onChangeCountry = (_,option, key) => {
+    const addresses = form.getFieldValue("addresses")
+    addresses[key].country = getPropertyKeyLabelObj(option)
+    addresses[key].city = {};
+    addresses[key].district= {};
+  };
+
+  const onChangeCity = (_,option, key) => {
+    const addresses = form.getFieldValue("addresses")
+    addresses[key].city = getPropertyKeyLabelObj(option)
+    addresses[key].district= {};
+  };
+
+  const onChangeDistrict = (_, option, key) => {
+    const addresses = form.getFieldValue("addresses")
+    console.log(option);
+    addresses[key].district = getPropertyKeyLabelObj(option)
+  };
+
+  const onDropdownCity = (key) => {
+    const addresses = form.getFieldValue("addresses")
+    dispatch(fetchCities({
+      parent_id: addresses[key].country.key
+    }))
+  } 
+
+  const onDropdownDistrict = (key) => {
+    const addresses = form.getFieldValue("addresses")
+    dispatch(fetchDistricts({
+      parent_id: addresses[key].city.key
+    }))
+  } 
 
   const onSearchNationality = value => {
     // setNationalitySearch(() => value);
@@ -600,145 +615,152 @@ const AddCandidate = () => {
           </Row>
           {/* Address */}
           <Row gutter={(16, 16)}>
-            <Col span={24}>
-              <Item label="Address">
-                <Form.List name="addresses">
-                  {(fields, { add, remove }) => {
-                    //   console.log(fields);
-                    return (
-                      <div>
-                        {fields.map(({ key, name, ...restField }) => (
-                          <Row
-                            key={key}
-                            align="middle"
-                            style={{ marginBottom: 16 }}
-                          >
-                            <Col span={22}>
-                              <Row gutter={(16, 16)}>
-                                <Col span={8}>
-                                  <Form.Item
-                                    {...restField}
-                                    name={[name, "country"]}
-                                    style={{ margin: 0 }}
+                    <Col span={24}>
+                      <Item label="Address">
+                        <Form.List name="addresses">
+                          {(fields, { add, remove }) => {
+                            //   console.log(fields);
+                            return (
+                              <div>
+                                {fields.map(({ key, name, ...restField }) => (
+                                  <Row
+                                    key={key}
+                                    align="middle"
+                                    style={{ marginBottom: 16 }}
                                   >
-                                    <Select
-                                      placeholder="Country"
-                                      allowClear
-                                      showSearch
-                                      optionFilterProp="label"
+                                    <Col span={22}>
+                                      <Row gutter={(16, 16)}>
+                                        <Col span={8}>
+                                          <Form.Item
+                                            {...restField}
+                                            name={[name, "country"]}
+                                            style={{ margin: 0 }}
+                                          >
+                                            <Select
+                                              placeholder="Country"
+                                              allowClear
+                                              showSearch
+                                              optionFilterProp="label"
+                                              style={{
+                                                width: "100%",
+                                              }}
+                                              onChange={(value,option) =>
+                                                onChangeCountry(value, option, key)
+                                              }
+                                            >
+                                              {countries.map(country => (
+                                                <Option
+                                                  key={country.key}
+                                                  value={country.key}
+                                                  label={country.label}
+                                                >
+                                                  {country.label}
+                                                </Option>
+                                              ))}
+                                            </Select>
+                                          </Form.Item>
+                                        </Col>
+                                        <Col span={8}>
+                                          <Form.Item
+                                            {...restField}
+                                            name={[name, "city"]}
+                                            style={{ margin: 0 }}
+                                          >
+                                            <Select
+                                              placeholder="City"
+                                              allowClear
+                                              showSearch
+                                              onDropdownVisibleChange={()=> onDropdownCity(key)}
+                                              onChange={(value, option) => onChangeCity(value, option, key)}
+                                              optionFilterProp="label"
+                                              style={{
+                                                width: "100%",
+                                              }}
+                                            >
+                                              {cities.map(city => (
+                                                <Option
+                                                  key={city.key}
+                                                  value={city.key}
+                                                  label={city.label}
+                                                >
+                                                  {city.label}
+                                                </Option>
+                                              ))}
+                                            </Select>
+                                          </Form.Item>
+                                        </Col>
+                                        <Col span={8}>
+                                          <Form.Item
+                                            {...restField}
+                                            name={[name, "district"]}
+                                            style={{ margin: 0 }}
+                                          >
+                                            <Select
+                                              placeholder="District"
+                                              onDropdownVisibleChange={()=> onDropdownDistrict(key)}
+                                                onChange={(value, option) => onChangeDistrict(value, option,key)}
+                                              allowClear
+                                              showSearch
+                                              optionFilterProp="label"
+                                              style={{
+                                                width: "100%",
+                                              }}
+                                            >
+                                              {districts.map(district => (
+                                                <Option
+                                                  key={district.key}
+                                                  value={district.key}
+                                                  label={district.label}
+                                                >
+                                                  {district.label}
+                                                </Option>
+                                              ))}
+                                            </Select>
+                                          </Form.Item>
+                                        </Col>
+                                      </Row>
+                                      <Row style={{ marginTop: 8 }}>
+                                        <Col span={24}>
+                                          <Form.Item
+                                            {...restField}
+                                            name={[name, "address"]}
+                                            style={{ margin: 0 }}
+                                          >
+                                            <Input placeholder="ex: 2 Hai Trieu, Bitexco Financial Tower" />
+                                          </Form.Item>
+                                        </Col>
+                                      </Row>
+                                    </Col>
+                                    <FaMinusCircleRemove
                                       style={{
-                                        width: "100%",
+                                        marginLeft: 16,
                                       }}
-                                    >
-                                      {countries.map(country => (
-                                        <Option
-                                          key={country.key}
-                                          value={country.key}
-                                          label={country.label}
-                                        >
-                                          {country.label}
-                                        </Option>
-                                      ))}
-                                    </Select>
-                                  </Form.Item>
-                                </Col>
-                                <Col span={8}>
-                                  <Form.Item
-                                    {...restField}
-                                    name={[name, "city"]}
-                                    style={{ margin: 0 }}
-                                  >
-                                    <Select
-                                      placeholder="City"
-                                      allowClear
-                                      showSearch
-                                      optionFilterProp="label"
-                                      style={{
-                                        width: "100%",
-                                      }}
-                                    >
-                                      {cities.map(city => (
-                                        <Option
-                                          key={city.key}
-                                          value={city.key}
-                                          label={city.label}
-                                        >
-                                          {city.label}
-                                        </Option>
-                                      ))}
-                                    </Select>
-                                  </Form.Item>
-                                </Col>
-                                <Col span={8}>
-                                  <Form.Item
-                                    {...restField}
-                                    name={[name, "district"]}
-                                    style={{ margin: 0 }}
-                                  >
-                                    <Select
-                                      placeholder="District"
-                                      allowClear
-                                      showSearch
-                                      optionFilterProp="label"
-                                      style={{
-                                        width: "100%",
-                                      }}
-                                    >
-                                      {districts.map(district => (
-                                        <Option
-                                          key={district.key}
-                                          value={district.key}
-                                          label={district.label}
-                                        >
-                                          {district.label}
-                                        </Option>
-                                      ))}
-                                    </Select>
-                                  </Form.Item>
-                                </Col>
-                              </Row>
-                              <Row style={{ marginTop: 8 }}>
-                                <Col span={24}>
-                                  <Form.Item
-                                    {...restField}
-                                    name={[name, "address"]}
-                                    style={{ margin: 0 }}
-                                  >
-                                    <Input placeholder="ex: 2 Hai Trieu, Bitexco Financial Tower" />
-                                  </Form.Item>
-                                </Col>
-                              </Row>
-                            </Col>
-                            <FaMinusCircleRemove
-                              style={{
-                                marginLeft: 16,
-                              }}
-                              onClick={() => remove(name)}
-                            />
-                          </Row>
-                        ))}
-                        <Button
-                          type="primary"
-                          ghost
-                          size="small"
-                          icon={<PlusOutlined />}
-                          onClick={() => add()}
-                          style={{
-                            width: "50%",
-                            height: 30,
-                            marginLeft: "30%",
-                            marginRight: "20%",
+                                      onClick={() => remove(name)}
+                                    />
+                                  </Row>
+                                ))}
+                                <Button
+                                  type="primary"
+                                  ghost
+                                  size="small"
+                                  icon={<PlusOutlined />}
+                                  onClick={() => add()}
+                                  style={{
+                                    width: "50%",
+                                    height: 30,
+                                    marginLeft: "30%",
+                                    marginRight: "20%",
+                                  }}
+                                >
+                                  Add Address
+                                </Button>
+                              </div>
+                            );
                           }}
-                        >
-                          Add Address
-                        </Button>
-                      </div>
-                    );
-                  }}
-                </Form.List>
-              </Item>
-            </Col>
-          </Row>
+                        </Form.List>
+                      </Item>
+                    </Col>
+                  </Row>
           {/* Nationality */}
           <Row gutter={(16, 16)}>
             <Col span={24}>

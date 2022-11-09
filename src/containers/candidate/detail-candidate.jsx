@@ -46,6 +46,7 @@ import {
   isEmpty,
   get_array_obj_key_label_from_array_key,
   format_day_month_year_to_date,
+  getPropertyKeyLabelObj,
 } from "ultis/func";
 import validator from "ultis/validate";
 import { fetchDegrees } from "features/degreeSlice";
@@ -81,7 +82,7 @@ const DetailCandidate = () => {
   const {
     candidates: { detailData, loading },
     location: { countries, cities, districts },
-    nationality: { nationalities, loading: isLoadingNation },
+    nationality: { nationalities },
     position: { positions },
     degree: { degrees },
     skill: { softSkills },
@@ -100,8 +101,23 @@ const DetailCandidate = () => {
     dispatch(fetchSoftSkills());
   }, []);
 
+  const {
+    day_of_birth,
+    month_of_birth,
+    year_of_birth,
+    emails,
+    phones,
+  } = form.getFieldsValue();
+
   const onFinish = values => {
     console.log("values", values);
+    console.log('fieldValues', fieldValues);
+
+    if (fieldValues.addresses) fieldValues.addresses = form.getFieldsValue().addresses.map(item => {
+      if (isEmpty(item.city)) delete item.city
+      if (isEmpty(item.district)) delete item.district
+      return item
+    })
 
     if (fieldValues.nationality)
       fieldValues.nationality = get_array_obj_key_label_from_array_key(
@@ -114,8 +130,6 @@ const DetailCandidate = () => {
       fieldValues.month_of_birth ||
       fieldValues.year_of_birth
     ) {
-      const { day_of_birth, month_of_birth, year_of_birth } =
-        form.getFieldsValue();
       fieldValues.dob = format_day_month_year_to_date(
         day_of_birth,
         month_of_birth,
@@ -127,12 +141,10 @@ const DetailCandidate = () => {
     }
 
     if (fieldValues.emails) {
-      const { emails } = form.getFieldsValue();
       fieldValues.emails = emails;
     }
 
     if (fieldValues.phones) {
-      const { phones } = form.getFieldsValue();
       fieldValues.phones = phones.map(item => ({
         ...item,
         current: -1,
@@ -167,35 +179,15 @@ const DetailCandidate = () => {
 
   const onValuesChange = (changedValues, allValues) => {
     setFieldValues(prevState => ({ ...prevState, ...changedValues }));
-
-    if (changedValues?.addresses) {
-      const { addresses } = form.getFieldsValue();
-      changedValues?.addresses.forEach((item, index) => {
-        if (item.country > 0) {
-          console.log(index);
-          addresses[index].city = {};
-          addresses[index].district = {};
-          dispatch(
-            fetchCities({
-              parent_id: item.country,
-            })
-          );
-        }
-      });
-      changedValues?.addresses.forEach((item, index) => {
-        if (item.city > 0) {
-          addresses[index].district = {};
-          dispatch(
-            fetchDistricts({
-              parent_id: item.city,
-            })
-          );
-        }
-      });
-    }
+    console.log("changedValues---", changedValues);
+   
 
     console.log(form.getFieldsValue());
     console.log("allValues", allValues);
+  };
+
+  const onChangeBirthDay = () => {
+    form.validateFields(["day_of_birth", "month_of_birth", "year_of_birth"]);
   };
 
   const onSearchNationality = value => {
@@ -215,6 +207,41 @@ const DetailCandidate = () => {
       })
     );
   };
+
+
+  const onChangeCountry = (_,option, key) => {
+    const addresses = form.getFieldValue("addresses")
+    addresses[key].country = getPropertyKeyLabelObj(option)
+    addresses[key].city = {};
+    addresses[key].district= {};
+  };
+
+  const onChangeCity = (_,option, key) => {
+    const addresses = form.getFieldValue("addresses")
+    addresses[key].city = getPropertyKeyLabelObj(option)
+    addresses[key].district= {};
+  };
+
+  const onChangeDistrict = (_, option, key) => {
+    const addresses = form.getFieldValue("addresses")
+    console.log(option);
+    addresses[key].district = getPropertyKeyLabelObj(option)
+  };
+
+  const onDropdownCity = (key) => {
+    const addresses = form.getFieldValue("addresses")
+    dispatch(fetchCities({
+      parent_id: addresses[key].country.key
+    }))
+  } 
+
+  const onDropdownDistrict = (key) => {
+    const addresses = form.getFieldValue("addresses")
+    dispatch(fetchDistricts({
+      parent_id: addresses[key].city.key
+    }))
+  } 
+
 
   const onAddNationality = () => {
     dispatch(postNationality(nationalitySearch));
@@ -271,9 +298,15 @@ const DetailCandidate = () => {
                   last_name: detailData?.last_name,
                   middle_name: detailData?.middle_name,
                   priority_status: detailData?.priority_status,
-                  day_of_birth: +formatDate(detailData?.dob).day,
-                  month_of_birth: +formatDate(detailData?.dob).month,
-                  year_of_birth: +formatDate(detailData?.dob).year,
+                  day_of_birth: detailData?.dob
+                    ? +formatDate(detailData?.dob).day
+                    : null,
+                  month_of_birth: detailData?.dob
+                    ? +formatDate(detailData?.dob).month
+                    : null,
+                  year_of_birth: detailData?.dob
+                    ? +formatDate(detailData?.dob).year
+                    : null,
                   dob: detailData?.dob,
                   gender: detailData?.gender,
                   martial_status: detailData?.extra?.martial_status,
@@ -283,7 +316,9 @@ const DetailCandidate = () => {
                   createdAt: formatDDMMYYYY(detailData?.createdAt),
                   emails: detailData?.emails,
                   phones: detailData?.phones,
-                  addresses: detailData?.addresses,
+                  addresses: detailData?.addresses.length
+                    ? detailData?.addresses
+                    : [null],
                   nationality: detailData?.nationality,
                   prefer_position: detailData?.prefer_position,
                   highest_education: detailData?.highest_education,
@@ -389,13 +424,26 @@ const DetailCandidate = () => {
                             <Item
                               name="day_of_birth"
                               rules={[
-                                {
-                                  required: true,
-                                  message: "Please select date!",
-                                },
+                                ({ getFieldValue }) => ({
+                                  validator(_, value) {
+                                    if (
+                                      value ||
+                                      (!getFieldValue("month_of_birth") &&
+                                        !getFieldValue("year_of_birth"))
+                                    ) {
+                                      return Promise.resolve();
+                                    }
+
+                                    return Promise.reject(
+                                      new Error("Please select Day!")
+                                    );
+                                  },
+                                }),
                               ]}
                             >
                               <Select
+                                onChange={onChangeBirthDay}
+                                placeholder="Date"
                                 allowClear
                                 showSearch
                                 optionFilterProp="label"
@@ -419,13 +467,26 @@ const DetailCandidate = () => {
                             <Item
                               name="month_of_birth"
                               rules={[
-                                {
-                                  required: true,
-                                  message: "Please select month!",
-                                },
+                                ({ getFieldValue }) => ({
+                                  validator(_, value) {
+                                    if (
+                                      value ||
+                                      (!getFieldValue("day_of_birth") &&
+                                        !getFieldValue("year_of_birth"))
+                                    ) {
+                                      return Promise.resolve();
+                                    }
+
+                                    return Promise.reject(
+                                      new Error("Please select Month")
+                                    );
+                                  },
+                                }),
                               ]}
                             >
                               <Select
+                                onChange={onChangeBirthDay}
+                                placeholder="Month"
                                 allowClear
                                 showSearch
                                 optionFilterProp="label"
@@ -445,13 +506,26 @@ const DetailCandidate = () => {
                             <Item
                               name="year_of_birth"
                               rules={[
-                                {
-                                  required: true,
-                                  message: "Please select year!",
-                                },
+                                ({ getFieldValue }) => ({
+                                  validator(_, value) {
+                                    if (
+                                      value ||
+                                      (!getFieldValue("day_of_birth") &&
+                                        !getFieldValue("month_of_birth"))
+                                    ) {
+                                      return Promise.resolve();
+                                    }
+
+                                    return Promise.reject(
+                                      new Error("Please select Year")
+                                    );
+                                  },
+                                }),
                               ]}
                             >
                               <Select
+                                onChange={onChangeBirthDay}
+                                placeholder="Year"
                                 allowClear
                                 showSearch
                                 optionFilterProp="label"
@@ -693,6 +767,9 @@ const DetailCandidate = () => {
                                               style={{
                                                 width: "100%",
                                               }}
+                                              onChange={(value,option) =>
+                                                onChangeCountry(value, option, key)
+                                              }
                                             >
                                               {countries.map(country => (
                                                 <Option
@@ -716,6 +793,8 @@ const DetailCandidate = () => {
                                               placeholder="City"
                                               allowClear
                                               showSearch
+                                              onDropdownVisibleChange={()=> onDropdownCity(key)}
+                                              onChange={(value, option) => onChangeCity(value, option, key)}
                                               optionFilterProp="label"
                                               style={{
                                                 width: "100%",
@@ -741,6 +820,8 @@ const DetailCandidate = () => {
                                           >
                                             <Select
                                               placeholder="District"
+                                              onDropdownVisibleChange={()=> onDropdownDistrict(key)}
+                                                onChange={(value, option) => onChangeDistrict(value, option,key)}
                                               allowClear
                                               showSearch
                                               optionFilterProp="label"

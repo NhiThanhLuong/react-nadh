@@ -116,6 +116,13 @@ export const getPropertyKeyLabel = arr =>
     label,
   }));
 
+export const getPropertyKeyLabelObj = obj => {
+  return {
+    key: obj.key,
+    label: obj.label,
+  };
+};
+
 export function isEmpty(obj) {
   return Object.keys(obj).length === 0;
 }
