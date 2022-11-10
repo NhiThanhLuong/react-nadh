@@ -5,6 +5,7 @@ import { createSearchParams } from "react-router-dom";
 import CustomSearch from "./custom-search";
 import SelectSearch from "./type_search_filter/select-search";
 import { deleteKeyNull } from "ultis/func";
+import { Col } from "antd";
 
 const FilterDropdown3Select = ({
   keyIdFilter,
@@ -127,29 +128,32 @@ const FilterDropdown3Select = ({
 
   return (
     <CustomSearch onSearch={onSearch} onReset={onReset} value={value1}>
-      <SelectSearch
-        placeholder={placeholder1}
-        onChange={onChangeKeySearch1}
-        options={options1}
-        // mode={isMutiple ? "multiple" : undefined}
-        value={value1}
-      />
-      <SelectSearch
-        isDisabled={!value1}
-        placeholder={placeholder2}
-        onChange={onChangeKeySearch2}
-        options={options2}
-        // mode={isMutiple ? "multiple" : undefined}
-        value={value2}
-      />
-      <SelectSearch
-        isDisabled={!value2}
-        placeholder={placeholder3}
-        onChange={val => setValue3(val)}
-        options={options3}
-        // mode={isMutiple ? "multiple" : undefined}
-        value={value3}
-      />
+      <Col span={24}>
+        <SelectSearch
+          placeholder={placeholder1}
+          onChange={onChangeKeySearch1}
+          options={options1}
+          value={value1}
+        />
+      </Col>
+      <Col span={24}>
+        <SelectSearch
+          isDisabled={!value1}
+          placeholder={placeholder2}
+          onChange={onChangeKeySearch2}
+          options={options2}
+          value={value2}
+        />
+      </Col>
+      <Col span={24}>
+        <SelectSearch
+          isDisabled={!value2}
+          placeholder={placeholder3}
+          onChange={val => setValue3(val)}
+          options={options3}
+          value={value3}
+        />
+      </Col>
     </CustomSearch>
   );
 };

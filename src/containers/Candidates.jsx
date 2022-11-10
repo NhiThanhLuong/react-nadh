@@ -97,7 +97,7 @@ const Candidates = () => {
     );
   }, []);
 
-  console.log(currentPage);
+  console.log("count", count);
 
   useEffect(() => {
     const newParamsRouter = { ...paramsRouter };
@@ -105,9 +105,6 @@ const Candidates = () => {
     delete newParamsRouter.sector;
     delete newParamsRouter.category;
     dispatch(fetchCandidates(newParamsRouter));
-    columns.forEach(item => {
-      item.filtered = !!paramsRouter[item.dataIndex];
-    });
     setCurrentPage(+paramsRouter.page || 1);
   }, [searchParams]);
 
@@ -200,6 +197,7 @@ const Candidates = () => {
           />
         ),
         filterIcon: <SearchOutlined />,
+        filtered: !!paramsRouter.full_name,
         render: (text, record) => (
           <Link
             to={`/candidate/${record.candidate_id}`}
@@ -228,6 +226,7 @@ const Candidates = () => {
           />
         ),
         filterIcon: <SearchOutlined />,
+        filtered: !!paramsRouter.priority_status,
         render: text => {
           const status = candidate_priority_status.find(
             ({ id }) => id === text
@@ -252,6 +251,7 @@ const Candidates = () => {
           />
         ),
         filterIcon: <SearchOutlined />,
+        filtered: !!paramsRouter.language,
         render: (_, record) => {
           return record.languages.map(({ key, label }) => (
             <p key={key}>- {label}</p>
@@ -289,6 +289,7 @@ const Candidates = () => {
             }
           />
         ),
+        filtered: !!paramsRouter.country,
         filterIcon: <SearchOutlined />,
         render: text => {
           return <p>{text}</p>;
@@ -319,6 +320,7 @@ const Candidates = () => {
             getOptions3={val => dispatch(fetchCategory(val))}
           />
         ),
+        filtered: !!paramsRouter.industry_id,
         filterIcon: <SearchOutlined />,
         render: (_, record) => {
           return record.industry?.map(item => (
@@ -341,6 +343,7 @@ const Candidates = () => {
           />
         ),
         filterIcon: <SearchOutlined />,
+        filtered: !!paramsRouter.yob_from || !!paramsRouter.yob_to,
       },
       // Activity
       {
@@ -359,6 +362,7 @@ const Candidates = () => {
           />
         ),
         filterIcon: <SearchOutlined />,
+        filtered: !!paramsRouter.flow_status,
         render: text => {
           return candidate_flow_status.find(({ id }) => id === text)?.label;
         },
@@ -379,6 +383,7 @@ const Candidates = () => {
           />
         ),
         filterIcon: <SearchOutlined style={{ color: "inherit" }} />,
+        filtered: !!paramsRouter.current_company_text,
         render: (_, record) => {
           return record.current_company?.map(({ organization }) => (
             <p key={organization.key}>- {organization.label}</p>
@@ -401,6 +406,8 @@ const Candidates = () => {
           />
         ),
         filterIcon: <SearchOutlined style={{ color: "inherit" }} />,
+        filtered: !!paramsRouter.current_position_text,
+
         render: (_, record) => {
           return record.current_company?.map(({ title }) => (
             <p key={title.key}>- {title.label}</p>
@@ -422,6 +429,9 @@ const Candidates = () => {
           />
         ),
         filterIcon: <SearchOutlined />,
+        filtered:
+          !!paramsRouter.industry_years_from ||
+          !!paramsRouter.industry_years_to,
       },
       // Year of management
       {
@@ -438,6 +448,9 @@ const Candidates = () => {
           />
         ),
         filterIcon: <SearchOutlined />,
+        filtered:
+          !!paramsRouter.management_years_from ||
+          !!paramsRouter.management_years_to,
       },
     ],
     [
@@ -448,6 +461,7 @@ const Candidates = () => {
       sectors,
       categories,
       languages,
+      paramsRouter?.candidate_id,
     ]
   );
 
@@ -476,6 +490,7 @@ const Candidates = () => {
   );
 
   const onCloseFilterTag = key => {
+    resetPage();
     if (key_of_keys[key]) {
       key_of_keys[key].forEach(item => delete paramsRouter[item]);
     } else delete paramsRouter[key];
@@ -522,19 +537,23 @@ const Candidates = () => {
         languages={filterTags.language ? languages : undefined}
         activities={filterTags.flow_status ? candidate_flow_status : undefined}
       />
-      <StyledTable
-        loading={loading}
-        columns={columns}
-        dataSource={dataSource}
-        pagination={{
-          showSizeChanger: false,
-          pageSize: 10,
-          total: count,
-          showQuickJumper: true,
-          current: currentPage,
-          onChange: onChangePage,
-        }}
-      />
+
+      {loading ? (
+        <Table loading={loading} columns={columns} />
+      ) : (
+        <StyledTable
+          columns={columns}
+          dataSource={dataSource}
+          pagination={{
+            showSizeChanger: false,
+            pageSize: 10,
+            total: count,
+            showQuickJumper: true,
+            current: currentPage,
+            onChange: onChangePage,
+          }}
+        />
+      )}
     </div>
   );
 };

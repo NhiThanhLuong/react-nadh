@@ -7,6 +7,8 @@ import FilterDropdown2Select from "./table/filter-dropdown-2-select";
 import FilterDropdown3Select from "./table/filter-dropdown-3-select";
 import FilterDropdownRange from "./table/filter-dropdown-range";
 
+import FormTextInput from "./form/form-text-input";
+
 import ClearAllFilter from "./button/clear-all-filter";
 import CustomColumn from "./button/custom-column";
 
@@ -26,6 +28,7 @@ export {
   FilterDropdown2Select,
   FilterDropdown3Select,
   FilterDropdownRange,
+  FormTextInput,
   ClearAllFilter,
   CustomColumn,
   UserInfo,

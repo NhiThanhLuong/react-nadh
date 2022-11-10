@@ -48,6 +48,7 @@ const CustomSearchYearRange = ({
         </Col>
         <Col span={12}>
           <InputNumber
+            min={0}
             value={yearFrom}
             onChange={onChangeFrom}
             placeholder="From"
@@ -62,6 +63,7 @@ const CustomSearchYearRange = ({
         </Col>
         <Col span={12}>
           <InputNumber
+            min={0}
             value={yearTo}
             onChange={onChangeTo}
             placeholder="To"

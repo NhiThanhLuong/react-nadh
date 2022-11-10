@@ -14,6 +14,18 @@ export const fetchSoftSkills = createAsyncThunk(
     })
 );
 
+export const fetchFunctionSoftSkills = createAsyncThunk(
+  "skill/fetchFunctionSoftSkills",
+  async params =>
+    await getPropertyValues({
+      params: {
+        ...params,
+        property_name: "functions_skills",
+        parent_id: "null",
+      },
+    })
+);
+
 export const putSoftSkillDetailCandidate = createAsyncThunk(
   "skill/putSoftSkillDetailCandidate",
   async ({ id, params }) => await putDetailCandidate(id, params)
@@ -24,6 +36,7 @@ export const skillSlice = createSlice({
   initialState: {
     loading: false,
     softSkills: [],
+    functionSkills: [],
   },
   reducers: {},
   extraReducers: {
@@ -51,6 +64,15 @@ export const skillSlice = createSlice({
       toast.error("Duplicated Soft Skills value", {
         position: "top-right",
       });
+    },
+    // Fetch function skills
+
+    [fetchFunctionSoftSkills.pending.type]: state => {
+      state.loading = true;
+    },
+    [fetchFunctionSoftSkills.fulfilled.type]: (state, { payload }) => {
+      state.loading = false;
+      state.functionSkills = payload.data;
     },
   },
 });

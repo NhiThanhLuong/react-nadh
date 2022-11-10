@@ -1,3 +1,4 @@
+import { Col } from "antd";
 import { useState, useEffect } from "react";
 import { createSearchParams } from "react-router-dom";
 // import PropTypes from 'prop-types'
@@ -52,13 +53,15 @@ const FilterDropdownSelect = ({
 
   return (
     <CustomSearch onSearch={onSearch} onReset={onReset} value={value}>
-      <SelectSearch
-        placeholder={placeholder}
-        onChange={onChange}
-        options={options}
-        mode={isMutiple ? "multiple" : undefined}
-        value={value}
-      />
+      <Col span={24}>
+        <SelectSearch
+          placeholder={placeholder}
+          onChange={onChange}
+          options={options}
+          mode={isMutiple ? "multiple" : undefined}
+          value={value}
+        />
+      </Col>
     </CustomSearch>
   );
 };

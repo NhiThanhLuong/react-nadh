@@ -6,6 +6,7 @@ import { createSearchParams } from "react-router-dom";
 import CustomSearch from "./custom-search";
 import SelectSearch from "./type_search_filter/select-search";
 import { deleteKeyNull } from "ultis/func";
+import { Col } from "antd";
 
 const FilterDropdown2Select = ({
   keySearch1,
@@ -59,21 +60,25 @@ const FilterDropdown2Select = ({
 
   return (
     <CustomSearch onSearch={onSearch} onReset={onReset} value={value1}>
-      <SelectSearch
-        placeholder={placeholder1}
-        onChange={onChangeKeySearch1}
-        options={options1}
-        // mode={isMutiple ? "multiple" : undefined}
-        value={value1}
-      />
-      <SelectSearch
-        isDisabled={!value1}
-        placeholder={placeholder2}
-        onChange={val => setValue2(val)}
-        options={options2}
-        // mode={isMutiple ? "multiple" : undefined}
-        value={value2}
-      />
+      <Col span={24}>
+        <SelectSearch
+          placeholder={placeholder1}
+          onChange={onChangeKeySearch1}
+          options={options1}
+          // mode={isMutiple ? "multiple" : undefined}
+          value={value1}
+        />
+      </Col>
+      <Col span={24}>
+        <SelectSearch
+          isDisabled={!value1}
+          placeholder={placeholder2}
+          onChange={val => setValue2(val)}
+          options={options2}
+          // mode={isMutiple ? "multiple" : undefined}
+          value={value2}
+        />
+      </Col>
     </CustomSearch>
   );
 };

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 // import React from 'react'
 // import PropTypes from 'prop-types'
 import { useState, useEffect } from "react";
@@ -28,9 +27,7 @@ import {
 } from "ultis/const";
 import {
   pad2,
-  formatDate,
   years,
-  formatDDMMYYYY,
   isEmpty,
   get_array_obj_key_label_from_array_key,
   format_day_month_year_to_date,
@@ -40,17 +37,14 @@ import {
 import validator from "ultis/validate";
 import { fetchPostCandidate } from "features/candidatesSlice";
 import { fetchDegrees } from "features/degreeSlice";
-import {
-  fetchSoftSkills,
-  putSoftSkillDetailCandidate,
-} from "features/skillSlice";
+
 import {
   fetchCities,
   fetchDistricts,
   fetchLocations,
 } from "features/locationSlice";
-import { fetchNationality } from "features/nationalitySlice";
-import { fetchPosition } from "features/positionSlice";
+import { fetchNationality, postNationality } from "features/nationalitySlice";
+import { fetchPosition, postPosition } from "features/positionSlice";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -71,6 +65,9 @@ const AddCandidate = () => {
 
   const [form] = Form.useForm();
   const [fieldValues, setFieldValues] = useState({});
+
+  const [nationalitySearch, setNationalitySearch] = useState();
+  const [positionSearch, setPositionSearch] = useState();
 
   const {
     location: { countries, cities, districts },
@@ -223,29 +220,29 @@ const AddCandidate = () => {
   };
 
   const onSearchNationality = value => {
-    // setNationalitySearch(() => value);
-    // dispatch(
-    //   fetchNationality({
-    //     value,
-    //   })
-    // );
+    setNationalitySearch(() => value);
+    dispatch(
+      fetchNationality({
+        value,
+      })
+    );
   };
 
   const onAddNationality = () => {
-    // dispatch(postNationality(nationalitySearch));
+    dispatch(postNationality(nationalitySearch));
   };
 
   const onSearchPosition = value => {
-    // setPositionSearch(() => value);
-    // dispatch(
-    //   fetchPosition({
-    //     value,
-    //   })
-    // );
+    setPositionSearch(() => value);
+    dispatch(
+      fetchPosition({
+        value,
+      })
+    );
   };
 
   const onAddPosition = () => {
-    // dispatch(postPosition(positionSearch));
+    dispatch(postPosition(positionSearch));
   };
 
   const onChangeEducation = (_, option) => {

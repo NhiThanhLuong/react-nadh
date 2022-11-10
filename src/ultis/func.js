@@ -117,6 +117,7 @@ export const getPropertyKeyLabel = arr =>
   }));
 
 export const getPropertyKeyLabelObj = obj => {
+  if (!obj) return {};
   return {
     key: +obj.key,
     label: obj.label,

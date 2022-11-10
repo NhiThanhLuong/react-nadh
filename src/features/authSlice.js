@@ -18,11 +18,6 @@ export const authSlice = createSlice({
     err: undefined,
   },
   reducers: {
-    // login: (state, action) => {
-    //   state.token = action?.payload?.token;
-    //   state.info = action?.payload?.info;
-    //   return state;
-    // },
     cancelLoginFailed: state => {
       state.err = undefined;
       return state;

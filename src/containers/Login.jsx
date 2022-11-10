@@ -1,38 +1,22 @@
-/* eslint-disable no-unused-vars */
-import {
-  Button,
-  Card,
-  Checkbox,
-  Form,
-  Input,
-  message,
-  Row,
-  Space,
-  notification,
-} from "antd";
+import { Button, Card, Form, Input, message, Row, Space } from "antd";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { LoginFailed } from "components";
-import { getLocalStorage } from "utils";
-import { storage, _LAYOUT } from "_constants";
-import { postLogin, cancelLoginFailed } from "features/authSlice";
+import { _LAYOUT } from "_constants";
+import { postLogin } from "features/authSlice";
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { token, loading } = useSelector(state => state.auth);
   const [isSubmiting, setIsSubmiting] = useState(false);
-  const { email, password, is_save } = sessionStorage?.saved
-    ? JSON.parse(sessionStorage.saved)
-    : {};
+  const username = sessionStorage?.username || "";
 
-  const onCancelLoginFailed = () => dispatch(cancelLoginFailed());
+  console.log(sessionStorage?.username);
 
   useEffect(() => {
-    // if (token || getLocalStorage(storage.ACCESS_TOKEN)) {
     if (token && !loading) {
       navigate("/candidates", { replace: true });
     }
@@ -50,29 +34,28 @@ const Login = () => {
     setIsSubmiting(true);
 
     let isError = false;
-    if (!values.email || !values.password) {
-      message.error("Email và mật khẩu không được để trống");
+    if (!values.username || !values.password) {
+      message.error("Username và mật khẩu không được để trống");
       isError = true;
     }
     if (values.password && values.password.length < 6) {
       message.error("Mật khẩu phải 6 kí tự trở lên");
       isError = true;
     }
-    if (values.is_save) {
-      sessionStorage.setItem("saved", JSON.stringify(values));
-    }
+
+    sessionStorage.setItem("username", values.username);
 
     if (isError) {
       setIsSubmiting(false);
       return;
     }
 
-    values.email = values.email.trim();
+    values.username = values.username.trim();
     values.password = values.password.trim();
 
     dispatch(
       postLogin({
-        username: values.email,
+        username: values.username,
         password: values.password,
       })
     );
@@ -112,7 +95,7 @@ const Login = () => {
           disabled={loading || isSubmiting}
           onFinish={onFinish}
           className="login-form my-auto px-4 py-5"
-          initialValues={{ email, password, is_save }}
+          initialValues={{ username }}
         >
           <div
             className="logo"
@@ -145,10 +128,10 @@ const Login = () => {
           </div>
 
           <Form.Item
-            name="email"
+            name="username"
             rules={[{ required: false, message: "Không được để trống" }]}
           >
-            <Input placeholder="Email" className="input-login" />
+            <Input placeholder="Username" className="input-login" />
           </Form.Item>
           <Form.Item
             name="password"
@@ -159,10 +142,7 @@ const Login = () => {
           >
             <Input.Password placeholder="Mật khẩu" className="input-login" />
           </Form.Item>
-          <Row direction="row" justify="space-between" align="center">
-            <Form.Item name="is_save" valuePropName="checked">
-              <Checkbox>Lưu thông tin đăng nhập lần sau</Checkbox>
-            </Form.Item>
+          <Row direction="row" justify="end" align="center">
             <Button
               loading={isSubmiting}
               htmlType="submit"
