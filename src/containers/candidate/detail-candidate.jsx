@@ -101,23 +101,18 @@ const DetailCandidate = () => {
     dispatch(fetchSoftSkills());
   }, []);
 
-  const {
-    day_of_birth,
-    month_of_birth,
-    year_of_birth,
-    emails,
-    phones,
-  } = form.getFieldsValue();
+  const { day_of_birth, month_of_birth, year_of_birth, emails, phones } =
+    form.getFieldsValue();
 
   const onFinish = values => {
     console.log("values", values);
-    console.log('fieldValues', fieldValues);
 
-    if (fieldValues.addresses) fieldValues.addresses = form.getFieldsValue().addresses.map(item => {
-      if (isEmpty(item.city)) delete item.city
-      if (isEmpty(item.district)) delete item.district
-      return item
-    })
+    if (fieldValues.addresses)
+      fieldValues.addresses = form.getFieldsValue().addresses.map(item => {
+        if (item.city && isEmpty(item.city)) delete item.city;
+        if (item.district && isEmpty(item.district)) delete item.district;
+        return item;
+      });
 
     if (fieldValues.nationality)
       fieldValues.nationality = get_array_obj_key_label_from_array_key(
@@ -164,6 +159,9 @@ const DetailCandidate = () => {
         );
     }
 
+    if (fieldValues.highest_education)
+      fieldValues.highest_education = form.getFieldsValue().highest_education;
+
     dispatch(
       fetchEditDetailCandidate({
         id: detailData.id,
@@ -179,11 +177,6 @@ const DetailCandidate = () => {
 
   const onValuesChange = (changedValues, allValues) => {
     setFieldValues(prevState => ({ ...prevState, ...changedValues }));
-    console.log("changedValues---", changedValues);
-   
-
-    console.log(form.getFieldsValue());
-    console.log("allValues", allValues);
   };
 
   const onChangeBirthDay = () => {
@@ -208,40 +201,47 @@ const DetailCandidate = () => {
     );
   };
 
-
-  const onChangeCountry = (_,option, key) => {
-    const addresses = form.getFieldValue("addresses")
-    addresses[key].country = getPropertyKeyLabelObj(option)
-    addresses[key].city = {};
-    addresses[key].district= {};
+  const onChangeEducation = (_, option) => {
+    form.setFieldsValue({
+      highest_education: getPropertyKeyLabelObj(option),
+    });
   };
 
-  const onChangeCity = (_,option, key) => {
-    const addresses = form.getFieldValue("addresses")
-    addresses[key].city = getPropertyKeyLabelObj(option)
-    addresses[key].district= {};
+  const onChangeCountry = (_, option, key) => {
+    const addresses = form.getFieldValue("addresses");
+    addresses[key].country = getPropertyKeyLabelObj(option);
+    addresses[key].city = {};
+    addresses[key].district = {};
+  };
+
+  const onChangeCity = (_, option, key) => {
+    const addresses = form.getFieldValue("addresses");
+    addresses[key].city = getPropertyKeyLabelObj(option);
+    addresses[key].district = {};
   };
 
   const onChangeDistrict = (_, option, key) => {
-    const addresses = form.getFieldValue("addresses")
-    console.log(option);
-    addresses[key].district = getPropertyKeyLabelObj(option)
+    const addresses = form.getFieldValue("addresses");
+    addresses[key].district = getPropertyKeyLabelObj(option);
   };
 
-  const onDropdownCity = (key) => {
-    const addresses = form.getFieldValue("addresses")
-    dispatch(fetchCities({
-      parent_id: addresses[key].country.key
-    }))
-  } 
+  const onDropdownCity = key => {
+    const addresses = form.getFieldValue("addresses");
+    dispatch(
+      fetchCities({
+        parent_id: +addresses[key].country.key,
+      })
+    );
+  };
 
-  const onDropdownDistrict = (key) => {
-    const addresses = form.getFieldValue("addresses")
-    dispatch(fetchDistricts({
-      parent_id: addresses[key].city.key
-    }))
-  } 
-
+  const onDropdownDistrict = key => {
+    const addresses = form.getFieldValue("addresses");
+    dispatch(
+      fetchDistricts({
+        parent_id: addresses[key].city.key,
+      })
+    );
+  };
 
   const onAddNationality = () => {
     dispatch(postNationality(nationalitySearch));
@@ -767,8 +767,12 @@ const DetailCandidate = () => {
                                               style={{
                                                 width: "100%",
                                               }}
-                                              onChange={(value,option) =>
-                                                onChangeCountry(value, option, key)
+                                              onChange={(value, option) =>
+                                                onChangeCountry(
+                                                  value,
+                                                  option,
+                                                  key
+                                                )
                                               }
                                             >
                                               {countries.map(country => (
@@ -793,8 +797,12 @@ const DetailCandidate = () => {
                                               placeholder="City"
                                               allowClear
                                               showSearch
-                                              onDropdownVisibleChange={()=> onDropdownCity(key)}
-                                              onChange={(value, option) => onChangeCity(value, option, key)}
+                                              onDropdownVisibleChange={() =>
+                                                onDropdownCity(key)
+                                              }
+                                              onChange={(value, option) =>
+                                                onChangeCity(value, option, key)
+                                              }
                                               optionFilterProp="label"
                                               style={{
                                                 width: "100%",
@@ -820,8 +828,16 @@ const DetailCandidate = () => {
                                           >
                                             <Select
                                               placeholder="District"
-                                              onDropdownVisibleChange={()=> onDropdownDistrict(key)}
-                                                onChange={(value, option) => onChangeDistrict(value, option,key)}
+                                              onDropdownVisibleChange={() =>
+                                                onDropdownDistrict(key)
+                                              }
+                                              onChange={(value, option) =>
+                                                onChangeDistrict(
+                                                  value,
+                                                  option,
+                                                  key
+                                                )
+                                              }
                                               allowClear
                                               showSearch
                                               optionFilterProp="label"
@@ -966,6 +982,7 @@ const DetailCandidate = () => {
                           style={{
                             width: "100%",
                           }}
+                          onChange={onChangeEducation}
                         >
                           {degrees.map(({ key, label }) => (
                             <Option key={key} value={+key} label={label}>
