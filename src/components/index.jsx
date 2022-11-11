@@ -6,6 +6,7 @@ import FilterDropdownSelect from "./table/filter-dropdown-select";
 import FilterDropdown2Select from "./table/filter-dropdown-2-select";
 import FilterDropdown3Select from "./table/filter-dropdown-3-select";
 import FilterDropdownRange from "./table/filter-dropdown-range";
+import IndustryDetailCandidate from "./table/industry-detail-candidate";
 
 import FormTextInput from "./form/form-text-input";
 
@@ -28,6 +29,7 @@ export {
   FilterDropdown2Select,
   FilterDropdown3Select,
   FilterDropdownRange,
+  IndustryDetailCandidate,
   FormTextInput,
   ClearAllFilter,
   CustomColumn,

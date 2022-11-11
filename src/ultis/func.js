@@ -133,3 +133,13 @@ export const get_obj_key_label_from_key = (options, key) =>
 
 export const get_array_obj_key_label_from_array_key = (options, key_arr) =>
   key_arr.map(key => get_obj_key_label_from_key(options, key));
+
+export const get_params_payload_id_from_industry_form_arr = arr =>
+  arr.map(item =>
+    deleteKeyNull({
+      industry_id: item.industry ? item.industry.id : null,
+      sector_id: item.sector ? item.sector.id : null,
+      category_id: item.category ? item.category.id : null,
+      primary: item?.primary,
+    })
+  );

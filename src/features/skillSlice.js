@@ -52,9 +52,8 @@ export const skillSlice = createSlice({
     [putSoftSkillDetailCandidate.pending.type]: state => {
       state.loading = true;
     },
-    [putSoftSkillDetailCandidate.fulfilled.type]: (state, { payload }) => {
+    [putSoftSkillDetailCandidate.fulfilled.type]: state => {
       state.loading = false;
-      state.detailData = payload;
       toast.success("Successfully updated", {
         position: "top-right",
       });

@@ -29,6 +29,16 @@ export const fetchEditDetailCandidate = createAsyncThunk(
   async ({ id, params }) => await putDetailCandidate(id, params)
 );
 
+export const putLanguageDetailCandidate = createAsyncThunk(
+  "candidates/putLanguageDetailCandidate",
+  async ({ id, params }) => await putDetailCandidate(id, params)
+);
+
+export const putIndustryDetailCandidate = createAsyncThunk(
+  "candidates/putIndustryDetailCandidate",
+  async ({ id, params }) => await putDetailCandidate(id, params)
+);
+
 export const fetchPostCandidate = createAsyncThunk(
   "candidates/fetchPostCandidate",
   postCandidate
@@ -38,6 +48,7 @@ export const candidatesSlice = createSlice({
   name: "candidates",
   initialState: {
     loading: false,
+    isDetailLoading: false,
     count: 0,
     data: [],
     detailData: undefined,
@@ -62,7 +73,7 @@ export const candidatesSlice = createSlice({
       state.loading = false;
     },
     // Put Detail Candidate
-    [fetchEditDetailCandidate.pending.type]: state => {
+    [putLanguageDetailCandidate.pending.type]: state => {
       state.loading = true;
     },
     [fetchEditDetailCandidate.fulfilled.type]: (state, { payload }) => {
@@ -92,6 +103,41 @@ export const candidatesSlice = createSlice({
     [fetchPostCandidate.rejected.type]: state => {
       state.loading = false;
       toast.error("Create error", {
+        position: "top-right",
+      });
+    },
+    // Put Language
+    [putLanguageDetailCandidate.pending.type]: state => {
+      state.isDetailLoading = true;
+    },
+    [putLanguageDetailCandidate.fulfilled.type]: (state, { payload }) => {
+      state.isDetailLoading = false;
+      state.detailData.languages = payload.languages;
+      toast.success("Successfully updated", {
+        position: "top-right",
+      });
+    },
+    [putLanguageDetailCandidate.rejected.type]: state => {
+      state.isDetailLoading = false;
+      toast.error("Duplicated languages value", {
+        position: "top-right",
+      });
+    },
+
+    // Put Industry
+    [putIndustryDetailCandidate.pending.type]: state => {
+      state.isDetailLoading = true;
+    },
+    [putIndustryDetailCandidate.fulfilled.type]: (state, { payload }) => {
+      state.isDetailLoading = false;
+      state.detailData.business_line = payload.business_line;
+      toast.success("Successfully updated", {
+        position: "top-right",
+      });
+    },
+    [putIndustryDetailCandidate.rejected.type]: state => {
+      state.isDetailLoading = false;
+      toast.error("Duplicated Industry Value", {
         position: "top-right",
       });
     },

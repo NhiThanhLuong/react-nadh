@@ -586,62 +586,57 @@ const AddCandidate = () => {
             <Col span={22}>
               <Item label="Mobile Phone" required>
                 <Form.List name="phones" required>
-                  {(fields, { add, remove }) => {
-                    //   console.log(fields);
-                    return (
-                      <div>
-                        {fields.map(({ key, name, ...restField }) => (
-                          <Row
-                            key={key}
-                            align="middle"
-                            style={{ marginBottom: 16 }}
-                          >
-                            <Col span={20}>
-                              <Form.Item
-                                {...restField}
-                                name={[name, "number"]}
-                                style={{ margin: 0 }}
-                                rules={[
-                                  ...validator("number"),
-                                  {
-                                    required: true,
-                                    message: "Please input mobile phone!",
-                                  },
-                                ]}
-                              >
-                                <Input
-                                  placeholder="ex: 0981345782"
-                                  style={{
-                                    width: "65%",
-                                  }}
-                                />
-                              </Form.Item>
-                            </Col>
-                            {fields.length > 1 ? (
-                              <FaMinusCircleRemove
-                                onClick={() => remove(name)}
-                              />
-                            ) : null}
-                          </Row>
-                        ))}
-                        <Button
-                          type="primary"
-                          ghost
-                          size="small"
-                          icon={<PlusOutlined />}
-                          onClick={() => add()}
-                          style={{
-                            width: "50%",
-                            height: 30,
-                            marginLeft: "30%",
-                            marginRight: "20%",
-                          }}
+                  {(fields, { add, remove }) => (
+                    <div>
+                      {fields.map(({ key, name, ...restField }) => (
+                        <Row
+                          key={key}
+                          align="middle"
+                          style={{ marginBottom: 16 }}
                         >
-                          Add Phone
-                        </Button>
-                      </div>
-                    );
-                  }}
+                          <Col span={20}>
+                            <Form.Item
+                              {...restField}
+                              name={[name, "number"]}
+                              style={{ margin: 0 }}
+                              rules={[
+                                ...validator("number"),
+                                {
+                                  required: true,
+                                  message: "Please input mobile phone!",
+                                },
+                              ]}
+                            >
+                              <Input
+                                placeholder="ex: 0981345782"
+                                style={{
+                                  width: "65%",
+                                }}
+                              />
+                            </Form.Item>
+                          </Col>
+                          {fields.length > 1 ? (
+                            <FaMinusCircleRemove onClick={() => remove(name)} />
+                          ) : null}
+                        </Row>
+                      ))}
+                      <Button
+                        type="primary"
+                        ghost
+                        size="small"
+                        icon={<PlusOutlined />}
+                        onClick={() => add()}
+                        style={{
+                          width: "50%",
+                          height: 30,
+                          marginLeft: "30%",
+                          marginRight: "20%",
+                        }}
+                      >
+                        Add Phone
+                      </Button>
+                    </div>
+                  )}
                 </Form.List>
               </Item>
             </Col>
@@ -651,153 +646,150 @@ const AddCandidate = () => {
             <Col span={24}>
               <Item label="Address">
                 <Form.List name="addresses">
-                  {(fields, { add, remove }) => {
-                    //   console.log(fields);
-                    return (
-                      <div>
-                        {fields.map(({ key, name, ...restField }) => (
-                          <Row
-                            key={key}
-                            align="middle"
-                            style={{ marginBottom: 16 }}
-                          >
-                            <Col span={22}>
-                              <Row gutter={(16, 16)}>
-                                <Col span={8}>
-                                  <Form.Item
-                                    {...restField}
-                                    name={[name, "country"]}
-                                    style={{ margin: 0 }}
-                                  >
-                                    <Select
-                                      placeholder="Country"
-                                      allowClear
-                                      showSearch
-                                      optionFilterProp="label"
-                                      style={{
-                                        width: "100%",
-                                      }}
-                                      onChange={(value, option) =>
-                                        onChangeCountry(value, option, key)
-                                      }
-                                    >
-                                      {countries.map(country => (
-                                        <Option
-                                          key={country.key}
-                                          value={country.key}
-                                          label={country.label}
-                                        >
-                                          {country.label}
-                                        </Option>
-                                      ))}
-                                    </Select>
-                                  </Form.Item>
-                                </Col>
-                                <Col span={8}>
-                                  <Form.Item
-                                    {...restField}
-                                    name={[name, "city"]}
-                                    style={{ margin: 0 }}
-                                  >
-                                    <Select
-                                      placeholder="City"
-                                      allowClear
-                                      showSearch
-                                      onDropdownVisibleChange={() =>
-                                        onDropdownCity(key)
-                                      }
-                                      onChange={(value, option) =>
-                                        onChangeCity(value, option, key)
-                                      }
-                                      optionFilterProp="label"
-                                      style={{
-                                        width: "100%",
-                                      }}
-                                    >
-                                      {cities.map(city => (
-                                        <Option
-                                          key={city.key}
-                                          value={city.key}
-                                          label={city.label}
-                                        >
-                                          {city.label}
-                                        </Option>
-                                      ))}
-                                    </Select>
-                                  </Form.Item>
-                                </Col>
-                                <Col span={8}>
-                                  <Form.Item
-                                    {...restField}
-                                    name={[name, "district"]}
-                                    style={{ margin: 0 }}
-                                  >
-                                    <Select
-                                      placeholder="District"
-                                      onDropdownVisibleChange={() =>
-                                        onDropdownDistrict(key)
-                                      }
-                                      onChange={(value, option) =>
-                                        onChangeDistrict(value, option, key)
-                                      }
-                                      allowClear
-                                      showSearch
-                                      optionFilterProp="label"
-                                      style={{
-                                        width: "100%",
-                                      }}
-                                    >
-                                      {districts.map(district => (
-                                        <Option
-                                          key={district.key}
-                                          value={district.key}
-                                          label={district.label}
-                                        >
-                                          {district.label}
-                                        </Option>
-                                      ))}
-                                    </Select>
-                                  </Form.Item>
-                                </Col>
-                              </Row>
-                              <Row style={{ marginTop: 8 }}>
-                                <Col span={24}>
-                                  <Form.Item
-                                    {...restField}
-                                    name={[name, "address"]}
-                                    style={{ margin: 0 }}
-                                  >
-                                    <Input placeholder="ex: 2 Hai Trieu, Bitexco Financial Tower" />
-                                  </Form.Item>
-                                </Col>
-                              </Row>
-                            </Col>
-                            <FaMinusCircleRemove
-                              style={{
-                                marginLeft: 16,
-                              }}
-                              onClick={() => remove(name)}
-                            />
-                          </Row>
-                        ))}
-                        <Button
-                          type="primary"
-                          ghost
-                          size="small"
-                          icon={<PlusOutlined />}
-                          onClick={() => add()}
-                          style={{
-                            width: "50%",
-                            height: 30,
-                            marginLeft: "30%",
-                            marginRight: "20%",
-                          }}
+                  {(fields, { add, remove }) => (
+                    <div>
+                      {fields.map(({ key, name, ...restField }) => (
+                        <Row
+                          key={key}
+                          align="middle"
+                          style={{ marginBottom: 16 }}
                         >
-                          Add Address
-                        </Button>
-                      </div>
-                    );
-                  }}
+                          <Col span={22}>
+                            <Row gutter={(16, 16)}>
+                              <Col span={8}>
+                                <Form.Item
+                                  {...restField}
+                                  name={[name, "country"]}
+                                  style={{ margin: 0 }}
+                                >
+                                  <Select
+                                    placeholder="Country"
+                                    allowClear
+                                    showSearch
+                                    optionFilterProp="label"
+                                    style={{
+                                      width: "100%",
+                                    }}
+                                    onChange={(value, option) =>
+                                      onChangeCountry(value, option, key)
+                                    }
+                                  >
+                                    {countries.map(country => (
+                                      <Option
+                                        key={country.key}
+                                        value={country.key}
+                                        label={country.label}
+                                      >
+                                        {country.label}
+                                      </Option>
+                                    ))}
+                                  </Select>
+                                </Form.Item>
+                              </Col>
+                              <Col span={8}>
+                                <Form.Item
+                                  {...restField}
+                                  name={[name, "city"]}
+                                  style={{ margin: 0 }}
+                                >
+                                  <Select
+                                    placeholder="City"
+                                    allowClear
+                                    showSearch
+                                    onDropdownVisibleChange={() =>
+                                      onDropdownCity(key)
+                                    }
+                                    onChange={(value, option) =>
+                                      onChangeCity(value, option, key)
+                                    }
+                                    optionFilterProp="label"
+                                    style={{
+                                      width: "100%",
+                                    }}
+                                  >
+                                    {cities.map(city => (
+                                      <Option
+                                        key={city.key}
+                                        value={city.key}
+                                        label={city.label}
+                                      >
+                                        {city.label}
+                                      </Option>
+                                    ))}
+                                  </Select>
+                                </Form.Item>
+                              </Col>
+                              <Col span={8}>
+                                <Form.Item
+                                  {...restField}
+                                  name={[name, "district"]}
+                                  style={{ margin: 0 }}
+                                >
+                                  <Select
+                                    placeholder="District"
+                                    onDropdownVisibleChange={() =>
+                                      onDropdownDistrict(key)
+                                    }
+                                    onChange={(value, option) =>
+                                      onChangeDistrict(value, option, key)
+                                    }
+                                    allowClear
+                                    showSearch
+                                    optionFilterProp="label"
+                                    style={{
+                                      width: "100%",
+                                    }}
+                                  >
+                                    {districts.map(district => (
+                                      <Option
+                                        key={district.key}
+                                        value={district.key}
+                                        label={district.label}
+                                      >
+                                        {district.label}
+                                      </Option>
+                                    ))}
+                                  </Select>
+                                </Form.Item>
+                              </Col>
+                            </Row>
+                            <Row style={{ marginTop: 8 }}>
+                              <Col span={24}>
+                                <Form.Item
+                                  {...restField}
+                                  name={[name, "address"]}
+                                  style={{ margin: 0 }}
+                                >
+                                  <Input placeholder="ex: 2 Hai Trieu, Bitexco Financial Tower" />
+                                </Form.Item>
+                              </Col>
+                            </Row>
+                          </Col>
+                          <FaMinusCircleRemove
+                            style={{
+                              marginLeft: 16,
+                            }}
+                            onClick={() => remove(name)}
+                          />
+                        </Row>
+                      ))}
+                      <Button
+                        type="primary"
+                        ghost
+                        size="small"
+                        icon={<PlusOutlined />}
+                        onClick={() => add()}
+                        style={{
+                          width: "50%",
+                          height: 30,
+                          marginLeft: "30%",
+                          marginRight: "20%",
+                        }}
+                      >
+                        Add Address
+                      </Button>
+                    </div>
+                  )}
                 </Form.List>
               </Item>
             </Col>
