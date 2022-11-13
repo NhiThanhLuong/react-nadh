@@ -1,5 +1,6 @@
 import CustomSearch from "./table/custom-search";
 import CustomSearchYearRange from "./table/custom-search-year-range";
+import AcademicCandidate from "./table/academic-candidate";
 import CustomSearch3Select from "./table/custom-search-3-select";
 import FilterDropdownText from "./table/filter-dropdown-text";
 import FilterDropdownSelect from "./table/filter-dropdown-select";
@@ -8,6 +9,8 @@ import FilterDropdown3Select from "./table/filter-dropdown-3-select";
 import FilterDropdownRange from "./table/filter-dropdown-range";
 import IndustryDetailCandidate from "./table/industry-detail-candidate";
 
+import FormAddEducation from "./form/form-add-education";
+import FormSelect from "./form/form-select";
 import FormTextInput from "./form/form-text-input";
 
 import ClearAllFilter from "./button/clear-all-filter";
@@ -23,6 +26,7 @@ export {
   CustomSearch,
   FilterTags,
   CustomSearchYearRange,
+  AcademicCandidate,
   CustomSearch3Select,
   FilterDropdownText,
   FilterDropdownSelect,
@@ -30,6 +34,8 @@ export {
   FilterDropdown3Select,
   FilterDropdownRange,
   IndustryDetailCandidate,
+  FormAddEducation,
+  FormSelect,
   FormTextInput,
   ClearAllFilter,
   CustomColumn,

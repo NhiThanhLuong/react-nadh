@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { DeleteOutlined } from "@ant-design/icons";
 import { Table, Checkbox } from "antd";
 
-const IndustryDetailCandidate = ({ dataSource, onDeleteItem, onChecked }) => {
+const IndustryDetailCandidate = ({ dataSource, onDeleteItem, onChecked,...props }) => {
   const columns = useMemo(
     () => [
       {
@@ -46,7 +46,7 @@ const IndustryDetailCandidate = ({ dataSource, onDeleteItem, onChecked }) => {
     []
   );
 
-  return <Table columns={columns} dataSource={dataSource} />;
+  return <Table columns={columns} dataSource={dataSource} {...props} />;
 };
 
 IndustryDetailCandidate.propTypes = {};

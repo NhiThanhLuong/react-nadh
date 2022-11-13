@@ -25,7 +25,12 @@ export const fetchDetailCandidate = createAsyncThunk(
 );
 
 export const fetchEditDetailCandidate = createAsyncThunk(
-  "candidates/putDetailCandidate",
+  "candidates/fetchEditDetailCandidate",
+  async ({ id, params }) => await putDetailCandidate(id, params)
+);
+
+export const putEditDetailCandidateNotLoading = createAsyncThunk(
+  "candidates/putEditDetailCandidateNotLoading",
   async ({ id, params }) => await putDetailCandidate(id, params)
 );
 
@@ -52,8 +57,14 @@ export const candidatesSlice = createSlice({
     count: 0,
     data: [],
     detailData: undefined,
+    history: {},
   },
-  reducers: {},
+  reducers: {
+    getHistory: (state, { payload: id }) => {
+      state.history = state.detailData.histories.find(item => item.id === id);
+      return state;
+    },
+  },
   extraReducers: {
     // Get Candidates
     [fetchCandidates.pending.type]: state => {
@@ -89,6 +100,24 @@ export const candidatesSlice = createSlice({
         position: "top-right",
       });
     },
+    // Put Detail Candidate not loading
+    // [putEditDetailCandidateNotLoading.pending.type]: state => {
+    //   state.loading = true;
+    // },
+    [putEditDetailCandidateNotLoading.fulfilled.type]: (state, { payload }) => {
+      // state.loading = false;
+      state.detailData = payload;
+      toast.success("Successfully updated", {
+        position: "top-right",
+      });
+    },
+    [putEditDetailCandidateNotLoading.rejected.type]: () => {
+      // state.loading = false;
+      toast.error("Update error", {
+        position: "top-right",
+      });
+    },
+
     // Post Candidate
     [fetchPostCandidate.pending.type]: state => {
       state.loading = true;
@@ -145,4 +174,5 @@ export const candidatesSlice = createSlice({
 });
 
 const { reducer } = candidatesSlice;
+export const { getHistory } = candidatesSlice.actions;
 export default reducer;

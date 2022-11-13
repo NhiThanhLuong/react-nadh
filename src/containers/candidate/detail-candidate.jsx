@@ -23,6 +23,7 @@ import styled from "styled-components";
 import {
   fetchDetailCandidate,
   fetchEditDetailCandidate,
+  putEditDetailCandidateNotLoading,
   putIndustryDetailCandidate,
   putLanguageDetailCandidate,
 } from "features/candidatesSlice";
@@ -60,15 +61,21 @@ import {
   fetchSoftSkills,
   putSoftSkillDetailCandidate,
 } from "features/skillSlice";
-import { FormTextInput, IndustryDetailCandidate } from "components";
+import {
+  AcademicCandidate,
+  FormSelect,
+  FormTextInput,
+  IndustryDetailCandidate,
+} from "components";
 import { fetchLanguages } from "features/languageSlice";
 import {
   fetchCategory,
   fetchIndustries,
   fetchSectors,
 } from "features/categorySlice";
+import { AddSelect, Item } from "styles/styled";
 
-const { Item } = Form;
+// const { Item  } = Form;
 const { Option } = Select;
 const { TreeNode } = TreeSelect;
 
@@ -104,6 +111,11 @@ const DetailCandidate = () => {
     language: { languages, loading: loadingLanguage },
     category: { industries, sectors, categories },
   } = useSelector(state => state);
+
+  console.log(
+    "global",
+    detailData?.business_line.map(({ primary }) => primary)
+  );
 
   const isHiddenCancelSave = () => {
     if (isEmpty(fieldValues)) return true;
@@ -289,11 +301,15 @@ const DetailCandidate = () => {
   };
 
   const onAddNationality = () => {
-    dispatch(postNationality(nationalitySearch));
+    dispatch(
+      postNationality(nationalitySearch)
+    );
   };
 
   const onAddPosition = () => {
-    dispatch(postPosition(positionSearch));
+    dispatch(
+      postPosition(positionSearch)
+    );
   };
 
   const onChangeSoftSkill = value => {
@@ -420,6 +436,10 @@ const DetailCandidate = () => {
   };
 
   const onCheckedPrimaryIndustry = (text, __, index) => {
+    console.log(
+      "scope",
+      detailData.business_line.map(({ primary }) => primary)
+    );
     const newBusinessLine = detailData.business_line.map((item, id) => {
       if (id === index)
         return {
@@ -429,7 +449,7 @@ const DetailCandidate = () => {
       return item;
     });
     dispatch(
-      putIndustryDetailCandidate({
+      putEditDetailCandidateNotLoading({
         id: detailData.id,
         params: {
           business_line:
@@ -574,7 +594,7 @@ const DetailCandidate = () => {
                     />
                   </Col>
                   <Col span={12}>
-                    <Item name="priority_status" label="Primary status">
+                    {/* <Item name="priority_status" label="Primary status">
                       <Select
                         showSearch
                         optionFilterProp="label"
@@ -588,7 +608,13 @@ const DetailCandidate = () => {
                           </Option>
                         ))}
                       </Select>
-                    </Item>
+                    </Item> */}
+                    <FormSelect
+                      name="priority_status"
+                      label="Primary status"
+                      optionFilterProp="label"
+                      options={candidate_priority_status}
+                    />
                   </Col>
                 </Row>
                 {/* Birthday */}
@@ -749,7 +775,7 @@ const DetailCandidate = () => {
                 {/* Ready to move */}
                 <Row gutter={(16, 16)}>
                   <Col span={12}>
-                    <Item name="relocating_willingness" label="Ready to move">
+                    {/* <Item name="relocating_willingness" label="Ready to move">
                       <Select
                         allowClear
                         showSearch
@@ -764,7 +790,14 @@ const DetailCandidate = () => {
                           </Option>
                         ))}
                       </Select>
-                    </Item>
+                    </Item> */}
+                    <FormSelect
+                      name="relocating_willingness"
+                      label="Ready to move"
+                      allowClear
+                      optionFilterProp="label"
+                      options={RELOCATING_WILLINGNESS}
+                    />
                   </Col>
                   <Col span={12}>
                     <FormTextInput
@@ -1073,7 +1106,7 @@ const DetailCandidate = () => {
                         placeholder="Select or add your nationality"
                         allowClear
                         showSearch
-                        optionFilterProp="label"
+                        filterOption={false}
                         style={{
                           width: "100%",
                         }}
@@ -1315,11 +1348,7 @@ const DetailCandidate = () => {
                 {/* Industry */}
                 <Row gutter={(16, 16)} style={{ marginBottom: 16 }}>
                   <Col span={24}>
-                    <Item
-                      name="business_line"
-                      label="Industry"
-                      style={{ margin: 0 }}
-                    >
+                    <Item label="Industry" style={{ margin: 0 }}>
                       <Row gutter={(16, 16)}>
                         <Col span={8}>
                           <Item name="industry_id" style={{ margin: 0 }}>
@@ -1402,6 +1431,16 @@ const DetailCandidate = () => {
                     </Button>
                   </Row>
                 )}
+                <Button
+                  onClick={() =>
+                    console.log(
+                      "test",
+                      detailData.business_line.map(({ primary }) => primary)
+                    )
+                  }
+                >
+                  Test check primary
+                </Button>
                 {!isDetailLoading && (
                   <IndustryDetailCandidate
                     dataSource={detailData.business_line}
@@ -1409,6 +1448,30 @@ const DetailCandidate = () => {
                     onChecked={onCheckedPrimaryIndustry}
                   />
                 )}
+              </Card>
+              {/* Education */}
+              <Card
+                title={<span style={{ color: "#465f7b" }}>Education</span>}
+                style={{ marginBottom: 16 }}
+              >
+                <Row gutter={(16, 16)}>
+                  {/* Academic */}
+                  <Col span={24} style={{ marginBottom: 8 }}>
+                    <Row align="middle" justify="space-between">
+                      <span style={{ fontWeight: 500 }}>ACADEMIC</span>
+                      <Button
+                        type="primary"
+                        ghost
+                        onClick={() => setIsChange(!isChange)}
+                      >
+                        Add Education
+                      </Button>
+                    </Row>
+                  </Col>
+                  <Col span={24}>
+                    <AcademicCandidate dataSource={detailData.histories} />
+                  </Col>
+                </Row>
               </Card>
               {/* Cancel & Save */}
               {isHiddenCancelSave() ? null : (
@@ -1434,11 +1497,6 @@ DetailCandidate.propTypes = {};
 const FaMinusCircleRemove = styled(FaMinusCircle)`
   cursor: pointer;
   color: red;
-`;
-
-const AddSelect = styled.div`
-  padding: 4px 8px;
-  cursor: pointer;
 `;
 
 const RowSubmit = styled(Row)`

@@ -31,18 +31,8 @@ export const getPropertyValues = async params => {
   return await axiosClient.get("/api/property_values", params);
 };
 
-export const postPropertyNationality = async value => {
-  return await axiosClient.post(`/api/property_values`, {
-    name: "nationality",
-    value,
-  });
-};
-
-export const postPropertyPosition = async value => {
-  return await axiosClient.post(`/api/property_values`, {
-    name: "position",
-    value,
-  });
+export const postPropertyValues = async params => {
+  return await axiosClient.post(`/api/property_values`, params);
 };
 
 export const getDetailCandidate = async id => {
@@ -52,3 +42,7 @@ export const getDetailCandidate = async id => {
 export const putDetailCandidate = async (id, params) => {
   return await axiosClient.put(`/api/candidates/${id}`, params);
 };
+
+// Delete
+export const deleteCandidateHistories = async id =>
+  await axiosClient.delete(`/api/candidate_histories/${id}`);

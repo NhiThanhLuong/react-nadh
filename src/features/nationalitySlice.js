@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getPropertyValues, postPropertyNationality } from "ultis/api";
+import { getPropertyValues, postPropertyValues } from "ultis/api";
 import { getPropertyKeyLabel } from "ultis/func";
 import { toast } from "react-toastify";
 
@@ -16,7 +16,11 @@ export const fetchNationality = createAsyncThunk(
 
 export const postNationality = createAsyncThunk(
   "nationality/postNationality",
-  postPropertyNationality
+  async value =>
+    await postPropertyValues({
+      value,
+      name: "nationality",
+    })
 );
 
 export const nationalitySlice = createSlice({

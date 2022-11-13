@@ -9,6 +9,9 @@ import nationalityReducer from "features/nationalitySlice";
 import positionReducer from "features/positionSlice";
 import degreeReducer from "features/degreeSlice";
 import skillReducer from "features/skillSlice";
+import schoolReducer from "features/schoolSlice";
+import majorReducer from "features/majorSlice";
+import modalReducer from "features/modalSlice";
 
 export const store = configureStore({
   reducer: {
@@ -22,5 +25,8 @@ export const store = configureStore({
     position: positionReducer,
     degree: degreeReducer,
     skill: skillReducer,
+    school: schoolReducer,
+    major: majorReducer,
+    modal: modalReducer,
   },
 });

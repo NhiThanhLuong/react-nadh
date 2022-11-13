@@ -97,8 +97,6 @@ const Candidates = () => {
     );
   }, []);
 
-  console.log("count", count);
-
   useEffect(() => {
     const newParamsRouter = { ...paramsRouter };
     delete newParamsRouter.industry;

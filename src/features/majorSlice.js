@@ -1,61 +1,61 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 import { getPropertyValues, postPropertyValues } from "ultis/api";
 import { getPropertyKeyLabel } from "ultis/func";
-import { toast } from "react-toastify";
 
-export const fetchPosition = createAsyncThunk(
-  "position/fetchPosition",
+export const fetchMajors = createAsyncThunk(
+  "major/fetchMajors",
   async params =>
     await getPropertyValues({
       params: {
         ...params,
-        property_name: "position",
+        property_name: "major",
       },
     })
 );
 
-export const postPosition = createAsyncThunk(
-  "position/postPosition",
+export const postMajor = createAsyncThunk(
+  "major/postMajor",
   async value =>
     await postPropertyValues({
       value,
-      name: "position",
+      name: "major",
     })
 );
 
-export const positionSlice = createSlice({
-  name: "position",
+export const majorSlice = createSlice({
+  name: "major",
   initialState: {
     loading: false,
-    positions: [],
+    majors: [],
   },
   reducers: {},
   extraReducers: {
-    [fetchPosition.pending.type]: state => {
+    [fetchMajors.pending.type]: state => {
       state.loading = true;
     },
-    [fetchPosition.fulfilled.type]: (state, { payload }) => {
+    [fetchMajors.fulfilled.type]: (state, { payload }) => {
       state.loading = false;
-      state.positions = getPropertyKeyLabel(payload.data);
+      state.majors = getPropertyKeyLabel(payload.data);
     },
 
-    [postPosition.pending.type]: state => {
+    [postMajor.pending.type]: state => {
       state.loading = true;
     },
-    [postPosition.fulfilled.type]: state => {
+    [postMajor.fulfilled.type]: state => {
       state.loading = false;
       toast.success("Successfully Creates", {
         position: "top-right",
       });
     },
-    [postPosition.rejected.type]: state => {
+    [postMajor.rejected.type]: state => {
       state.loading = false;
-      toast.error("Duplicated position value", {
+      toast.error("Duplicated major value", {
         position: "top-right",
       });
     },
   },
 });
 
-const { reducer } = positionSlice;
+const { reducer } = majorSlice;
 export default reducer;

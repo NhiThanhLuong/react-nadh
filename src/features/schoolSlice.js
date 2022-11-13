@@ -1,61 +1,61 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 import { getPropertyValues, postPropertyValues } from "ultis/api";
 import { getPropertyKeyLabel } from "ultis/func";
-import { toast } from "react-toastify";
 
-export const fetchPosition = createAsyncThunk(
-  "position/fetchPosition",
+export const fetchSchools = createAsyncThunk(
+  "school/fetchSchools",
   async params =>
     await getPropertyValues({
       params: {
         ...params,
-        property_name: "position",
+        property_name: "school",
       },
     })
 );
 
-export const postPosition = createAsyncThunk(
-  "position/postPosition",
+export const postSchool = createAsyncThunk(
+  "school/postSchool",
   async value =>
     await postPropertyValues({
       value,
-      name: "position",
+      name: "school",
     })
 );
 
-export const positionSlice = createSlice({
-  name: "position",
+export const schoolSlice = createSlice({
+  name: "school",
   initialState: {
     loading: false,
-    positions: [],
+    schools: [],
   },
   reducers: {},
   extraReducers: {
-    [fetchPosition.pending.type]: state => {
+    [fetchSchools.pending.type]: state => {
       state.loading = true;
     },
-    [fetchPosition.fulfilled.type]: (state, { payload }) => {
+    [fetchSchools.fulfilled.type]: (state, { payload }) => {
       state.loading = false;
-      state.positions = getPropertyKeyLabel(payload.data);
+      state.schools = getPropertyKeyLabel(payload.data);
     },
 
-    [postPosition.pending.type]: state => {
+    [postSchool.pending.type]: state => {
       state.loading = true;
     },
-    [postPosition.fulfilled.type]: state => {
+    [postSchool.fulfilled.type]: state => {
       state.loading = false;
       toast.success("Successfully Creates", {
         position: "top-right",
       });
     },
-    [postPosition.rejected.type]: state => {
+    [postSchool.rejected.type]: state => {
       state.loading = false;
-      toast.error("Duplicated position value", {
+      toast.error("Duplicated school value", {
         position: "top-right",
       });
     },
   },
 });
 
-const { reducer } = positionSlice;
+const { reducer } = schoolSlice;
 export default reducer;

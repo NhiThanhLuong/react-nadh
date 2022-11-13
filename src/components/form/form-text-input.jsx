@@ -1,11 +1,12 @@
 // import PropTypes from 'prop-types'
-import { Form, Input } from "antd";
+import {  Input } from "antd";
+import { Item } from "styles/styled";
 
 const FormTextInput = ({ placeholder, inputClassName, ...props }) => {
   return (
-    <Form.Item {...props}>
+    <Item {...props}>
       <Input placeholder={placeholder} className={inputClassName} />
-    </Form.Item>
+    </Item>
   );
 };
 
