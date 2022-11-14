@@ -1,18 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const initialState = {
+  showModal: false,
+  type_modal: 0,
+};
+
 export const modalSlice = createSlice({
   name: "modal",
-  initialState: {
-    showModal: false,
-  },
+  initialState,
   reducers: {
-    showModal: state => {
+    showModal: (state, { payload: type_modal }) => {
       state.showModal = true;
+      state.type_modal = type_modal;
       return state;
     },
-    hideModal: state => {
-      state.showModal = false;
-      return state;
+    hideModal: () => {
+      return initialState;
     },
   },
 });

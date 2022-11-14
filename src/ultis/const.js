@@ -178,3 +178,8 @@ export const RELOCATING_WILLINGNESS = [
     label: "Available",
   },
 ];
+
+export const TYPE_MODAL = {
+  edit_candidate_history: 1,
+  add_candidate_history: 2,
+};

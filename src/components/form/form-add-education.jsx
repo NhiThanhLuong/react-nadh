@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
-import { Modal, Form, Checkbox, Row, Col } from "antd";
+import { Modal, Form, Checkbox, Row, Col, Button } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Item } from "styles/styled";
@@ -9,6 +8,8 @@ import FormSelect from "./form-select";
 import { fetchSchools, postSchool } from "features/schoolSlice";
 import { fetchMajors, postMajor } from "features/majorSlice";
 import { hideModal } from "features/modalSlice";
+import { deleteHistory } from "features/candidatesSlice";
+import { TYPE_MODAL } from "ultis/const";
 
 const FormAddEducation = () => {
   const dispatch = useDispatch();
@@ -18,7 +19,7 @@ const FormAddEducation = () => {
     school: { schools },
     major: { majors },
     degree: { degrees },
-    modal: { showModal },
+    modal: { showModal, type_modal },
     candidates: { history },
   } = useSelector(state => state);
 
@@ -29,20 +30,26 @@ const FormAddEducation = () => {
     if (showModal) {
       dispatch(fetchSchools());
       dispatch(fetchMajors());
+      console.log("history", history);
       form.setFieldsValue({
         status: history?.status === 1,
         start_year: history?.start_time
           ? formatDate(history?.start_time).year
           : null,
         end_year: history?.end_time ? formatDate(history?.end_time).year : null,
-        organization: history?.organization || {},
-        title: history?.title || {},
-        degree: history?.degree || {},
+        organization: history?.organization || null,
+        title: history?.title || null,
+        degree: history?.degree || null,
       });
     }
   }, [showModal]);
 
   const onCancel = () => {
+    dispatch(hideModal());
+  };
+
+  const onDeleteHistory = () => {
+    dispatch(deleteHistory(history.id));
     dispatch(hideModal());
   };
 
@@ -64,28 +71,35 @@ const FormAddEducation = () => {
     );
   };
 
+  const onFinish = values => {
+    console.log(values);
+  };
+
+  const onSubmit = () => {
+    form.submit();
+  };
+
   return (
     <Modal
       open={showModal}
       centered
-      title="Add Education"
+      title={
+        <Row justify="space-between" align="middle">
+          <span>Add Education</span>
+          {type_modal === TYPE_MODAL.edit_candidate_history && (
+            <Button danger type="primary" onClick={onDeleteHistory}>
+              Delete
+            </Button>
+          )}
+        </Row>
+      }
       width={700}
       closable={false}
       onCancel={onCancel}
+      onOk={onSubmit}
+      okText={type_modal === TYPE_MODAL.edit_candidate_history ? "Save" : "Add"}
     >
-      <Form
-        form={form}
-        layout="vertical"
-        // initialValues={{
-        //   status: history?.status === 1,
-        //   start_year: history?.start_time
-        //     ? formatDate(history?.start_time).year
-        //     : null,
-        //   end_year: history?.end_time
-        //     ? formatDate(history?.end_time).year
-        //     : null,
-        // }}
-      >
+      <Form form={form} layout="vertical" onFinish={onFinish}>
         <Row gutter={16}>
           <Col span={24}>
             <Item name="status" valuePropName="checked">
@@ -117,7 +131,7 @@ const FormAddEducation = () => {
           <Col span={24}>
             <FormSelect
               allowClear
-              name='organization'
+              name="organization"
               label="School"
               placeholder="Select or add school"
               onSearch={onSearchSchool}

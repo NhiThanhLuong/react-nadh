@@ -1,4 +1,3 @@
-// /* eslint-disable no-unused-vars */
 // import PropTypes from 'prop-types'
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -26,6 +25,7 @@ import {
   putEditDetailCandidateNotLoading,
   putIndustryDetailCandidate,
   putLanguageDetailCandidate,
+  resetHistory,
 } from "features/candidatesSlice";
 import {
   fetchCities,
@@ -41,6 +41,7 @@ import {
   GENDERS,
   MARITAL_STATUS,
   RELOCATING_WILLINGNESS,
+  TYPE_MODAL,
 } from "ultis/const";
 import {
   pad2,
@@ -74,6 +75,8 @@ import {
   fetchSectors,
 } from "features/categorySlice";
 import { AddSelect, Item } from "styles/styled";
+import { useCallback } from "react";
+import { showModal } from "features/modalSlice";
 
 // const { Item  } = Form;
 const { Option } = Select;
@@ -111,11 +114,6 @@ const DetailCandidate = () => {
     language: { languages, loading: loadingLanguage },
     category: { industries, sectors, categories },
   } = useSelector(state => state);
-
-  console.log(
-    "global",
-    detailData?.business_line.map(({ primary }) => primary)
-  );
 
   const isHiddenCancelSave = () => {
     if (isEmpty(fieldValues)) return true;
@@ -301,15 +299,11 @@ const DetailCandidate = () => {
   };
 
   const onAddNationality = () => {
-    dispatch(
-      postNationality(nationalitySearch)
-    );
+    dispatch(postNationality(nationalitySearch));
   };
 
   const onAddPosition = () => {
-    dispatch(
-      postPosition(positionSearch)
-    );
+    dispatch(postPosition(positionSearch));
   };
 
   const onChangeSoftSkill = value => {
@@ -435,28 +429,32 @@ const DetailCandidate = () => {
     );
   };
 
-  const onCheckedPrimaryIndustry = (text, __, index) => {
-    console.log(
-      "scope",
-      detailData.business_line.map(({ primary }) => primary)
-    );
-    const newBusinessLine = detailData.business_line.map((item, id) => {
-      if (id === index)
-        return {
-          ...item,
-          primary: text * -1,
-        };
-      return item;
-    });
-    dispatch(
-      putEditDetailCandidateNotLoading({
-        id: detailData.id,
-        params: {
-          business_line:
-            get_params_payload_id_from_industry_form_arr(newBusinessLine),
-        },
-      })
-    );
+  const onCheckedPrimaryIndustry = useCallback(
+    (checked, index) => {
+      const newBusinessLine = detailData.business_line.map((item, id) => {
+        if (id === index)
+          return {
+            ...item,
+            primary: checked ? 1 : -1,
+          };
+        return item;
+      });
+      dispatch(
+        putEditDetailCandidateNotLoading({
+          id: detailData.id,
+          params: {
+            business_line:
+              get_params_payload_id_from_industry_form_arr(newBusinessLine),
+          },
+        })
+      );
+    },
+    [detailData]
+  );
+
+  const onAddEducation = () => {
+    dispatch(resetHistory());
+    dispatch(showModal(TYPE_MODAL.add_candidate_history));
   };
 
   const onSearchFunctionSkill = value => {
@@ -1431,16 +1429,6 @@ const DetailCandidate = () => {
                     </Button>
                   </Row>
                 )}
-                <Button
-                  onClick={() =>
-                    console.log(
-                      "test",
-                      detailData.business_line.map(({ primary }) => primary)
-                    )
-                  }
-                >
-                  Test check primary
-                </Button>
                 {!isDetailLoading && (
                   <IndustryDetailCandidate
                     dataSource={detailData.business_line}
@@ -1459,11 +1447,7 @@ const DetailCandidate = () => {
                   <Col span={24} style={{ marginBottom: 8 }}>
                     <Row align="middle" justify="space-between">
                       <span style={{ fontWeight: 500 }}>ACADEMIC</span>
-                      <Button
-                        type="primary"
-                        ghost
-                        onClick={() => setIsChange(!isChange)}
-                      >
+                      <Button type="primary" ghost onClick={onAddEducation}>
                         Add Education
                       </Button>
                     </Row>

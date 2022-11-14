@@ -4,6 +4,7 @@ import {
   getDetailCandidate,
   putDetailCandidate,
   postCandidate,
+  deleteCandidateHistories,
 } from "ultis/api";
 import { toast } from "react-toastify";
 
@@ -62,6 +63,20 @@ export const candidatesSlice = createSlice({
   reducers: {
     getHistory: (state, { payload: id }) => {
       state.history = state.detailData.histories.find(item => item.id === id);
+      return state;
+    },
+    deleteHistory: (state, { payload: id }) => {
+      state.detailData.histories = state.detailData.histories.filter(
+        item => item.id !== id
+      );
+      deleteCandidateHistories(id);
+      toast.success("Delete candidate history successful", {
+        position: "top-right",
+      });
+      return state;
+    },
+    resetHistory: state => {
+      state.history = {};
       return state;
     },
   },
@@ -174,5 +189,6 @@ export const candidatesSlice = createSlice({
 });
 
 const { reducer } = candidatesSlice;
-export const { getHistory } = candidatesSlice.actions;
+export const { getHistory, deleteHistory, resetHistory } =
+  candidatesSlice.actions;
 export default reducer;
