@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   getCandidates,
@@ -5,6 +6,7 @@ import {
   putDetailCandidate,
   postCandidate,
   deleteCandidateHistories,
+  postCandidateHistories,
 } from "ultis/api";
 import { toast } from "react-toastify";
 
@@ -22,6 +24,11 @@ export const fetchCandidates = createAsyncThunk(
 
 export const fetchDetailCandidate = createAsyncThunk(
   "candidates/fetchDetailCandidate",
+  getDetailCandidate
+);
+
+export const fetchDetailCandidateNotLoading = createAsyncThunk(
+  "candidates/fetchDetailCandidateNotLoading",
   getDetailCandidate
 );
 
@@ -48,6 +55,15 @@ export const putIndustryDetailCandidate = createAsyncThunk(
 export const fetchPostCandidate = createAsyncThunk(
   "candidates/fetchPostCandidate",
   postCandidate
+);
+
+export const PostCandidateHistory = createAsyncThunk(
+  "candidates/PostCandidateHistory",
+  async params =>
+    await postCandidateHistories({
+      ...params,
+      type: 1,
+    })
 );
 
 export const candidatesSlice = createSlice({
@@ -98,6 +114,12 @@ export const candidatesSlice = createSlice({
       state.detailData = payload;
       state.loading = false;
     },
+
+    // Get Detail Candidate history
+    [fetchDetailCandidateNotLoading.fulfilled.type]: (state, { payload }) => {
+      console.log("slice1", payload.histories);
+      state.detailData = payload;
+    },
     // Put Detail Candidate
     [putLanguageDetailCandidate.pending.type]: state => {
       state.loading = true;
@@ -115,19 +137,15 @@ export const candidatesSlice = createSlice({
         position: "top-right",
       });
     },
+
     // Put Detail Candidate not loading
-    // [putEditDetailCandidateNotLoading.pending.type]: state => {
-    //   state.loading = true;
-    // },
     [putEditDetailCandidateNotLoading.fulfilled.type]: (state, { payload }) => {
-      // state.loading = false;
       state.detailData = payload;
       toast.success("Successfully updated", {
         position: "top-right",
       });
     },
     [putEditDetailCandidateNotLoading.rejected.type]: () => {
-      // state.loading = false;
       toast.error("Update error", {
         position: "top-right",
       });
@@ -139,7 +157,6 @@ export const candidatesSlice = createSlice({
     },
     [fetchPostCandidate.fulfilled.type]: state => {
       state.loading = false;
-      // state.detailData = payload;
       toast.success("Successfully Created Candidate", {
         position: "top-right",
       });
@@ -150,6 +167,19 @@ export const candidatesSlice = createSlice({
         position: "top-right",
       });
     },
+
+    // Post Candidate History
+    [PostCandidateHistory.fulfilled.type]: () => {
+      toast.success("Successfully created candidate education", {
+        position: "top-right",
+      });
+    },
+    [PostCandidateHistory.rejected.type]: () => {
+      toast.error("Create candidate education error", {
+        position: "top-right",
+      });
+    },
+
     // Put Language
     [putLanguageDetailCandidate.pending.type]: state => {
       state.isDetailLoading = true;

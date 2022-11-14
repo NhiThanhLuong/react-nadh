@@ -46,3 +46,9 @@ export const putDetailCandidate = async (id, params) => {
 // Delete
 export const deleteCandidateHistories = async id =>
   await axiosClient.delete(`/api/candidate_histories/${id}`);
+
+// Post
+export const postCandidateHistories = async params => {
+  console.log(params);
+  return await axiosClient.post("/api/candidate_histories", params);
+};

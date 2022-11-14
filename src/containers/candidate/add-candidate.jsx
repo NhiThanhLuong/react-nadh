@@ -95,7 +95,6 @@ const AddCandidate = () => {
 
   const onFinish = values => {
     console.log("values", values);
-    console.log("fieldValues", fieldValues);
 
     if (fieldValues.addresses)
       fieldValues.addresses = form.getFieldsValue().addresses.map(item => {
@@ -158,8 +157,6 @@ const AddCandidate = () => {
 
     if (fieldValues.nationality)
       fieldValues.nationality = form.getFieldsValue().nationality;
-
-    console.log(fieldValues);
 
     dispatch(
       fetchPostCandidate({

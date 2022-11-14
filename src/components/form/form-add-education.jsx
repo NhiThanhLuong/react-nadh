@@ -1,14 +1,26 @@
+/* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 import { Modal, Form, Checkbox, Row, Col, Button } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Item } from "styles/styled";
-import { years, formatDate } from "ultis/func";
+import {
+  years,
+  formatDate,
+  deleteKeyNull,
+  getPropertyKeyLabelObj,
+} from "ultis/func";
 import FormSelect from "./form-select";
 import { fetchSchools, postSchool } from "features/schoolSlice";
 import { fetchMajors, postMajor } from "features/majorSlice";
 import { hideModal } from "features/modalSlice";
-import { deleteHistory } from "features/candidatesSlice";
+import {
+  deleteHistory,
+  fetchDetailCandidate,
+  fetchDetailCandidateNotLoading,
+  fetchEditDetailCandidate,
+  PostCandidateHistory,
+} from "features/candidatesSlice";
 import { TYPE_MODAL } from "ultis/const";
 
 const FormAddEducation = () => {
@@ -19,18 +31,18 @@ const FormAddEducation = () => {
     school: { schools },
     major: { majors },
     degree: { degrees },
-    modal: { showModal, type_modal },
-    candidates: { history },
+    modal: { isShowModal, type_modal },
+    candidates: { history, detailData },
   } = useSelector(state => state);
 
   const [schoolSearch, setSchoolSearch] = useState(null);
   const [majorSearch, setMajorSearch] = useState(null);
+  const [fieldsChanges, setFieldsChanges] = useState({});
 
   useEffect(() => {
-    if (showModal) {
+    if (isShowModal) {
       dispatch(fetchSchools());
       dispatch(fetchMajors());
-      console.log("history", history);
       form.setFieldsValue({
         status: history?.status === 1,
         start_year: history?.start_time
@@ -42,7 +54,7 @@ const FormAddEducation = () => {
         degree: history?.degree || null,
       });
     }
-  }, [showModal]);
+  }, [isShowModal]);
 
   const onCancel = () => {
     dispatch(hideModal());
@@ -71,17 +83,29 @@ const FormAddEducation = () => {
     );
   };
 
-  const onFinish = values => {
-    console.log(values);
+  const onChangeDegree = (_, option) => {
+    fieldsChanges.title = getPropertyKeyLabelObj(option);
+  };
+
+  const onFinish = async () => {
+    await dispatch(
+      PostCandidateHistory({
+        ...fieldsChanges,
+        candidate_id: detailData.id,
+      })
+    );
+    await dispatch(fetchDetailCandidateNotLoading(detailData.candidate_id));
+    await setFieldsChanges(() => ({}));
+    await dispatch(hideModal());
   };
 
   const onSubmit = () => {
     form.submit();
   };
 
-  return (
+  return isShowModal ? (
     <Modal
-      open={showModal}
+      open
       centered
       title={
         <Row justify="space-between" align="middle">
@@ -166,6 +190,7 @@ const FormAddEducation = () => {
               placeholder="Select degree"
               optionFilterProp="label"
               options={degrees}
+              onChange={onChangeDegree}
               rules={[
                 {
                   required: true,
@@ -177,7 +202,7 @@ const FormAddEducation = () => {
         </Row>
       </Form>
     </Modal>
-  );
+  ) : null;
 };
 
 export default FormAddEducation;

@@ -62,7 +62,13 @@ const AcademicCandidate = ({ dataSource }) => {
 
   return (
     <>
-      <Table columns={columns} dataSource={dataSource} />
+      <Table
+        columns={columns}
+        dataSource={dataSource}
+        pagination={{
+          pageSize: 5,
+        }}
+      />
       <FormAddEducation />
     </>
   );
