@@ -7,8 +7,8 @@ import { Item } from "styles/styled";
 import {
   years,
   formatDate,
-  deleteKeyNull,
   getPropertyKeyLabelObj,
+  deleteKeyNull,
 } from "ultis/func";
 import FormSelect from "./form-select";
 import { fetchSchools, postSchool } from "features/schoolSlice";
@@ -16,9 +16,7 @@ import { fetchMajors, postMajor } from "features/majorSlice";
 import { hideModal } from "features/modalSlice";
 import {
   deleteHistory,
-  fetchDetailCandidate,
   fetchDetailCandidateNotLoading,
-  fetchEditDetailCandidate,
   PostCandidateHistory,
 } from "features/candidatesSlice";
 import { TYPE_MODAL } from "ultis/const";
@@ -38,6 +36,15 @@ const FormAddEducation = () => {
   const [schoolSearch, setSchoolSearch] = useState(null);
   const [majorSearch, setMajorSearch] = useState(null);
   const [fieldsChanges, setFieldsChanges] = useState({});
+  const [isChecked, setIsChecked] = useState(false);
+
+  useEffect(() => {
+    setIsChecked(
+      type_modal === TYPE_MODAL.edit_candidate_history
+        ? history?.status === 1
+        : false
+    );
+  }, [type_modal, history]);
 
   useEffect(() => {
     if (isShowModal) {
@@ -65,6 +72,18 @@ const FormAddEducation = () => {
     dispatch(hideModal());
   };
 
+  const onChecked = e => {
+    setIsChecked(e.target.checked);
+  };
+
+  const onChangeStartYear = year => {
+    fieldsChanges.start_time = year ? `${year}-01-01` : null;
+  };
+
+  const onChangeGradutionYear = year => {
+    fieldsChanges.end_time = year ? `${year}-01-01` : null;
+  };
+
   const onSearchSchool = value => {
     setSchoolSearch(() => value);
     dispatch(
@@ -72,6 +91,10 @@ const FormAddEducation = () => {
         value,
       })
     );
+  };
+
+  const onChangeSchool = (_, option) => {
+    fieldsChanges.organization = _ ? getPropertyKeyLabelObj(option) : null;
   };
 
   const onSearchMajor = value => {
@@ -83,14 +106,18 @@ const FormAddEducation = () => {
     );
   };
 
+  const onChangeMajor = (_, option) => {
+    fieldsChanges.title = _ ? getPropertyKeyLabelObj(option) : null;
+  };
+
   const onChangeDegree = (_, option) => {
-    fieldsChanges.title = getPropertyKeyLabelObj(option);
+    fieldsChanges.degree = getPropertyKeyLabelObj(option);
   };
 
   const onFinish = async () => {
     await dispatch(
       PostCandidateHistory({
-        ...fieldsChanges,
+        ...deleteKeyNull(fieldsChanges),
         candidate_id: detailData.id,
       })
     );
@@ -127,7 +154,7 @@ const FormAddEducation = () => {
         <Row gutter={16}>
           <Col span={24}>
             <Item name="status" valuePropName="checked">
-              <Checkbox>Current school</Checkbox>
+              <Checkbox onChange={onChecked}>Current school</Checkbox>
             </Item>
           </Col>
           <Col span={12}>
@@ -139,6 +166,7 @@ const FormAddEducation = () => {
               isKeyLabel={false}
               optionFilterProp="label"
               options={years()}
+              onChange={onChangeStartYear}
             />
           </Col>
           <Col span={12}>
@@ -147,9 +175,11 @@ const FormAddEducation = () => {
               name="end_year"
               label="Graduation year"
               placeholder="Graduation year"
-              isKeyLabel={false}
               optionFilterProp="label"
+              isKeyLabel={false}
+              disabled={isChecked}
               options={years()}
+              onChange={onChangeGradutionYear}
             />
           </Col>
           <Col span={24}>
@@ -161,6 +191,7 @@ const FormAddEducation = () => {
               onSearch={onSearchSchool}
               filterOption={false}
               options={schools}
+              onChange={onChangeSchool}
               dropdownRender={{
                 text: "Add school",
                 onAdd: () => dispatch(postSchool(schoolSearch)),
@@ -174,6 +205,7 @@ const FormAddEducation = () => {
               label="Major"
               placeholder="Select or add major"
               onSearch={onSearchMajor}
+              onChange={onChangeMajor}
               filterOption={false}
               options={majors}
               dropdownRender={{

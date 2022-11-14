@@ -1453,7 +1453,11 @@ const DetailCandidate = () => {
                     </Row>
                   </Col>
                   <Col span={24}>
-                    <AcademicCandidate dataSource={detailData.histories} />
+                    <AcademicCandidate
+                      dataSource={detailData.histories.filter(
+                        ({ type }) => type === 1
+                      )}
+                    />
                   </Col>
                 </Row>
               </Card>

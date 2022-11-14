@@ -117,7 +117,6 @@ export const candidatesSlice = createSlice({
 
     // Get Detail Candidate history
     [fetchDetailCandidateNotLoading.fulfilled.type]: (state, { payload }) => {
-      console.log("slice1", payload.histories);
       state.detailData = payload;
     },
     // Put Detail Candidate
