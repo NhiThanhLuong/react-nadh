@@ -13,7 +13,8 @@ import {
   putCandidateHistory,
 } from "features/candidatesSlice";
 import { TYPE_MODAL } from "ultis/const";
-import { deleteKeyNull, formatDate } from "ultis/func";
+import { deleteKeyNull, formatDate, pad2 } from "ultis/func";
+import { format } from "prettier";
 
 const ModalForm = Component => {
   const Comp = ({ ...props }) => {
@@ -31,7 +32,8 @@ const ModalForm = Component => {
 
     const isEdit =
       type_modal === TYPE_MODAL.certificate_history.edit.type ||
-      type_modal === TYPE_MODAL.academic_history.edit.type;
+      type_modal === TYPE_MODAL.academic_history.edit.type ||
+      type_modal === TYPE_MODAL.working_history.edit.type;
 
     const type = () => {
       if (
@@ -44,6 +46,11 @@ const ModalForm = Component => {
         type_modal === TYPE_MODAL.certificate_history.edit.type
       )
         return 3;
+      if (
+        type_modal === TYPE_MODAL.working_history.add.type ||
+        type_modal === TYPE_MODAL.working_history.edit.type
+      )
+        return 2;
     };
 
     const onCancel = () => {
@@ -78,6 +85,26 @@ const ModalForm = Component => {
         organization: history?.organization || null,
         title: history?.title || null,
       };
+    } else if (type() === 2) {
+      initValues = {
+        start_month: history?.start_time
+          ? +formatDate(history.start_time).month
+          : null,
+        start_year: history?.start_time
+          ? formatDate(history.start_time).year
+          : null,
+        end_month: history?.end_time
+          ? +formatDate(history.end_time).month
+          : null,
+        end_year: history?.end_time ? formatDate(history.end_time).year : null,
+        //   status: history?.status === 1,
+        //   start_year: history?.start_time
+        //     ? formatDate(history?.start_time).year
+        //     : null,
+        //   end_year: history?.end_time ? formatDate(history?.end_time).year : null,
+        //   organization: history?.organization || null,
+        //   title: history?.title || null,
+      };
     }
 
     useEffect(() => {
@@ -91,28 +118,40 @@ const ModalForm = Component => {
     const onSubmit = async () => {
       form.submit();
       if (isEdit) {
-        await dispatch(
-          putCandidateHistory({
-            id: history.id,
-            params: deleteKeyNull({
-              ...initValues,
-              status: initValues.status ? 1 : -1,
-              ...fieldsChanges,
-            }),
-          })
-        );
-      } else {
-        await dispatch(
-          PostCandidateHistory({
-            ...deleteKeyNull(fieldsChanges),
-            candidate_id: detailData.id,
-            type: type(),
-          })
-        );
+        // await dispatch(
+        //   putCandidateHistory({
+        //     id: history.id,
+        //     params: {
+        //       ...initValues,
+        //       status: initValues.status ? 1 : -1,
+        //       ...fieldsChanges,
+        //     },
+        //   })
+        // );
+        const params = {
+          ...initValues,
+          status: initValues.status ? 1 : -1,
+          ...fieldsChanges,
+          type: type(),
+        };
+        const { start_year, start_month, end_year, end_month } = params;
+        params.start_time = `${start_year}-${pad2(start_month)}-00`;
+        params.end_time = `${end_year}-${pad2(end_month)}-00`;
+        // params.status = status ? 1 : -1;
+        console.log(params);
       }
-      await dispatch(fetchDetailCandidateNotLoading(detailData.candidate_id));
-      await setFieldsChanges(() => ({}));
-      dispatch(hideModal());
+      //   else {
+      //     await dispatch(
+      //       PostCandidateHistory({
+      //         ...deleteKeyNull(fieldsChanges),
+      //         candidate_id: detailData.id,
+      //         type: type(),
+      //       })
+      //     );
+      //   }
+      //   await dispatch(fetchDetailCandidateNotLoading(detailData.candidate_id));
+      //   await setFieldsChanges(() => ({}));
+      //   dispatch(hideModal());
     };
 
     return (
@@ -123,7 +162,7 @@ const ModalForm = Component => {
         title={
           <Row justify="space-between" align="middle">
             <span>{title_modal}</span>
-            {type_modal === TYPE_MODAL.academic_history.edit.type && (
+            {isEdit && (
               <Button danger type="primary" onClick={onDeleteHistory}>
                 Delete
               </Button>

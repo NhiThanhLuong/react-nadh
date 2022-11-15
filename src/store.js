@@ -12,6 +12,7 @@ import skillReducer from "features/skillSlice";
 import schoolReducer from "features/schoolSlice";
 import majorReducer from "features/majorSlice";
 import modalReducer from "features/modalSlice";
+import companyReducer from "features/companySlice";
 
 export const store = configureStore({
   reducer: {
@@ -28,5 +29,6 @@ export const store = configureStore({
     school: schoolReducer,
     major: majorReducer,
     modal: modalReducer,
+    company: companyReducer,
   },
 });

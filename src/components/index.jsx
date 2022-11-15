@@ -9,12 +9,14 @@ import FilterDropdown2Select from "./table/filter-dropdown-2-select";
 import FilterDropdown3Select from "./table/filter-dropdown-3-select";
 import FilterDropdownRange from "./table/filter-dropdown-range";
 import IndustryDetailCandidate from "./table/industry-detail-candidate";
+import WorkingHistoryCandidate from "./table/working-history-candidate";
 
 import FormAddEducation from "./form/form-add-education";
 import FormSelect from "./form/form-select";
 import FormTextInput from "./form/form-text-input";
 import FormAcademic from "./form/form-academic";
 import FormCertificate from "./form/form-certificate";
+import FormWorkingHistory from "./form/form-working-history";
 
 import ClearAllFilter from "./button/clear-all-filter";
 import CustomColumn from "./button/custom-column";
@@ -38,11 +40,13 @@ export {
   FilterDropdown3Select,
   FilterDropdownRange,
   IndustryDetailCandidate,
+  WorkingHistoryCandidate,
   FormAddEducation,
   FormSelect,
   FormTextInput,
   FormAcademic,
   FormCertificate,
+  FormWorkingHistory,
   ClearAllFilter,
   CustomColumn,
   UserInfo,

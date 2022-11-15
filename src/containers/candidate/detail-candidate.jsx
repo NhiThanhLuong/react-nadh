@@ -68,6 +68,7 @@ import {
   FormSelect,
   FormTextInput,
   IndustryDetailCandidate,
+  WorkingHistoryCandidate,
 } from "components";
 import { fetchLanguages } from "features/languageSlice";
 import {
@@ -119,8 +120,8 @@ const DetailCandidate = () => {
   const districts = useSelector(state => state.location.districts);
 
   const nationalities = useSelector(state => state.location.nationalities);
-  const positions = useSelector(state => state.location.positions);
-  const degrees = useSelector(state => state.location.degrees);
+  const positions = useSelector(state => state.position.positions);
+  const degrees = useSelector(state => state.degree.degrees);
 
   const languages = useSelector(state => state.location.languages);
   const loadingLanguage = useSelector(state => state.location.loading);
@@ -550,6 +551,7 @@ const DetailCandidate = () => {
                 direct_reports: detailData?.direct_reports || 0,
                 soft_skills: detailData?.soft_skills || [],
                 functions_skills: detailData?.functions_skills || [],
+                certificate_text: detailData?.certificate_text || "",
               }}
             >
               <Button onClick={() => console.log(form.getFieldsValue())}>
@@ -1490,6 +1492,40 @@ const DetailCandidate = () => {
                     <CertificateCandidate
                       dataSource={detailData.histories.filter(
                         ({ type }) => type === 3
+                      )}
+                    />
+                  </Col>
+                </Row>
+              </Card>
+              {/* Certificate */}
+              <Card
+                title={<span style={{ color: "#465f7b" }}>Certificate</span>}
+                style={{ marginBottom: 16 }}
+              >
+                <Item name="certificate_text">
+                  <Input.TextArea placeholder="Certificate" />
+                </Item>
+              </Card>
+              {/* Working History */}
+              <Card
+                title={
+                  <span style={{ color: "#465f7b" }}>Working History</span>
+                }
+                style={{ marginBottom: 16 }}
+              >
+                <Row>
+                  <Col span={24} style={{ marginBottom: 8 }}>
+                    <Row align="middle" justify="space-between">
+                      <span style={{ fontWeight: 500 }}>WORKING HISTORY</span>
+                      <Button type="primary" ghost onClick={onAddCertificate}>
+                        Add Working History
+                      </Button>
+                    </Row>
+                  </Col>
+                  <Col span={24}>
+                    <WorkingHistoryCandidate
+                      dataSource={detailData.histories.filter(
+                        ({ type }) => type === 2
                       )}
                     />
                   </Col>

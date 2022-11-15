@@ -202,4 +202,15 @@ export const TYPE_MODAL = {
       title: "Add Certificate",
     },
   },
+  working_history: {
+    edit: {
+      type: 5,
+      title: "Edit Working History",
+    },
+
+    add: {
+      type: 6,
+      title: "Add Working History",
+    },
+  },
 };
