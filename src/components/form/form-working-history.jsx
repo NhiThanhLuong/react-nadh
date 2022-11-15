@@ -11,12 +11,12 @@ import { MONTHS } from "ultis/const";
 import { fetchPosition, postPosition } from "features/positionSlice";
 import { fetchCompanys, postCompany } from "features/companySlice";
 
-const FormWorkingHistory = ({ fieldsChanges }) => {
+const FormWorkingHistory = ({ fieldsChanges, form }) => {
   const dispatch = useDispatch();
 
   const [companySearch, setCompanySearch] = useState(null);
   const [positionSearch, setPositionSearch] = useState(null);
-  //   const [isChecked, setIsChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
 
   const companys = useSelector(state => state.company.companys);
   const positions = useSelector(state => state.position.positions);
@@ -27,20 +27,37 @@ const FormWorkingHistory = ({ fieldsChanges }) => {
     dispatch(fetchCompanys());
   }, []);
 
+  useEffect(() => {
+    if (isChecked)
+      form.setFieldsValue({
+        end_month: null,
+        end_year: null,
+      });
+  }, [isChecked]);
+
   const onChecked = e => {
-    // setIsChecked(e.target.checked);
+    setIsChecked(e.target.checked);
+    if (isChecked)
+      form.setFieldsValue({
+        end_month: null,
+        end_year: null,
+      });
   };
   const onChangeStartMotnh = month => {
+    form.validateFields(["start_year"]);
     fieldsChanges.start_month = month || null;
   };
   const onChangeStartYear = year => {
+    form.validateFields(["start_month"]);
     fieldsChanges.start_year = year || null;
   };
 
   const onChangeEndMotnh = month => {
+    form.validateFields(["end_year"]);
     fieldsChanges.end_month = month || null;
   };
   const onChangeEndYear = year => {
+    form.validateFields(["end_month"]);
     fieldsChanges.end_year = year || null;
   };
 
@@ -96,6 +113,29 @@ const FormWorkingHistory = ({ fieldsChanges }) => {
                 optionFilterProp="label"
                 options={MONTHS}
                 onChange={onChangeStartMotnh}
+                rules={[
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (
+                        !value ||
+                        !getFieldValue("start_month") ||
+                        !getFieldValue("start_year") ||
+                        !getFieldValue("end_year") ||
+                        +getFieldValue("start_year") !==
+                          +getFieldValue("end_year") ||
+                        +value <= +getFieldValue("end_month")
+                      ) {
+                        return Promise.resolve();
+                      }
+
+                      return Promise.reject(
+                        new Error(
+                          "Start month not higher end month when the same year"
+                        )
+                      );
+                    },
+                  }),
+                ]}
               />
             </Col>
             <Col span={12}>
@@ -107,10 +147,18 @@ const FormWorkingHistory = ({ fieldsChanges }) => {
                 optionFilterProp="label"
                 options={years()}
                 rules={[
-                  ({ getFieldValue, getFieldsValue }) => ({
+                  ({ getFieldValue }) => ({
                     validator(_, value) {
                       if (value || !getFieldValue("start_month")) {
-                        return Promise.resolve();
+                        if (
+                          !getFieldValue("end_year") ||
+                          +value <= +getFieldValue("end_year")
+                        )
+                          return Promise.resolve();
+
+                        return Promise.reject(
+                          new Error("Start year not higher end year")
+                        );
                       }
 
                       return Promise.reject(new Error("Please select Year"));
@@ -129,16 +177,41 @@ const FormWorkingHistory = ({ fieldsChanges }) => {
             <Col span={12}>
               <FormSelect
                 allowClear
+                disabled={isChecked}
                 name="end_month"
                 placeholder="Month"
                 optionFilterProp="label"
                 options={MONTHS}
                 onChange={onChangeEndMotnh}
+                rules={[
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (
+                        !value ||
+                        !getFieldValue("start_month") ||
+                        !getFieldValue("start_year") ||
+                        !getFieldValue("end_year") ||
+                        +getFieldValue("start_year") !==
+                          +getFieldValue("end_year") ||
+                        +value >= +getFieldValue("start_month")
+                      ) {
+                        return Promise.resolve();
+                      }
+
+                      return Promise.reject(
+                        new Error(
+                          "End month not lower start month when the same year"
+                        )
+                      );
+                    },
+                  }),
+                ]}
               />
             </Col>
             <Col span={12}>
               <FormSelect
                 allowClear
+                disabled={isChecked}
                 name="end_year"
                 placeholder="Year"
                 isKeyLabel={false}
@@ -148,7 +221,15 @@ const FormWorkingHistory = ({ fieldsChanges }) => {
                   ({ getFieldValue }) => ({
                     validator(_, value) {
                       if (value || !getFieldValue("end_month")) {
-                        return Promise.resolve();
+                        if (
+                          !getFieldValue("start_year") ||
+                          +value >= +getFieldValue("start_year")
+                        )
+                          return Promise.resolve();
+
+                        return Promise.reject(
+                          new Error("Start year not higher end year")
+                        );
                       }
 
                       return Promise.reject(new Error("Please select Year"));
@@ -177,6 +258,7 @@ const FormWorkingHistory = ({ fieldsChanges }) => {
       <Col span={24}>
         <FormSelect
           allowClear
+          required
           name="organization"
           label="Company"
           placeholder="Select or add company"
@@ -193,6 +275,7 @@ const FormWorkingHistory = ({ fieldsChanges }) => {
       <Col span={24}>
         <FormSelect
           allowClear
+          required
           name="title"
           label="Position"
           placeholder="Select or add position"

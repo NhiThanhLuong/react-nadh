@@ -176,7 +176,7 @@ const ModalForm = Component => {
         okText={isEdit ? "Save" : "Add"}
       >
         <Form form={form} layout="vertical">
-          <Component fieldsChanges={fieldsChanges} {...props} />
+          <Component fieldsChanges={fieldsChanges} form={form} {...props} />
         </Form>
       </Modal>
     );

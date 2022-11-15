@@ -8,6 +8,7 @@ const { Option } = Select;
 const FormSelect = ({
   name,
   label,
+  required = false,
   rules,
   options,
   isKeyLabel = true,
@@ -15,7 +16,7 @@ const FormSelect = ({
   ...props
 }) => {
   return (
-    <Item name={name} label={label} rules={rules}>
+    <Item name={name} label={label} rules={rules} required={required}>
       <Select
         showSearch
         {...props}
