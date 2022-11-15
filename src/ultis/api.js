@@ -49,6 +49,9 @@ export const deleteCandidateHistories = async id =>
 
 // Post
 export const postCandidateHistories = async params => {
-  console.log(params);
   return await axiosClient.post("/api/candidate_histories", params);
 };
+
+// Put
+export const putCandidateHistories = async (id, params) =>
+  await axiosClient.put(`/api/candidate_histories/${id}`, params);

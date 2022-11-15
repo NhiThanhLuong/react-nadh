@@ -180,6 +180,26 @@ export const RELOCATING_WILLINGNESS = [
 ];
 
 export const TYPE_MODAL = {
-  edit_candidate_history: 1,
-  add_candidate_history: 2,
+  academic_history: {
+    edit: {
+      type: 1,
+      title: "Edit Education",
+    },
+
+    add: {
+      type: 2,
+      title: "Add Education",
+    },
+  },
+  certificate_history: {
+    edit: {
+      type: 3,
+      title: "Edit Certificate",
+    },
+
+    add: {
+      type: 4,
+      title: "Add Certificate",
+    },
+  },
 };

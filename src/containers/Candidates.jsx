@@ -46,12 +46,19 @@ import {
 const Candidates = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {
-    candidates: { count, data, loading },
-    location: { countries, cities },
-    category: { industries, sectors, categories },
-    language: { languages },
-  } = useSelector(state => state);
+
+  const count = useSelector(state => state.candidates.count);
+  const data = useSelector(state => state.candidates.data);
+  const loading = useSelector(state => state.candidates.loading);
+
+  const industries = useSelector(state => state.category.industries);
+  const sectors = useSelector(state => state.category.sectors);
+  const categories = useSelector(state => state.category.categories);
+
+  const countries = useSelector(state => state.location.countries);
+  const cities = useSelector(state => state.location.cities);
+
+  const languages = useSelector(state => state.language.languages);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const paramsRouter = Object.fromEntries([...searchParams]);

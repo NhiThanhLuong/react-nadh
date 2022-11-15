@@ -64,6 +64,7 @@ import {
 } from "features/skillSlice";
 import {
   AcademicCandidate,
+  CertificateCandidate,
   FormSelect,
   FormTextInput,
   IndustryDetailCandidate,
@@ -104,16 +105,29 @@ const DetailCandidate = () => {
   const [fieldValues, setFieldValues] = useState({});
   const [isChange, setIsChange] = useState(false);
 
-  const {
-    candidates: { detailData, loading, isDetailLoading },
-    location: { countries, cities, districts },
-    nationality: { nationalities },
-    position: { positions },
-    degree: { degrees },
-    skill: { softSkills, functionSkills },
-    language: { languages, loading: loadingLanguage },
-    category: { industries, sectors, categories },
-  } = useSelector(state => state);
+  const detailData = useSelector(state => state.candidates.detailData);
+  const loading = useSelector(state => state.candidates.loading);
+  const isDetailLoading = useSelector(
+    state => state.candidates.isDetailLoading
+  );
+
+  const softSkills = useSelector(state => state.skill.softSkills);
+  const functionSkills = useSelector(state => state.skill.functionSkills);
+
+  const countries = useSelector(state => state.location.countries);
+  const cities = useSelector(state => state.location.cities);
+  const districts = useSelector(state => state.location.districts);
+
+  const nationalities = useSelector(state => state.location.nationalities);
+  const positions = useSelector(state => state.location.positions);
+  const degrees = useSelector(state => state.location.degrees);
+
+  const languages = useSelector(state => state.location.languages);
+  const loadingLanguage = useSelector(state => state.location.loading);
+
+  const industries = useSelector(state => state.location.industries);
+  const sectors = useSelector(state => state.location.sectors);
+  const categories = useSelector(state => state.location.categories);
 
   const isHiddenCancelSave = () => {
     if (isEmpty(fieldValues)) return true;
@@ -454,7 +468,12 @@ const DetailCandidate = () => {
 
   const onAddEducation = () => {
     dispatch(resetHistory());
-    dispatch(showModal(TYPE_MODAL.add_candidate_history));
+    dispatch(showModal(TYPE_MODAL.academic_history.add));
+  };
+
+  const onAddCertificate = () => {
+    dispatch(resetHistory());
+    dispatch(showModal(TYPE_MODAL.certificate_history.add));
   };
 
   const onSearchFunctionSkill = value => {
@@ -1120,7 +1139,7 @@ const DetailCandidate = () => {
                           </>
                         )}
                       >
-                        {nationalities.map(({ key, label }) => (
+                        {nationalities?.map(({ key, label }) => (
                           <Option key={key} value={+key} label={label}>
                             {label}
                           </Option>
@@ -1157,7 +1176,7 @@ const DetailCandidate = () => {
                           </>
                         )}
                       >
-                        {positions.map(({ key, label }) => (
+                        {positions?.map(({ key, label }) => (
                           <Option key={key} value={+key} label={label}>
                             {label}
                           </Option>
@@ -1179,7 +1198,7 @@ const DetailCandidate = () => {
                         }}
                         onChange={onChangeEducation}
                       >
-                        {degrees.map(({ key, label }) => (
+                        {degrees?.map(({ key, label }) => (
                           <Option key={key} value={+key} label={label}>
                             {label}
                           </Option>
@@ -1309,7 +1328,7 @@ const DetailCandidate = () => {
                           width: "100%",
                         }}
                       >
-                        {languages.map(({ key, label }) => (
+                        {languages?.map(({ key, label }) => (
                           <Option
                             key={key}
                             value={key}
@@ -1360,7 +1379,7 @@ const DetailCandidate = () => {
                                 width: "100%",
                               }}
                             >
-                              {industries.map(({ key, label }) => (
+                              {industries?.map(({ key, label }) => (
                                 <Option key={key} value={+key} label={label}>
                                   {label}
                                 </Option>
@@ -1382,7 +1401,7 @@ const DetailCandidate = () => {
                                 width: "100%",
                               }}
                             >
-                              {sectors.map(({ key, label }) => (
+                              {sectors?.map(({ key, label }) => (
                                 <Option key={key} value={+key} label={label}>
                                   {label}
                                 </Option>
@@ -1403,7 +1422,7 @@ const DetailCandidate = () => {
                                 width: "100%",
                               }}
                             >
-                              {categories.map(({ key, label }) => (
+                              {categories?.map(({ key, label }) => (
                                 <Option key={key} value={+key} label={label}>
                                   {label}
                                 </Option>
@@ -1456,6 +1475,21 @@ const DetailCandidate = () => {
                     <AcademicCandidate
                       dataSource={detailData.histories.filter(
                         ({ type }) => type === 1
+                      )}
+                    />
+                  </Col>
+                  <Col span={24} style={{ marginBottom: 8 }}>
+                    <Row align="middle" justify="space-between">
+                      <span style={{ fontWeight: 500 }}>CERTIFICATE</span>
+                      <Button type="primary" ghost onClick={onAddCertificate}>
+                        Add Certificate
+                      </Button>
+                    </Row>
+                  </Col>
+                  <Col span={24}>
+                    <CertificateCandidate
+                      dataSource={detailData.histories.filter(
+                        ({ type }) => type === 3
                       )}
                     />
                   </Col>

@@ -7,6 +7,7 @@ import {
   postCandidate,
   deleteCandidateHistories,
   postCandidateHistories,
+  putCandidateHistories,
 } from "ultis/api";
 import { toast } from "react-toastify";
 
@@ -59,11 +60,12 @@ export const fetchPostCandidate = createAsyncThunk(
 
 export const PostCandidateHistory = createAsyncThunk(
   "candidates/PostCandidateHistory",
-  async params =>
-    await postCandidateHistories({
-      ...params,
-      type: 1,
-    })
+  postCandidateHistories
+);
+
+export const putCandidateHistory = createAsyncThunk(
+  "candidates/putCandidateHistory",
+  async ({ id, params }) => await putCandidateHistories(id, params)
 );
 
 export const candidatesSlice = createSlice({
@@ -175,6 +177,24 @@ export const candidatesSlice = createSlice({
     },
     [PostCandidateHistory.rejected.type]: () => {
       toast.error("Create candidate education error", {
+        position: "top-right",
+      });
+    },
+
+    // Put Candidate History
+    [putCandidateHistory.pending.type]: state => {
+      state.isDetailLoading = true;
+    },
+    [putCandidateHistory.fulfilled.type]: (state, { payload }) => {
+      state.isDetailLoading = false;
+      // state.detailData.histories = payload.histories;
+      toast.success("Successfully candidate history updated", {
+        position: "top-right",
+      });
+    },
+    [putCandidateHistory.rejected.type]: state => {
+      state.isDetailLoading = false;
+      toast.error("Duplicated candidate history Value", {
         position: "top-right",
       });
     },

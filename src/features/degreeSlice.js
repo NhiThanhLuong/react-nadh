@@ -13,11 +13,23 @@ export const fetchDegrees = createAsyncThunk(
     })
 );
 
+export const fetchCertificate = createAsyncThunk(
+  "degree/fetchCertificate",
+  async params =>
+    await getPropertyValues({
+      params: {
+        ...params,
+        property_name: "certificate",
+      },
+    })
+);
+
 export const degreeSlice = createSlice({
   name: "degree",
   initialState: {
     loading: false,
     degrees: [],
+    certificates: [],
   },
   reducers: {},
   extraReducers: {
@@ -27,6 +39,14 @@ export const degreeSlice = createSlice({
     [fetchDegrees.fulfilled.type]: (state, { payload }) => {
       state.loading = false;
       state.degrees = getPropertyKeyLabel(payload.data);
+    },
+
+    [fetchCertificate.pending.type]: state => {
+      state.loading = true;
+    },
+    [fetchCertificate.fulfilled.type]: (state, { payload }) => {
+      state.loading = false;
+      state.certificates = getPropertyKeyLabel(payload.data);
     },
   },
 });

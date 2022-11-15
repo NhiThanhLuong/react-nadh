@@ -3,14 +3,15 @@ import { EditOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 
 import { formatDate } from "ultis/func";
-import { FormAcademic } from "components";
+import { FormCertificate } from "components";
 import { showModal } from "features/modalSlice";
 import { getHistory } from "features/candidatesSlice";
 import { TYPE_MODAL } from "ultis/const";
 
-const AcademicCandidate = ({ dataSource }) => {
+const CertificateCandidate = ({ dataSource }) => {
   const dispatch = useDispatch();
   const type_modal = useSelector(state => state.modal.type_modal);
+
   const columns = [
     {
       title: "Current School",
@@ -33,13 +34,8 @@ const AcademicCandidate = ({ dataSource }) => {
       render: text => <span>{text?.label}</span>,
     },
     {
-      title: "Major",
-      dataIndex: "title",
-      render: text => <span>{text?.label}</span>,
-    },
-    {
       title: "Degree",
-      dataIndex: "degree",
+      dataIndex: "title",
       render: text => <span>{text?.label}</span>,
     },
     {
@@ -58,7 +54,7 @@ const AcademicCandidate = ({ dataSource }) => {
 
   const onEdit = id => {
     dispatch(getHistory(id));
-    dispatch(showModal(TYPE_MODAL.academic_history.edit));
+    dispatch(showModal(TYPE_MODAL.certificate_history.edit));
   };
 
   return (
@@ -70,15 +66,16 @@ const AcademicCandidate = ({ dataSource }) => {
           pageSize: 5,
         }}
       />
+      {/* <FormAddEducation /> */}
 
-      <FormAcademic
+      <FormCertificate
         open={
-          type_modal === TYPE_MODAL.academic_history.add.type ||
-          type_modal === TYPE_MODAL.academic_history.edit.type
+          type_modal === TYPE_MODAL.certificate_history.add.type ||
+          type_modal === TYPE_MODAL.certificate_history.edit.type
         }
       />
     </>
   );
 };
 
-export default AcademicCandidate;
+export default CertificateCandidate;
