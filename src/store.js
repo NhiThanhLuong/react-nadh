@@ -13,6 +13,7 @@ import schoolReducer from "features/schoolSlice";
 import majorReducer from "features/majorSlice";
 import modalReducer from "features/modalSlice";
 import companyReducer from "features/companySlice";
+import currencyReducer from "features/currencySlice";
 
 export const store = configureStore({
   reducer: {
@@ -30,5 +31,6 @@ export const store = configureStore({
     major: majorReducer,
     modal: modalReducer,
     company: companyReducer,
+    currency: currencyReducer,
   },
 });

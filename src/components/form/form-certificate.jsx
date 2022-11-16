@@ -8,11 +8,11 @@ import { fetchSchools, postSchool } from "features/schoolSlice";
 import ModalForm from "HOC/modal-form";
 import { fetchCertificate } from "features/degreeSlice";
 
-const FormCertificate = ({ fieldsChanges }) => {
+const FormCertificate = ({ fieldsChanges, form }) => {
   const dispatch = useDispatch();
 
   const [schoolSearch, setSchoolSearch] = useState(null);
-  const [isChecked, setIsChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState(!form.getFieldValue("end_year"));
 
   const schools = useSelector(state => state.school.schools);
   const certificates = useSelector(state => state.degree.certificates);
@@ -21,15 +21,28 @@ const FormCertificate = ({ fieldsChanges }) => {
     dispatch(fetchCertificate());
   }, []);
 
+  useEffect(() => {
+    if (isChecked) {
+      setIsChecked(isChecked);
+      form.setFieldsValue({
+        end_year: null,
+      });
+      fieldsChanges.end_year = null;
+    }
+  }, [isChecked]);
+
   const onChecked = e => {
     setIsChecked(e.target.checked);
+    fieldsChanges.status = e.target.checked;
   };
 
   const onChangeStartYear = year => {
+    form.validateFields(["end_year"]);
     fieldsChanges.start_time = year ? `${year}-01-01` : null;
   };
 
   const onChangeGradutionYear = year => {
+    form.validateFields(["start_year"]);
     fieldsChanges.end_time = year ? `${year}-01-01` : null;
   };
 
@@ -54,7 +67,9 @@ const FormCertificate = ({ fieldsChanges }) => {
     <Row gutter={16}>
       <Col span={24}>
         <Item name="status" valuePropName="checked">
-          <Checkbox onChange={onChecked}>Current school</Checkbox>
+          <Checkbox checked={isChecked} onChange={onChecked}>
+            Current school
+          </Checkbox>
         </Item>
       </Col>
       <Col span={12}>
@@ -67,6 +82,22 @@ const FormCertificate = ({ fieldsChanges }) => {
           optionFilterProp="label"
           options={years()}
           onChange={onChangeStartYear}
+          rules={[
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (
+                  value &&
+                  !!getFieldValue("end_year") &&
+                  +value > +getFieldValue("end_year")
+                )
+                  return Promise.reject(
+                    new Error("Start year not higher end year")
+                  );
+
+                return Promise.resolve();
+              },
+            }),
+          ]}
         />
       </Col>
       <Col span={12}>
@@ -80,6 +111,22 @@ const FormCertificate = ({ fieldsChanges }) => {
           disabled={isChecked}
           options={years()}
           onChange={onChangeGradutionYear}
+          rules={[
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (
+                  value &&
+                  !!getFieldValue("start_year") &&
+                  +value < +getFieldValue("start_year")
+                )
+                  return Promise.reject(
+                    new Error("End year not lower start year")
+                  );
+
+                return Promise.resolve();
+              },
+            }),
+          ]}
         />
       </Col>
       <Col span={24}>
@@ -103,6 +150,7 @@ const FormCertificate = ({ fieldsChanges }) => {
           allowClear
           name="title"
           label="Degree"
+          required
           placeholder="Select degree"
           optionFilterProp="label"
           options={certificates}

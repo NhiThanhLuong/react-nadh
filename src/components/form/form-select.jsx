@@ -11,6 +11,7 @@ const FormSelect = ({
   required = false,
   rules,
   options,
+  showSearch = true,
   isKeyLabel = true,
   dropdownRender,
   ...props
@@ -18,7 +19,7 @@ const FormSelect = ({
   return (
     <Item name={name} label={label} rules={rules} required={required}>
       <Select
-        showSearch
+        showSearch={showSearch}
         {...props}
         style={{
           width: "100%",

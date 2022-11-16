@@ -16,7 +16,7 @@ const FormWorkingHistory = ({ fieldsChanges, form }) => {
 
   const [companySearch, setCompanySearch] = useState(null);
   const [positionSearch, setPositionSearch] = useState(null);
-  const [isChecked, setIsChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState(form.getFieldValue("status"));
 
   const companys = useSelector(state => state.company.companys);
   const positions = useSelector(state => state.position.positions);
@@ -28,36 +28,35 @@ const FormWorkingHistory = ({ fieldsChanges, form }) => {
   }, []);
 
   useEffect(() => {
-    if (isChecked)
+    if (isChecked) {
+      setIsChecked(isChecked);
       form.setFieldsValue({
         end_month: null,
         end_year: null,
       });
+      fieldsChanges.end_month = null;
+      fieldsChanges.end_year = null;
+    }
   }, [isChecked]);
 
   const onChecked = e => {
     setIsChecked(e.target.checked);
-    if (isChecked)
-      form.setFieldsValue({
-        end_month: null,
-        end_year: null,
-      });
   };
   const onChangeStartMotnh = month => {
-    form.validateFields(["start_year"]);
+    form.validateFields(["start_year", "end_month"]);
     fieldsChanges.start_month = month || null;
   };
   const onChangeStartYear = year => {
-    form.validateFields(["start_month"]);
+    form.validateFields(["start_month", "end_year"]);
     fieldsChanges.start_year = year || null;
   };
 
   const onChangeEndMotnh = month => {
-    form.validateFields(["end_year"]);
+    form.validateFields(["end_year", "start_month"]);
     fieldsChanges.end_month = month || null;
   };
   const onChangeEndYear = year => {
-    form.validateFields(["end_month"]);
+    form.validateFields(["end_month", "start_year"]);
     fieldsChanges.end_year = year || null;
   };
 
@@ -90,10 +89,6 @@ const FormWorkingHistory = ({ fieldsChanges, form }) => {
   const onChangePosition = (_, option) => {
     fieldsChanges.title = _ ? getPropertyKeyLabelObj(option) : null;
   };
-
-  //   const onChangeDegree = (_, option) => {
-  //     fieldsChanges.title = getPropertyKeyLabelObj(option);
-  //   };
 
   return (
     <Row gutter={16}>
@@ -147,21 +142,25 @@ const FormWorkingHistory = ({ fieldsChanges, form }) => {
                 optionFilterProp="label"
                 options={years()}
                 rules={[
+                  {
+                    required: true,
+                    message: "This field is required",
+                  },
                   ({ getFieldValue }) => ({
                     validator(_, value) {
-                      if (value || !getFieldValue("start_month")) {
-                        if (
-                          !getFieldValue("end_year") ||
-                          +value <= +getFieldValue("end_year")
-                        )
-                          return Promise.resolve();
+                      if (!value && !!getFieldValue("start_month"))
+                        return Promise.reject(new Error("Please select Year"));
 
+                      if (
+                        value &&
+                        !!getFieldValue("end_year") &&
+                        +value > +getFieldValue("end_year")
+                      )
                         return Promise.reject(
                           new Error("Start year not higher end year")
                         );
-                      }
 
-                      return Promise.reject(new Error("Please select Year"));
+                      return Promise.resolve();
                     },
                   }),
                 ]}
@@ -218,21 +217,25 @@ const FormWorkingHistory = ({ fieldsChanges, form }) => {
                 optionFilterProp="label"
                 options={years()}
                 rules={[
+                  {
+                    required: !isChecked,
+                    message: "This field is required",
+                  },
                   ({ getFieldValue }) => ({
                     validator(_, value) {
-                      if (value || !getFieldValue("end_month")) {
-                        if (
-                          !getFieldValue("start_year") ||
-                          +value >= +getFieldValue("start_year")
-                        )
-                          return Promise.resolve();
+                      if (!value && !!getFieldValue("end_month"))
+                        return Promise.reject(new Error("Please select Year"));
 
+                      if (
+                        value &&
+                        !!getFieldValue("start_year") &&
+                        +value < +getFieldValue("start_year")
+                      )
                         return Promise.reject(
-                          new Error("Start year not higher end year")
+                          new Error("End year not lower start year")
                         );
-                      }
 
-                      return Promise.reject(new Error("Please select Year"));
+                      return Promise.resolve();
                     },
                   }),
                 ]}
@@ -242,23 +245,16 @@ const FormWorkingHistory = ({ fieldsChanges, form }) => {
           </Row>
         </Item>
       </Col>
-      {/* <Col span={12}>
-        <FormSelect
-          allowClear
-          name="end_year"
-          label="Graduation year"
-          placeholder="Graduation year"
-          optionFilterProp="label"
-          isKeyLabel={false}
-          disabled={isChecked}
-          options={years()}
-          onChange={onChangeGradutionYear}
-        />
-      </Col> */}
       <Col span={24}>
         <FormSelect
           allowClear
           required
+          rules={[
+            {
+              required: true,
+              message: "Please select Company",
+            },
+          ]}
           name="organization"
           label="Company"
           placeholder="Select or add company"
@@ -275,8 +271,14 @@ const FormWorkingHistory = ({ fieldsChanges, form }) => {
       <Col span={24}>
         <FormSelect
           allowClear
-          required
           name="title"
+          required
+          rules={[
+            {
+              required: true,
+              message: "Please select Position",
+            },
+          ]}
           label="Position"
           placeholder="Select or add position"
           onSearch={onSearchPosition}
@@ -289,23 +291,6 @@ const FormWorkingHistory = ({ fieldsChanges, form }) => {
           }}
         />
       </Col>
-      {/* <Col span={24}>
-        <FormSelect
-          allowClear
-          name="title"
-          label="Degree"
-          placeholder="Select degree"
-          optionFilterProp="label"
-          options={certificates}
-          onChange={onChangeDegree}
-          rules={[
-            {
-              required: true,
-              message: "Please select degree",
-            },
-          ]}
-        />
-      </Col> */}
     </Row>
   );
 };

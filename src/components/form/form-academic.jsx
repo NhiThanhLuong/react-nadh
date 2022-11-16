@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
-import { useState } from "react";
-import { Form, Row, Col, Checkbox } from "antd";
+import { useEffect, useState } from "react";
+import { Row, Col, Checkbox } from "antd";
 import { Item } from "styles/styled";
 import { deleteKeyNull, getPropertyKeyLabelObj, years } from "ultis/func";
 import { FormSelect } from "components";
@@ -14,26 +14,39 @@ import {
 } from "features/candidatesSlice";
 import { hideModal } from "features/modalSlice";
 
-const FormAcademic = ({ fieldsChanges, typeModal }) => {
+const FormAcademic = ({ fieldsChanges, form }) => {
   const dispatch = useDispatch();
 
   const [schoolSearch, setSchoolSearch] = useState(null);
   const [majorSearch, setMajorSearch] = useState(null);
-  const [isChecked, setIsChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState(!form.getFieldValue("end_year"));
 
   const schools = useSelector(state => state.school.schools);
   const majors = useSelector(state => state.major.majors);
   const degrees = useSelector(state => state.degree.degrees);
 
+  useEffect(() => {
+    if (isChecked) {
+      setIsChecked(isChecked);
+      form.setFieldsValue({
+        end_year: null,
+      });
+      fieldsChanges.end_year = null;
+    }
+  }, [isChecked]);
+
   const onChecked = e => {
     setIsChecked(e.target.checked);
+    fieldsChanges.status = e.target.checked;
   };
 
   const onChangeStartYear = year => {
+    form.validateFields(["end_year"]);
     fieldsChanges.start_time = year ? `${year}-01-01` : null;
   };
 
   const onChangeGradutionYear = year => {
+    form.validateFields(["start_year"]);
     fieldsChanges.end_time = year ? `${year}-01-01` : null;
   };
 
@@ -84,6 +97,22 @@ const FormAcademic = ({ fieldsChanges, typeModal }) => {
           optionFilterProp="label"
           options={years()}
           onChange={onChangeStartYear}
+          rules={[
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (
+                  value &&
+                  !!getFieldValue("end_year") &&
+                  +value > +getFieldValue("end_year")
+                )
+                  return Promise.reject(
+                    new Error("Start year not higher end year")
+                  );
+
+                return Promise.resolve();
+              },
+            }),
+          ]}
         />
       </Col>
       <Col span={12}>
@@ -97,6 +126,22 @@ const FormAcademic = ({ fieldsChanges, typeModal }) => {
           disabled={isChecked}
           options={years()}
           onChange={onChangeGradutionYear}
+          rules={[
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (
+                  value &&
+                  !!getFieldValue("start_year") &&
+                  +value < +getFieldValue("start_year")
+                )
+                  return Promise.reject(
+                    new Error("End year not lower start year")
+                  );
+
+                return Promise.resolve();
+              },
+            }),
+          ]}
         />
       </Col>
       <Col span={24}>
@@ -134,6 +179,7 @@ const FormAcademic = ({ fieldsChanges, typeModal }) => {
       <Col span={24}>
         <FormSelect
           allowClear
+          required
           name="degree"
           label="Degree"
           placeholder="Select degree"

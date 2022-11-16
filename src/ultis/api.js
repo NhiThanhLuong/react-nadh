@@ -43,6 +43,10 @@ export const putDetailCandidate = async (id, params) => {
   return await axiosClient.put(`/api/candidates/${id}`, params);
 };
 
+export const getCurrencies = async params => {
+  return await axiosClient.get("/api/exchange_currencies", params);
+};
+
 // Delete
 export const deleteCandidateHistories = async id =>
   await axiosClient.delete(`/api/candidate_histories/${id}`);

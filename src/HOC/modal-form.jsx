@@ -23,12 +23,13 @@ const ModalForm = Component => {
 
     const [fieldsChanges, setFieldsChanges] = useState({});
 
+    const detailData = useSelector(state => state.candidates.detailData);
+
     const isShowModal = useSelector(state => state.modal.isShowModal);
     const type_modal = useSelector(state => state.modal.type_modal);
     const title_modal = useSelector(state => state.modal.title_modal);
 
     const history = useSelector(state => state.candidates.history);
-    const detailData = useSelector(state => state.candidates.detailData);
 
     const isEdit =
       type_modal === TYPE_MODAL.certificate_history.edit.type ||
@@ -66,7 +67,7 @@ const ModalForm = Component => {
 
     if (type() === 1) {
       initValues = {
-        status: history?.status === 1,
+        status: history?.status === -1 ? false : true,
         start_year: history?.start_time
           ? formatDate(history?.start_time).year
           : null,
@@ -77,7 +78,7 @@ const ModalForm = Component => {
       };
     } else if (type() === 3) {
       initValues = {
-        status: history?.status === 1,
+        status: history?.status === -1 ? false : true,
         start_year: history?.start_time
           ? formatDate(history?.start_time).year
           : null,
@@ -87,6 +88,7 @@ const ModalForm = Component => {
       };
     } else if (type() === 2) {
       initValues = {
+        status: !history?.end_time,
         start_month: history?.start_time
           ? +formatDate(history.start_time).month
           : null,
@@ -97,6 +99,8 @@ const ModalForm = Component => {
           ? +formatDate(history.end_time).month
           : null,
         end_year: history?.end_time ? formatDate(history.end_time).year : null,
+        organization: history?.organization || null,
+        title: history?.title || null,
         //   status: history?.status === 1,
         //   start_year: history?.start_time
         //     ? formatDate(history?.start_time).year
@@ -115,43 +119,60 @@ const ModalForm = Component => {
       }
     }, [isShowModal]);
 
-    const onSubmit = async () => {
-      form.submit();
-      if (isEdit) {
-        // await dispatch(
-        //   putCandidateHistory({
-        //     id: history.id,
-        //     params: {
-        //       ...initValues,
-        //       status: initValues.status ? 1 : -1,
-        //       ...fieldsChanges,
-        //     },
-        //   })
-        // );
-        const params = {
+    const onFinish = async () => {
+      let params = {};
+      if (type() === 1 || type() === 3) {
+        params = {
           ...initValues,
-          status: initValues.status ? 1 : -1,
           ...fieldsChanges,
           type: type(),
+          candidate_id: detailData.id,
+        };
+        params.status = params.status ? 1 : -1;
+      }
+
+      if (type() === 2) {
+        params = {
+          ...initValues,
+          ...fieldsChanges,
+          type: type(),
+          candidate_id: detailData.id,
+          start_time_month_flag: 1,
+          end_time_month_flag: 1,
+          id: history.id,
         };
         const { start_year, start_month, end_year, end_month } = params;
-        params.start_time = `${start_year}-${pad2(start_month)}-00`;
-        params.end_time = `${end_year}-${pad2(end_month)}-00`;
-        // params.status = status ? 1 : -1;
-        console.log(params);
+        params.start_time = start_year
+          ? `${start_year}-${pad2(start_month)}-01`
+          : null;
+        params.end_time = end_year ? `${end_year}-${pad2(end_month)}-01` : null;
+        delete params.start_year;
+        delete params.start_month;
+        delete params.end_year;
+        delete params.end_month;
+        delete params.status;
       }
-      //   else {
-      //     await dispatch(
-      //       PostCandidateHistory({
-      //         ...deleteKeyNull(fieldsChanges),
-      //         candidate_id: detailData.id,
-      //         type: type(),
-      //       })
-      //     );
-      //   }
-      //   await dispatch(fetchDetailCandidateNotLoading(detailData.candidate_id));
-      //   await setFieldsChanges(() => ({}));
-      //   dispatch(hideModal());
+      if (isEdit) {
+        await dispatch(
+          putCandidateHistory({
+            id: history.id,
+            params,
+          })
+        );
+      } else {
+        console.log("asdasd");
+        await dispatch(
+          //   PostCandidateHistory({
+          //     ...deleteKeyNull(fieldsChanges),
+          //     candidate_id: detailData.id,
+          //     type: type(),
+          //   })
+          PostCandidateHistory(params)
+        );
+      }
+      await dispatch(fetchDetailCandidateNotLoading(detailData.candidate_id));
+      await setFieldsChanges(() => ({}));
+      dispatch(hideModal());
     };
 
     return (
@@ -172,10 +193,10 @@ const ModalForm = Component => {
         width={700}
         closable={false}
         onCancel={onCancel}
-        onOk={onSubmit}
+        onOk={() => form.submit()}
         okText={isEdit ? "Save" : "Add"}
       >
-        <Form form={form} layout="vertical">
+        <Form form={form} layout="vertical" onFinish={onFinish}>
           <Component fieldsChanges={fieldsChanges} form={form} {...props} />
         </Form>
       </Modal>

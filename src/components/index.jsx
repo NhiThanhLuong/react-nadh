@@ -17,6 +17,7 @@ import FormTextInput from "./form/form-text-input";
 import FormAcademic from "./form/form-academic";
 import FormCertificate from "./form/form-certificate";
 import FormWorkingHistory from "./form/form-working-history";
+import FormBenefit from "./form/form-benefit";
 
 import ClearAllFilter from "./button/clear-all-filter";
 import CustomColumn from "./button/custom-column";
@@ -24,8 +25,11 @@ import CustomColumn from "./button/custom-column";
 import UserInfo from "./auth/user-info";
 import LoginFailed from "./auth/login-failed";
 
+import PersonalInformation from "./card-candidate/personal-information";
+import RemunerationAndRewards from "./card-candidate/remuneration-and-rewards";
+import SkillAndIndustry from "./card-candidate/skill-and-industry";
+
 import FilterTags from "./table/filter-tags";
-import notifiMsg from "./notification";
 
 export {
   CustomSearch,
@@ -47,9 +51,12 @@ export {
   FormAcademic,
   FormCertificate,
   FormWorkingHistory,
+  FormBenefit,
   ClearAllFilter,
   CustomColumn,
   UserInfo,
   LoginFailed,
-  notifiMsg,
+  PersonalInformation,
+  RemunerationAndRewards,
+  SkillAndIndustry,
 };
