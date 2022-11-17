@@ -41,7 +41,17 @@ const RemunerationAndRewards = ({ form }) => {
             name="current_salary"
             label="Based salary (VND)"
           >
-            <InputNumber min={0} className="w-full" />
+            <InputNumber
+              min={0}
+              className="w-full"
+              formatter={value =>
+                `${value}`
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                  .replace(/\.(?=\d{0,3}$)/g, ".")
+              }
+              parser={value => value.replace(/\$\s?|(,*)/g, "")}
+              precision={2}
+            />
           </Item>
         </Col>
         <Col span={12}>

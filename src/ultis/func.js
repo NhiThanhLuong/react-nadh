@@ -143,3 +143,7 @@ export const get_params_payload_id_from_industry_form_arr = arr =>
       primary: item?.primary,
     })
   );
+
+export const delete_key_object = (obj, key) => {
+  if (obj[key]) delete obj[key];
+};

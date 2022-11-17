@@ -213,7 +213,7 @@ const SkillAndIndustry = ({ form }) => {
       {/* Soft skills and Functions Skills */}
       <Row gutter={(16, 16)}>
         <Col span={12}>
-          <Item name="soft_skills" label="Soft skills">
+          <Item label="Soft skills">
             <Select
               mode="multiple"
               placeholder="Select your soft skills"
@@ -224,6 +224,7 @@ const SkillAndIndustry = ({ form }) => {
                 width: "100%",
               }}
               onChange={onChangeSoftSkill}
+              defaultValue={detailData?.soft_skills || []}
             >
               {softSkills.map(({ key, label }) => (
                 <Option key={key} value={+key} label={label}>

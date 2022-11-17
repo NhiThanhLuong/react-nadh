@@ -18,7 +18,7 @@ import {
 } from "features/locationSlice";
 import { fetchNationality, postNationality } from "features/nationalitySlice";
 import { fetchPosition, postPosition } from "features/positionSlice";
-import { TYPE_MODAL } from "ultis/const";
+import { KEYS_FIELDS_NOT_PUSH_PARAMS, TYPE_MODAL } from "ultis/const";
 import {
   formatDate,
   formatDDMMYYYY,
@@ -26,6 +26,8 @@ import {
   get_array_obj_key_label_from_array_key,
   format_day_month_year_to_date,
   getPropertyKeyLabelObj,
+  delete_key_object,
+  getPropertyKeyLabel,
 } from "ultis/func";
 import { fetchDegrees } from "features/degreeSlice";
 import { fetchFunctionSoftSkills, fetchSoftSkills } from "features/skillSlice";
@@ -42,6 +44,7 @@ import { fetchIndustries } from "features/categorySlice";
 import { showModal } from "features/modalSlice";
 import { fetchCurrency } from "features/currencySlice";
 import { Item } from "styles/styled";
+import { lowerFirst } from "lodash";
 
 const validateMessages = {
   required: "${label} is required!",
@@ -68,7 +71,7 @@ const DetailCandidate = () => {
 
   const isHiddenCancelSave = () => {
     if (isEmpty(fieldValues)) return true;
-    return Object.keys(fieldValues).every(item => item === "soft_skills");
+    // return Object.keys(fieldValues).every(item => item === "soft_skills");
   };
 
   const {
@@ -77,9 +80,13 @@ const DetailCandidate = () => {
     year_of_birth,
     emails,
     phones,
+    addresses,
     salary_from,
     salary_to,
     notice_days,
+    currency,
+    current_salary,
+    car_allowance,
     car_allowance_text,
     car_parking,
     car_parking_text,
@@ -126,17 +133,11 @@ const DetailCandidate = () => {
     console.log("values", values);
 
     if (fieldValues.addresses)
-      fieldValues.addresses = form.getFieldsValue().addresses.map(item => {
+      fieldValues.addresses = addresses.map(item => {
         if (item.city && isEmpty(item.city)) delete item.city;
         if (item.district && isEmpty(item.district)) delete item.district;
         return item;
       });
-
-    if (fieldValues.nationality)
-      fieldValues.nationality = get_array_obj_key_label_from_array_key(
-        nationalities,
-        fieldValues.nationality
-      );
 
     if (
       fieldValues.day_of_birth ||
@@ -148,9 +149,6 @@ const DetailCandidate = () => {
         month_of_birth,
         year_of_birth
       );
-      delete fieldValues.day_of_birth ||
-        delete fieldValues.month_of_birth ||
-        delete fieldValues.year_of_birth;
     }
 
     if (fieldValues.emails) {
@@ -169,54 +167,63 @@ const DetailCandidate = () => {
       }));
     }
 
-    if (fieldValues.prefer_position) {
-      fieldValues.prefer_position.positions =
-        get_array_obj_key_label_from_array_key(
-          positions,
-          fieldValues.prefer_position.positions
-        );
-    }
-
-    if (fieldValues.highest_education)
-      fieldValues.highest_education = form.getFieldsValue().highest_education;
-
     fieldValues.remuneration = {
       ...fieldValues.remuneration,
       notice_days:
-        fieldValues.notice_days >= 0 ? fieldValues.notice_days : notice_days,
+        fieldValues.notice_days !== undefined
+          ? fieldValues.notice_days
+          : notice_days,
+
+      currency:
+        fieldValues.currency === undefined ? currency : fieldValues.currency,
+
+      current_salary:
+        fieldValues.current_salary === undefined
+          ? current_salary
+          : fieldValues.current_salary,
       benefit: {
         car_parking:
-          fieldValues.car_parking >= 0 ? fieldValues.car_parking : car_parking,
+          fieldValues.car_parking !== undefined
+            ? fieldValues.car_parking
+            : car_parking,
         health_cover:
-          fieldValues.health_cover >= 0
+          fieldValues.health_cover !== undefined
             ? fieldValues.health_cover
             : health_cover,
-        laptop: fieldValues.laptop >= 0 ? fieldValues.laptop : laptop,
+        laptop: fieldValues.laptop !== undefined ? fieldValues.laptop : laptop,
         lunch_check:
-          fieldValues.lunch_check >= 0 ? fieldValues.lunch_check : lunch_check,
+          fieldValues.lunch_check !== undefined
+            ? fieldValues.lunch_check
+            : lunch_check,
         no_holiday:
-          fieldValues.no_holiday >= 0 ? fieldValues.no_holiday : no_holiday,
+          fieldValues.no_holiday !== undefined
+            ? fieldValues.no_holiday
+            : no_holiday,
         over_thirteen:
-          fieldValues.over_thirteen >= 0
+          fieldValues.over_thirteen !== undefined
             ? fieldValues.over_thirteen
             : over_thirteen,
         overtime_hour:
-          fieldValues.overtime_hour >= 0
+          fieldValues.overtime_hour !== undefined
             ? fieldValues.overtime_hour
             : overtime_hour,
         pension_scheme:
-          fieldValues.pension_scheme >= 0
+          fieldValues.pension_scheme !== undefined
             ? fieldValues.pension_scheme
             : pension_scheme,
-        phone: fieldValues.phone >= 0 ? fieldValues.phone : phone,
+        phone: fieldValues.phone !== undefined ? fieldValues.phone : phone,
         share_option:
-          fieldValues.share_option >= 0
+          fieldValues.share_option !== undefined
             ? fieldValues.share_option
             : share_option,
         working_hour:
-          fieldValues.working_hour >= 0
+          fieldValues.working_hour !== undefined
             ? fieldValues.working_hour
             : working_hour,
+        car_allowance:
+          fieldValues.car_allowance !== undefined
+            ? fieldValues.car_allowance
+            : car_allowance,
         car_allowance_text:
           fieldValues.car_allowance_text !== undefined
             ? fieldValues.car_allowance_text
@@ -258,49 +265,10 @@ const DetailCandidate = () => {
       },
     };
 
-    delete fieldValues.notice_days;
-    delete fieldValues.salary_from;
-    delete fieldValues.salary_to;
-    delete fieldValues.car_allowance_text;
-    delete fieldValues.car_parking;
-    delete fieldValues.car_parking_text;
-    delete fieldValues.health_cover;
-    delete fieldValues.health_cover_text;
-    delete fieldValues.laptop;
-    delete fieldValues.laptop_text;
-    delete fieldValues.lunch_check;
-    delete fieldValues.lunch_check_text;
-    delete fieldValues.no_holiday;
-    delete fieldValues.over_thirteen;
-    delete fieldValues.over_thirteen_text;
-    delete fieldValues.overtime_hour;
-    delete fieldValues.pension_scheme;
-    delete fieldValues.phone;
-    delete fieldValues.phone_text;
-    delete fieldValues.share_option;
-    delete fieldValues.share_option_text;
-    delete fieldValues.working_hour;
+    KEYS_FIELDS_NOT_PUSH_PARAMS.forEach(key =>
+      delete_key_object(fieldValues, key)
+    );
 
-    // if (fieldValues.notice_days >= 0) {
-    //   fieldValues.remuneration = {
-    //     ...fieldValues.remuneration,
-    //     notice_days: fieldValues.notice_days,
-    //   };
-    //   delete fieldValues.salary_from;
-    //   delete fieldValues.salary_to;
-    // }
-
-    // if (fieldValues.salary_from >= 0 || fieldValues.salary_to >= 0) {
-    //   fieldValues.remuneration = {
-    //     ...fieldValues.remuneration,
-    //     salary: {
-    //       from: fieldValues.salary_from || salary_from,
-    //       to: fieldValues.salary_to || salary_to,
-    //     },
-    //   };
-    //   delete fieldValues.salary_from;
-    //   delete fieldValues.salary_to;
-    // }
     console.log(fieldValues);
 
     dispatch(
@@ -317,6 +285,8 @@ const DetailCandidate = () => {
   };
 
   const onValuesChange = changedValues => {
+    delete_key_object(changedValues, "nationality");
+    delete_key_object(changedValues, "prefer_position");
     setFieldValues(prevState => ({ ...prevState, ...changedValues }));
   };
 
@@ -342,10 +312,27 @@ const DetailCandidate = () => {
     );
   };
 
+  const onChangePosition = (_, options) => {
+    setFieldValues(prevState => ({
+      ...prevState,
+      prefer_position: {
+        positions: getPropertyKeyLabel(options),
+      },
+    }));
+  };
+
   const onChangeEducation = (_, option) => {
-    form.setFieldsValue({
+    setFieldValues(prevState => ({
+      ...prevState,
       highest_education: getPropertyKeyLabelObj(option),
-    });
+    }));
+  };
+
+  const onChangeNationality = (_, options) => {
+    setFieldValues(prevState => ({
+      ...prevState,
+      nationality: getPropertyKeyLabel(options),
+    }));
   };
 
   const onChangeCountry = (_, option, key) => {
@@ -524,6 +511,8 @@ const DetailCandidate = () => {
               </Card>
               {/* Personal Information */}
               <PersonalInformation
+                fieldValues={fieldValues}
+                setFieldValues={setFieldValues}
                 onChangeBirthDay={onChangeBirthDay}
                 onChangeCountry={onChangeCountry}
                 onDropdownCity={onDropdownCity}
@@ -532,9 +521,11 @@ const DetailCandidate = () => {
                 onChangeDistrict={onChangeDistrict}
                 onSearchNationality={onSearchNationality}
                 onSearchPosition={onSearchPosition}
+                onChangePosition={onChangePosition}
                 onAddNationality={onAddNationality}
                 onAddPosition={onAddPosition}
                 onChangeEducation={onChangeEducation}
+                onChangeNationality={onChangeNationality}
               />
               {/* Skills And Industry */}
 

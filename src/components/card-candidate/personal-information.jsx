@@ -1,31 +1,30 @@
+import { useSelector } from "react-redux";
+import { PlusOutlined } from "@ant-design/icons";
 import {
+  Button,
+  Card,
+  Col,
+  Divider,
   Form,
   Input,
-  Row,
-  Col,
-  Card,
-  Select,
-  Radio,
-  Button,
-  Divider,
   InputNumber,
+  Radio,
+  Row,
+  Select,
 } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
 
+import { FormSelect, FormTextInput } from "components";
 import {
   candidate_priority_status,
   DAYS_RANGE,
-  MONTHS,
   GENDERS,
   MARITAL_STATUS,
+  MONTHS,
   RELOCATING_WILLINGNESS,
 } from "ultis/const";
 import { pad2, years } from "ultis/func";
 import validator from "ultis/validate";
-import { FormSelect, FormTextInput } from "components";
-
 import { AddSelect, FaMinusCircleRemove, Item } from "styles/styled";
-import { useSelector } from "react-redux";
 
 const { Option } = Select;
 
@@ -38,9 +37,11 @@ const PersonalInformation = ({
   onChangeDistrict,
   onSearchNationality,
   onSearchPosition,
+  onChangePosition,
   onAddNationality,
   onAddPosition,
   onChangeEducation,
+  onChangeNationality,
 }) => {
   const countries = useSelector(state => state.location.countries);
   const cities = useSelector(state => state.location.cities);
@@ -580,6 +581,7 @@ const PersonalInformation = ({
                 width: "100%",
               }}
               onSearch={onSearchNationality}
+              onChange={onChangeNationality}
               dropdownRender={originNode => (
                 <>
                   {originNode}
@@ -614,6 +616,7 @@ const PersonalInformation = ({
                 width: "100%",
               }}
               onSearch={onSearchPosition}
+              onChange={onChangePosition}
               dropdownRender={originNode => (
                 <>
                   {originNode}
