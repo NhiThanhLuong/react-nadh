@@ -9,9 +9,6 @@ import styled from "styled-components";
 import {
   fetchDetailCandidate,
   fetchEditDetailCandidate,
-  putEditDetailCandidateNotLoading,
-  putIndustryDetailCandidate,
-  putLanguageDetailCandidate,
   resetHistory,
 } from "features/candidatesSlice";
 import {
@@ -29,15 +26,9 @@ import {
   get_array_obj_key_label_from_array_key,
   format_day_month_year_to_date,
   getPropertyKeyLabelObj,
-  deleteKeyNull,
-  get_params_payload_id_from_industry_form_arr,
 } from "ultis/func";
 import { fetchDegrees } from "features/degreeSlice";
-import {
-  fetchFunctionSoftSkills,
-  fetchSoftSkills,
-  putSoftSkillDetailCandidate,
-} from "features/skillSlice";
+import { fetchFunctionSoftSkills, fetchSoftSkills } from "features/skillSlice";
 import {
   AcademicCandidate,
   CertificateCandidate,
@@ -47,12 +38,7 @@ import {
   WorkingHistoryCandidate,
 } from "components";
 import { fetchLanguages } from "features/languageSlice";
-import {
-  fetchCategory,
-  fetchIndustries,
-  fetchSectors,
-} from "features/categorySlice";
-import { useCallback } from "react";
+import { fetchIndustries } from "features/categorySlice";
 import { showModal } from "features/modalSlice";
 import { fetchCurrency } from "features/currencySlice";
 import { Item } from "styles/styled";
@@ -73,20 +59,12 @@ const DetailCandidate = () => {
   const [nationalitySearch, setNationalitySearch] = useState();
   const [positionSearch, setPositionSearch] = useState();
   const [fieldValues, setFieldValues] = useState({});
-  const [isChange, setIsChange] = useState(false);
 
   const detailData = useSelector(state => state.candidates.detailData);
   const loading = useSelector(state => state.candidates.loading);
 
-  const softSkills = useSelector(state => state.skill.softSkills);
-
-  const countries = useSelector(state => state.location.countries);
-  const cities = useSelector(state => state.location.cities);
-  const districts = useSelector(state => state.location.districts);
-
   const nationalities = useSelector(state => state.nationality.nationalities);
   const positions = useSelector(state => state.position.positions);
-  const degrees = useSelector(state => state.degree.degrees);
 
   const isHiddenCancelSave = () => {
     if (isEmpty(fieldValues)) return true;
@@ -99,9 +77,28 @@ const DetailCandidate = () => {
     year_of_birth,
     emails,
     phones,
-    industry_id,
-    sector_id,
-    category_id,
+    salary_from,
+    salary_to,
+    notice_days,
+    car_allowance_text,
+    car_parking,
+    car_parking_text,
+    health_cover,
+    health_cover_text,
+    laptop,
+    laptop_text,
+    lunch_check,
+    lunch_check_text,
+    no_holiday,
+    over_thirteen,
+    over_thirteen_text,
+    overtime_hour,
+    pension_scheme,
+    phone,
+    phone_text,
+    share_option,
+    share_option_text,
+    working_hour,
   } = form.getFieldsValue();
 
   useEffect(() => {
@@ -183,9 +180,128 @@ const DetailCandidate = () => {
     if (fieldValues.highest_education)
       fieldValues.highest_education = form.getFieldsValue().highest_education;
 
-    // if (fieldValues.industry_id) {
-    //   fieldValues.business_line;
+    fieldValues.remuneration = {
+      ...fieldValues.remuneration,
+      notice_days:
+        fieldValues.notice_days >= 0 ? fieldValues.notice_days : notice_days,
+      benefit: {
+        car_parking:
+          fieldValues.car_parking >= 0 ? fieldValues.car_parking : car_parking,
+        health_cover:
+          fieldValues.health_cover >= 0
+            ? fieldValues.health_cover
+            : health_cover,
+        laptop: fieldValues.laptop >= 0 ? fieldValues.laptop : laptop,
+        lunch_check:
+          fieldValues.lunch_check >= 0 ? fieldValues.lunch_check : lunch_check,
+        no_holiday:
+          fieldValues.no_holiday >= 0 ? fieldValues.no_holiday : no_holiday,
+        over_thirteen:
+          fieldValues.over_thirteen >= 0
+            ? fieldValues.over_thirteen
+            : over_thirteen,
+        overtime_hour:
+          fieldValues.overtime_hour >= 0
+            ? fieldValues.overtime_hour
+            : overtime_hour,
+        pension_scheme:
+          fieldValues.pension_scheme >= 0
+            ? fieldValues.pension_scheme
+            : pension_scheme,
+        phone: fieldValues.phone >= 0 ? fieldValues.phone : phone,
+        share_option:
+          fieldValues.share_option >= 0
+            ? fieldValues.share_option
+            : share_option,
+        working_hour:
+          fieldValues.working_hour >= 0
+            ? fieldValues.working_hour
+            : working_hour,
+        car_allowance_text:
+          fieldValues.car_allowance_text !== undefined
+            ? fieldValues.car_allowance_text
+            : car_allowance_text,
+        car_parking_text:
+          fieldValues.car_parking_text !== undefined
+            ? fieldValues.car_parking_text
+            : car_parking_text,
+        health_cover_text:
+          fieldValues.health_cover_text !== undefined
+            ? fieldValues.health_cover_text
+            : health_cover_text,
+        laptop_text:
+          fieldValues.laptop_text !== undefined
+            ? fieldValues.laptop_text
+            : laptop_text,
+        lunch_check_text:
+          fieldValues.lunch_check_text !== undefined
+            ? fieldValues.lunch_check_text
+            : lunch_check_text,
+        over_thirteen_text:
+          fieldValues.over_thirteen_text !== undefined
+            ? fieldValues.over_thirteen_text
+            : over_thirteen_text,
+        phone_text:
+          fieldValues.phone_text !== undefined
+            ? fieldValues.phone_text
+            : phone_text,
+        share_option_text:
+          fieldValues.share_option_text !== undefined
+            ? fieldValues.share_option_text
+            : share_option_text,
+      },
+
+      salary: {
+        from:
+          fieldValues.salary_from >= 0 ? fieldValues.salary_from : salary_from,
+        to: fieldValues.salary_to >= 0 ? fieldValues.salary_to : salary_to,
+      },
+    };
+
+    delete fieldValues.notice_days;
+    delete fieldValues.salary_from;
+    delete fieldValues.salary_to;
+    delete fieldValues.car_allowance_text;
+    delete fieldValues.car_parking;
+    delete fieldValues.car_parking_text;
+    delete fieldValues.health_cover;
+    delete fieldValues.health_cover_text;
+    delete fieldValues.laptop;
+    delete fieldValues.laptop_text;
+    delete fieldValues.lunch_check;
+    delete fieldValues.lunch_check_text;
+    delete fieldValues.no_holiday;
+    delete fieldValues.over_thirteen;
+    delete fieldValues.over_thirteen_text;
+    delete fieldValues.overtime_hour;
+    delete fieldValues.pension_scheme;
+    delete fieldValues.phone;
+    delete fieldValues.phone_text;
+    delete fieldValues.share_option;
+    delete fieldValues.share_option_text;
+    delete fieldValues.working_hour;
+
+    // if (fieldValues.notice_days >= 0) {
+    //   fieldValues.remuneration = {
+    //     ...fieldValues.remuneration,
+    //     notice_days: fieldValues.notice_days,
+    //   };
+    //   delete fieldValues.salary_from;
+    //   delete fieldValues.salary_to;
     // }
+
+    // if (fieldValues.salary_from >= 0 || fieldValues.salary_to >= 0) {
+    //   fieldValues.remuneration = {
+    //     ...fieldValues.remuneration,
+    //     salary: {
+    //       from: fieldValues.salary_from || salary_from,
+    //       to: fieldValues.salary_to || salary_to,
+    //     },
+    //   };
+    //   delete fieldValues.salary_from;
+    //   delete fieldValues.salary_to;
+    // }
+    console.log(fieldValues);
 
     dispatch(
       fetchEditDetailCandidate({
@@ -280,151 +396,6 @@ const DetailCandidate = () => {
     dispatch(postPosition(positionSearch));
   };
 
-  const onChangeSoftSkill = value => {
-    const values = get_array_obj_key_label_from_array_key(softSkills, value);
-    dispatch(
-      putSoftSkillDetailCandidate({
-        id: detailData?.id,
-        params: {
-          soft_skills: values,
-        },
-      })
-    );
-  };
-
-  const onSearchLanguage = value => {
-    dispatch(
-      fetchLanguages({
-        value,
-      })
-    );
-  };
-
-  const onSelectLanguage = (_, option) => {
-    dispatch(
-      putLanguageDetailCandidate({
-        id: detailData.id,
-        params: {
-          languages: [...detailData.languages, getPropertyKeyLabelObj(option)],
-        },
-      })
-    );
-  };
-
-  const onDeleteLanguage = key => {
-    dispatch(
-      putLanguageDetailCandidate({
-        id: detailData.id,
-        params: {
-          languages: detailData.languages.filter(item => item.key !== key),
-        },
-      })
-    );
-  };
-
-  const onChangeIndustry = () => {
-    form.setFieldsValue({
-      sector_id: null,
-      category_id: null,
-    });
-  };
-
-  const onChangeSector = () => {
-    form.setFieldsValue({
-      category_id: null,
-    });
-  };
-
-  const onDropdownSector = open => {
-    open &&
-      dispatch(
-        fetchSectors({
-          parent_id: industry_id,
-          type: 2,
-        })
-      );
-  };
-
-  const onDropdownCategory = open => {
-    open &&
-      dispatch(
-        fetchCategory({
-          parent_id: sector_id,
-          type: 3,
-        })
-      );
-  };
-
-  const onResetIndustry = () => {
-    form.setFieldsValue({
-      industry_id: null,
-      sector_id: null,
-      category_id: null,
-    });
-    setIsChange(!isChange);
-  };
-
-  const onSaveIndustry = () => {
-    const initBusinessLine = get_params_payload_id_from_industry_form_arr(
-      detailData.business_line
-    );
-    const newBusinessLine = [
-      ...initBusinessLine,
-      deleteKeyNull({
-        industry_id,
-        sector_id,
-        category_id,
-      }),
-    ];
-
-    dispatch(
-      putIndustryDetailCandidate({
-        id: detailData.id,
-        params: {
-          business_line: newBusinessLine,
-        },
-      })
-    );
-    onResetIndustry();
-  };
-
-  const onDeleteIndustryItem = (_, __, index) => {
-    const newBusinessLine = get_params_payload_id_from_industry_form_arr(
-      detailData.business_line.filter((_, id) => id !== index)
-    );
-    dispatch(
-      putIndustryDetailCandidate({
-        id: detailData.id,
-        params: {
-          business_line: newBusinessLine,
-        },
-      })
-    );
-  };
-
-  const onCheckedPrimaryIndustry = useCallback(
-    (checked, index) => {
-      const newBusinessLine = detailData.business_line.map((item, id) => {
-        if (id === index)
-          return {
-            ...item,
-            primary: checked ? 1 : -1,
-          };
-        return item;
-      });
-      dispatch(
-        putEditDetailCandidateNotLoading({
-          id: detailData.id,
-          params: {
-            business_line:
-              get_params_payload_id_from_industry_form_arr(newBusinessLine),
-          },
-        })
-      );
-    },
-    [detailData]
-  );
-
   const onAddEducation = () => {
     dispatch(resetHistory());
     dispatch(showModal(TYPE_MODAL.academic_history.add));
@@ -438,18 +409,6 @@ const DetailCandidate = () => {
   const onAddWorkingHistory = () => {
     dispatch(resetHistory());
     dispatch(showModal(TYPE_MODAL.working_history.add));
-  };
-
-  const onSearchFunctionSkill = value => {
-    dispatch(
-      fetchFunctionSoftSkills(
-        value
-          ? {
-              children_name: value,
-            }
-          : {}
-      )
-    );
   };
 
   const onResetFields = () => {
@@ -539,6 +498,16 @@ const DetailCandidate = () => {
                 health_cover: detailData?.remuneration.benefit.health_cover,
                 health_cover_text:
                   detailData?.remuneration.benefit.health_cover_text,
+                pension_scheme:
+                  detailData?.remuneration.benefit.pension_scheme || 0,
+                working_hour:
+                  detailData?.remuneration.benefit?.working_hour || 0,
+                no_holiday: detailData?.remuneration.benefit?.no_holiday || 0,
+                overtime_hour:
+                  detailData?.remuneration.benefit?.overtime_hour || 0,
+                notice_days: detailData?.remuneration.notice_days || 0,
+                salary_from: detailData?.remuneration.salary.from || 0,
+                salary_to: detailData?.remuneration.salary.to || 0,
               }}
             >
               <Button onClick={() => console.log(form.getFieldsValue())}>
@@ -647,7 +616,7 @@ const DetailCandidate = () => {
                   </Col>
                 </Row>
               </Card>
-              <RemunerationAndRewards />
+              <RemunerationAndRewards form={form} />
               {/* Cancel & Save */}
               {isHiddenCancelSave() ? null : (
                 <RowSubmit justify="end">

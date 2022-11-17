@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getCurrencies } from "ultis/api";
-import { getPropertyKeyLabel } from "ultis/func";
 
 export const fetchCurrency = createAsyncThunk(
   "currency/fetchCurrency",
@@ -21,7 +20,7 @@ export const currencySlice = createSlice({
     [fetchCurrency.fulfilled.type]: (state, { payload }) => {
       state.loading = false;
 
-      state.currencies = getPropertyKeyLabel(payload);
+      state.currencies = payload;
     },
   },
 });
