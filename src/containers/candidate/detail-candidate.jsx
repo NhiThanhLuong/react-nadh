@@ -271,13 +271,13 @@ const DetailCandidate = () => {
 
     console.log(fieldValues);
 
-    dispatch(
-      fetchEditDetailCandidate({
-        id: detailData.id,
-        params: fieldValues,
-      })
-    );
-    setFieldValues(() => ({}));
+    // dispatch(
+    //   fetchEditDetailCandidate({
+    //     id: detailData.id,
+    //     params: fieldValues,
+    //   })
+    // );
+    // setFieldValues(() => ({}));
   };
 
   const onFinishFailed = errorInfo => {
@@ -287,6 +287,9 @@ const DetailCandidate = () => {
   const onValuesChange = changedValues => {
     delete_key_object(changedValues, "nationality");
     delete_key_object(changedValues, "prefer_position");
+    delete_key_object(changedValues, "industry_id");
+    delete_key_object(changedValues, "sector_id");
+    delete_key_object(changedValues, "category_id");
     setFieldValues(prevState => ({ ...prevState, ...changedValues }));
   };
 

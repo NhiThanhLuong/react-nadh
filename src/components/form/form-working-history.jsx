@@ -16,7 +16,6 @@ const FormWorkingHistory = ({ fieldsChanges, form }) => {
 
   const [companySearch, setCompanySearch] = useState(null);
   const [positionSearch, setPositionSearch] = useState(null);
-  const [isChecked, setIsChecked] = useState(form.getFieldValue("status"));
 
   const companys = useSelector(state => state.company.companys);
   const positions = useSelector(state => state.position.positions);
@@ -27,9 +26,8 @@ const FormWorkingHistory = ({ fieldsChanges, form }) => {
     dispatch(fetchCompanys());
   }, []);
 
-  useEffect(() => {
-    if (isChecked) {
-      setIsChecked(isChecked);
+  const onChecked = ({ target: { checked } }) => {
+    if (checked) {
       form.setFieldsValue({
         end_month: null,
         end_year: null,
@@ -37,10 +35,7 @@ const FormWorkingHistory = ({ fieldsChanges, form }) => {
       fieldsChanges.end_month = null;
       fieldsChanges.end_year = null;
     }
-  }, [isChecked]);
-
-  const onChecked = e => {
-    setIsChecked(e.target.checked);
+    form.validateFields(["start_year", "end_year", "start_month"]);
   };
   const onChangeStartMotnh = month => {
     form.validateFields(["start_year", "end_month"]);
@@ -59,10 +54,6 @@ const FormWorkingHistory = ({ fieldsChanges, form }) => {
     form.validateFields(["end_month", "start_year"]);
     fieldsChanges.end_year = year || null;
   };
-
-  //   const onChangeGradutionYear = year => {
-  //     fieldsChanges.end_time = year ? `${year}-01-01` : null;
-  //   };
 
   const onSearchCompany = value => {
     setCompanySearch(() => value);
@@ -104,6 +95,7 @@ const FormWorkingHistory = ({ fieldsChanges, form }) => {
               <FormSelect
                 allowClear
                 name="start_month"
+                dependencies={["status", "end_month"]}
                 placeholder="Month"
                 optionFilterProp="label"
                 options={MONTHS}
@@ -139,6 +131,7 @@ const FormWorkingHistory = ({ fieldsChanges, form }) => {
                 name="start_year"
                 placeholder="Year"
                 isKeyLabel={false}
+                dependencies={["end_year"]}
                 optionFilterProp="label"
                 options={years()}
                 rules={[
@@ -174,73 +167,58 @@ const FormWorkingHistory = ({ fieldsChanges, form }) => {
         <Item label="End year" required>
           <Row gutter={16}>
             <Col span={12}>
-              <FormSelect
-                allowClear
-                disabled={isChecked}
-                name="end_month"
-                placeholder="Month"
-                optionFilterProp="label"
-                options={MONTHS}
-                onChange={onChangeEndMotnh}
-                rules={[
-                  ({ getFieldValue }) => ({
-                    validator(_, value) {
-                      if (
-                        !value ||
-                        !getFieldValue("start_month") ||
-                        !getFieldValue("start_year") ||
-                        !getFieldValue("end_year") ||
-                        +getFieldValue("start_year") !==
-                          +getFieldValue("end_year") ||
-                        +value >= +getFieldValue("start_month")
-                      ) {
-                        return Promise.resolve();
-                      }
-
-                      return Promise.reject(
-                        new Error(
-                          "End month not lower start month when the same year"
-                        )
-                      );
-                    },
-                  }),
-                ]}
-              />
+              <Item dependencies={["status"]}>
+                {({ getFieldValue }) => {
+                  const status = getFieldValue("status");
+                  return (
+                    <FormSelect
+                      allowClear
+                      disabled={status}
+                      name="end_month"
+                      placeholder="Month"
+                      optionFilterProp="label"
+                      options={MONTHS}
+                      onChange={onChangeEndMotnh}
+                    />
+                  );
+                }}
+              </Item>
             </Col>
             <Col span={12}>
-              <FormSelect
-                allowClear
-                disabled={isChecked}
-                name="end_year"
-                placeholder="Year"
-                isKeyLabel={false}
-                optionFilterProp="label"
-                options={years()}
-                rules={[
-                  {
-                    required: !isChecked,
-                    message: "This field is required",
-                  },
-                  ({ getFieldValue }) => ({
-                    validator(_, value) {
-                      if (!value && !!getFieldValue("end_month"))
-                        return Promise.reject(new Error("Please select Year"));
+              <Item dependencies={["status"]}>
+                {({ getFieldValue }) => {
+                  const status = getFieldValue("status");
+                  return (
+                    <FormSelect
+                      allowClear
+                      disabled={status}
+                      name={"end_year"}
+                      dependencies={["status"]}
+                      placeholder="Year"
+                      isKeyLabel={false}
+                      optionFilterProp="label"
+                      options={years()}
+                      rules={[
+                        {
+                          required: !status,
+                          message: "This field is required",
+                        },
+                        ({ getFieldValue }) => ({
+                          validator(_, value) {
+                            if (!value && !!getFieldValue("end_month"))
+                              return Promise.reject(
+                                new Error("Please select Year")
+                              );
 
-                      if (
-                        value &&
-                        !!getFieldValue("start_year") &&
-                        +value < +getFieldValue("start_year")
-                      )
-                        return Promise.reject(
-                          new Error("End year not lower start year")
-                        );
-
-                      return Promise.resolve();
-                    },
-                  }),
-                ]}
-                onChange={onChangeEndYear}
-              />
+                            return Promise.resolve();
+                          },
+                        }),
+                      ]}
+                      onChange={onChangeEndYear}
+                    />
+                  );
+                }}
+              </Item>
             </Col>
           </Row>
         </Item>

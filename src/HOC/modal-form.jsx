@@ -101,13 +101,6 @@ const ModalForm = Component => {
         end_year: history?.end_time ? formatDate(history.end_time).year : null,
         organization: history?.organization || null,
         title: history?.title || null,
-        //   status: history?.status === 1,
-        //   start_year: history?.start_time
-        //     ? formatDate(history?.start_time).year
-        //     : null,
-        //   end_year: history?.end_time ? formatDate(history?.end_time).year : null,
-        //   organization: history?.organization || null,
-        //   title: history?.title || null,
       };
     }
 
@@ -161,14 +154,7 @@ const ModalForm = Component => {
         );
       } else {
         console.log("asdasd");
-        await dispatch(
-          //   PostCandidateHistory({
-          //     ...deleteKeyNull(fieldsChanges),
-          //     candidate_id: detailData.id,
-          //     type: type(),
-          //   })
-          PostCandidateHistory(params)
-        );
+        await dispatch(PostCandidateHistory(params));
       }
       await dispatch(fetchDetailCandidateNotLoading(detailData.candidate_id));
       await setFieldsChanges(() => ({}));

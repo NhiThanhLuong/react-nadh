@@ -12,7 +12,6 @@ const FormCertificate = ({ fieldsChanges, form }) => {
   const dispatch = useDispatch();
 
   const [schoolSearch, setSchoolSearch] = useState(null);
-  const [isChecked, setIsChecked] = useState(!form.getFieldValue("end_year"));
 
   const schools = useSelector(state => state.school.schools);
   const certificates = useSelector(state => state.degree.certificates);
@@ -21,19 +20,15 @@ const FormCertificate = ({ fieldsChanges, form }) => {
     dispatch(fetchCertificate());
   }, []);
 
-  useEffect(() => {
-    if (isChecked) {
-      setIsChecked(isChecked);
+  const onChecked = ({ target: { checked } }) => {
+    if (checked) {
       form.setFieldsValue({
         end_year: null,
       });
       fieldsChanges.end_year = null;
     }
-  }, [isChecked]);
-
-  const onChecked = e => {
-    setIsChecked(e.target.checked);
-    fieldsChanges.status = e.target.checked;
+    fieldsChanges.status = checked;
+    form.validateFields(["start_year", "end_year"]);
   };
 
   const onChangeStartYear = year => {
@@ -67,9 +62,7 @@ const FormCertificate = ({ fieldsChanges, form }) => {
     <Row gutter={16}>
       <Col span={24}>
         <Item name="status" valuePropName="checked">
-          <Checkbox checked={isChecked} onChange={onChecked}>
-            Current school
-          </Checkbox>
+          <Checkbox onChange={onChecked}>Current school</Checkbox>
         </Item>
       </Col>
       <Col span={12}>
@@ -79,6 +72,7 @@ const FormCertificate = ({ fieldsChanges, form }) => {
           label="Start Year"
           placeholder="Start Year"
           isKeyLabel={false}
+          dependencies={["end_year"]}
           optionFilterProp="label"
           options={years()}
           onChange={onChangeStartYear}
@@ -101,33 +95,24 @@ const FormCertificate = ({ fieldsChanges, form }) => {
         />
       </Col>
       <Col span={12}>
-        <FormSelect
-          allowClear
-          name="end_year"
-          label="Graduation year"
-          placeholder="Graduation year"
-          optionFilterProp="label"
-          isKeyLabel={false}
-          disabled={isChecked}
-          options={years()}
-          onChange={onChangeGradutionYear}
-          rules={[
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (
-                  value &&
-                  !!getFieldValue("start_year") &&
-                  +value < +getFieldValue("start_year")
-                )
-                  return Promise.reject(
-                    new Error("End year not lower start year")
-                  );
-
-                return Promise.resolve();
-              },
-            }),
-          ]}
-        />
+        <Item dependencies={["status"]}>
+          {({ getFieldValue }) => {
+            const status = getFieldValue("status");
+            return (
+              <FormSelect
+                allowClear
+                name="end_year"
+                label="Graduation year"
+                placeholder="Graduation year"
+                optionFilterProp="label"
+                isKeyLabel={false}
+                disabled={status}
+                options={years()}
+                onChange={onChangeGradutionYear}
+              />
+            );
+          }}
+        </Item>
       </Col>
       <Col span={24}>
         <FormSelect
