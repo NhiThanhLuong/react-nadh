@@ -1,15 +1,6 @@
 import axiosClient from "./axios";
 
-export const testLogin = async (username, password) => {
-  return await axiosClient.post("/login", {
-    user_name: username,
-    password,
-  });
-};
-
-export const postCandidate = async params => {
-  return await axiosClient.post("/api/candidates", params);
-};
+// Get
 
 export const getCandidates = async params => {
   return await axiosClient.get("/api/candidates", params);
@@ -31,20 +22,16 @@ export const getPropertyValues = async params => {
   return await axiosClient.get("/api/property_values", params);
 };
 
-export const postPropertyValues = async params => {
-  return await axiosClient.post(`/api/property_values`, params);
-};
-
 export const getDetailCandidate = async id => {
   return await axiosClient.get(`/api/candidates/${id}`);
 };
 
-export const putDetailCandidate = async (id, params) => {
-  return await axiosClient.put(`/api/candidates/${id}`, params);
-};
-
 export const getCurrencies = async params => {
   return await axiosClient.get("/api/exchange_currencies", params);
+};
+
+export const getFile = async params => {
+  return await axiosClient.get("/nadh-mediafile/files", params);
 };
 
 // Delete
@@ -52,10 +39,37 @@ export const deleteCandidateHistories = async id =>
   await axiosClient.delete(`/api/candidate_histories/${id}`);
 
 // Post
+export const postCandidate = async params => {
+  return await axiosClient.post("/api/candidates", params);
+};
+
+export const postPropertyValues = async params => {
+  return await axiosClient.post(`/api/property_values`, params);
+};
+
+export const testLogin = async (username, password) => {
+  return await axiosClient.post("/login", {
+    user_name: username,
+    password,
+  });
+};
+
 export const postCandidateHistories = async params => {
   return await axiosClient.post("/api/candidate_histories", params);
 };
 
+export const postFile = async formData => {
+  return await axiosClient.post("/nadh-mediafile/file", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
+
 // Put
+export const putDetailCandidate = async (id, params) => {
+  return await axiosClient.put(`/api/candidates/${id}`, params);
+};
+
 export const putCandidateHistories = async (id, params) =>
   await axiosClient.put(`/api/candidate_histories/${id}`, params);

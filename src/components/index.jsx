@@ -18,6 +18,7 @@ import FormAcademic from "./form/form-academic";
 import FormCertificate from "./form/form-certificate";
 import FormWorkingHistory from "./form/form-working-history";
 import FormBenefit from "./form/form-benefit";
+import FormCkeditor from "./form/form-ckeditor";
 
 import ClearAllFilter from "./button/clear-all-filter";
 import CustomColumn from "./button/custom-column";
@@ -30,10 +31,13 @@ import RemunerationAndRewards from "./card-candidate/remuneration-and-rewards";
 import SkillAndIndustry from "./card-candidate/skill-and-industry";
 
 import FilterTags from "./table/filter-tags";
+import UploadFile from "./upload-file";
 
 export {
   CustomSearch,
   FilterTags,
+  UploadFile,
+  FormCkeditor,
   CustomSearchYearRange,
   AcademicCandidate,
   CertificateCandidate,

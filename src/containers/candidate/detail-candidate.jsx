@@ -34,9 +34,11 @@ import { fetchFunctionSoftSkills, fetchSoftSkills } from "features/skillSlice";
 import {
   AcademicCandidate,
   CertificateCandidate,
+  FormCkeditor,
   PersonalInformation,
   RemunerationAndRewards,
   SkillAndIndustry,
+  UploadFile,
   WorkingHistoryCandidate,
 } from "components";
 import { fetchLanguages } from "features/languageSlice";
@@ -44,7 +46,6 @@ import { fetchIndustries } from "features/categorySlice";
 import { showModal } from "features/modalSlice";
 import { fetchCurrency } from "features/currencySlice";
 import { Item } from "styles/styled";
-import { lowerFirst } from "lodash";
 
 const validateMessages = {
   required: "${label} is required!",
@@ -269,15 +270,15 @@ const DetailCandidate = () => {
       delete_key_object(fieldValues, key)
     );
 
-    console.log(fieldValues);
+    // console.log(fieldValues);
 
-    // dispatch(
-    //   fetchEditDetailCandidate({
-    //     id: detailData.id,
-    //     params: fieldValues,
-    //   })
-    // );
-    // setFieldValues(() => ({}));
+    dispatch(
+      fetchEditDetailCandidate({
+        id: detailData.id,
+        params: fieldValues,
+      })
+    );
+    setFieldValues(() => ({}));
   };
 
   const onFinishFailed = errorInfo => {
@@ -290,7 +291,17 @@ const DetailCandidate = () => {
     delete_key_object(changedValues, "industry_id");
     delete_key_object(changedValues, "sector_id");
     delete_key_object(changedValues, "category_id");
+    // delete_key_object(changedValues, "extra");
     setFieldValues(prevState => ({ ...prevState, ...changedValues }));
+  };
+
+  const onChangeSkillOther = (event, editor) => {
+    const data = editor.getData();
+    console.log({ event, editor, data });
+    setFieldValues(prevState => ({
+      ...prevState,
+      skill_other: data,
+    }));
   };
 
   const onChangeBirthDay = () => {
@@ -463,6 +474,7 @@ const DetailCandidate = () => {
                 direct_reports: detailData?.direct_reports || 0,
                 soft_skills: detailData?.soft_skills || [],
                 functions_skills: detailData?.functions_skills || [],
+                extra: detailData?.extra || {},
                 certificate_text: detailData?.certificate_text || "",
                 current_salary: detailData?.remuneration.current_salary || null,
                 currency: detailData?.remuneration.currency.id,
@@ -503,6 +515,14 @@ const DetailCandidate = () => {
               <Button onClick={() => console.log(form.getFieldsValue())}>
                 Log field values
               </Button>
+              <UploadFile />
+              <FormCkeditor
+                name="skill_other"
+                label="Other"
+                data={detailData.extra.skill_other}
+                onChange={onChangeSkillOther}
+              />
+
               {/* Overview */}
               <Card
                 title={<span style={{ color: "#465f7b" }}>Overview</span>}
