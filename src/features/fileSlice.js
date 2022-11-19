@@ -29,7 +29,14 @@ export const fileSlice = createSlice({
     },
     [fetchFiles.fulfilled.type]: (state, { payload }) => {
       state.loading = false;
-      state.files = payload.data;
+      state.files = payload.data.map(item => {
+        if (item.ext === ".jpg")
+          return {
+            ...item,
+            thumbUrl: `https://lubrytics.com:8443/nadh-mediafile/file/${item.id}`,
+          };
+        return item;
+      });
     },
     [fetchFiles.rejected.type]: state => {
       state.loading = false;

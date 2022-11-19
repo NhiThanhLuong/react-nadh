@@ -38,6 +38,9 @@ export const getFile = async params => {
 export const deleteCandidateHistories = async id =>
   await axiosClient.delete(`/api/candidate_histories/${id}`);
 
+export const deleteFile = async id =>
+  await axiosClient.delete(`/nadh-mediafile/file/${id}`);
+
 // Post
 export const postCandidate = async params => {
   return await axiosClient.post("/api/candidates", params);

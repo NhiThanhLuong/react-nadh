@@ -9,10 +9,7 @@ const axiosClient = axios.create({
 });
 
 axiosClient.interceptors.request.use(async config => {
-  if (
-    config.url === "/nadh-mediafile/file" ||
-    config.url === "/nadh-mediafile/files"
-  )
+  if (config.url.includes("nadh-mediafile"))
     config.baseURL = "https://lubrytics.com:8443";
   config.paramsSerializer = params => queryString.stringify(params);
   config.headers.Authorization = `Bearer ${localStorage.getItem("token")}`;
