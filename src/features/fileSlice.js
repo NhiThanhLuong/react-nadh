@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getFile, postFile } from "ultis/api";
+import { URL_FILE } from "ultis/const";
 
 export const fetchFiles = createAsyncThunk(
   "file/fetchFiles",
@@ -30,12 +31,13 @@ export const fileSlice = createSlice({
     [fetchFiles.fulfilled.type]: (state, { payload }) => {
       state.loading = false;
       state.files = payload.data.map(item => {
+        const newItem = { ...item, status: "done", uid: item.id };
         if (item.ext === ".jpg")
           return {
-            ...item,
-            thumbUrl: `https://lubrytics.com:8443/nadh-mediafile/file/${item.id}`,
+            ...newItem,
+            thumbUrl: `${URL_FILE}/${item.id}`,
           };
-        return item;
+        return newItem;
       });
     },
     [fetchFiles.rejected.type]: state => {

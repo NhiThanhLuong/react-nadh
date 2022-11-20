@@ -293,3 +293,5 @@ export const KEYS_FIELDS_NOT_PUSH_PARAMS = [
   "share_option_text",
   "working_hour",
 ];
+
+export const URL_FILE = "https://lubrytics.com:8443/nadh-mediafile/file";
