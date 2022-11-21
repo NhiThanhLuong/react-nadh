@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import { createSearchParams } from "react-router-dom";
-// import PropTypes from "prop-types";
+import { Col } from "antd";
 
 import CustomSearch from "./custom-search";
 import SelectSearch from "./type_search_filter/select-search";
 import { deleteKeyNull } from "ultis/func";
-import { Col } from "antd";
 
 const FilterDropdown3Select = ({
   keyIdFilter,

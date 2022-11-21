@@ -6,6 +6,10 @@ export const getCandidates = async params => {
   return await axiosClient.get("/api/candidates", params);
 };
 
+export const getClients = async params => {
+  return await axiosClient.get("/api/clients", params);
+};
+
 export const getUserPage = async params => {
   return await axiosClient.get("/api/user_pages", params);
 };
@@ -32,6 +36,10 @@ export const getCurrencies = async params => {
 
 export const getFile = async params => {
   return await axiosClient.get("/nadh-mediafile/files", params);
+};
+
+export const getUsers = async params => {
+  return await axiosClient.get("/api/users", params);
 };
 
 // Delete

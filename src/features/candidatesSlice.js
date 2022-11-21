@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   getCandidates,
@@ -185,7 +184,7 @@ export const candidatesSlice = createSlice({
     [putCandidateHistory.pending.type]: state => {
       state.isDetailLoading = true;
     },
-    [putCandidateHistory.fulfilled.type]: (state, { payload }) => {
+    [putCandidateHistory.fulfilled.type]: state => {
       state.isDetailLoading = false;
       // state.detailData.histories = payload.histories;
       toast.success("Successfully candidate history updated", {

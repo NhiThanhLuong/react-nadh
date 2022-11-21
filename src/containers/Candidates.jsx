@@ -7,13 +7,12 @@ import {
 } from "react-router-dom";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { Row, Table, Typography, Button } from "antd";
+import { Row, Table, Typography, Button, Tag } from "antd";
 import { SearchOutlined, PlusOutlined } from "@ant-design/icons";
 
 import {
   FilterTags,
   ClearAllFilter,
-  // CustomColumn,
   FilterDropdownText,
   FilterDropdownSelect,
   FilterDropdownRange,
@@ -130,16 +129,44 @@ const Candidates = () => {
 
   const filterTags = useMemo(() => ({ ...paramsRouter }), [searchParams]);
 
+  // Filter Priority status
+  filterTags.priority_status = useMemo(() => {
+    const itemMatch = candidate_priority_status.find(
+      item => item.key === paramsRouter.priority_status
+    );
+    return itemMatch ? itemMatch.label : paramsRouter.priority_status;
+  }, [paramsRouter.priority_status]);
+
+  // Filter Activity
+  filterTags.flow_status = useMemo(() => {
+    if (paramsRouter.flow_status)
+      return paramsRouter.flow_status
+        .split(",")
+        .map(val => candidate_flow_status.find(item => item.id === +val)?.label)
+        .join(", ");
+  }, [paramsRouter.flow_status]);
+
+  // Filter Languages
+  filterTags.language = useMemo(() => {
+    if (paramsRouter.language)
+      return paramsRouter.language
+        ?.split(",")
+        .map(val => languages.find(item => item.key === +val)?.label)
+        .join(", ");
+  }, [paramsRouter.language, languages]);
+
   // Filter Location
-  const filterCountry =
-    filterTags.country &&
-    countries.find(({ key }) => key === +filterTags.country)?.label;
+  filterTags.location = useMemo(() => {
+    const filterCountry =
+      filterTags.country &&
+      countries.find(({ key }) => key === +filterTags.country)?.label;
 
-  const filterCity =
-    filterTags.city &&
-    cities.find(({ key }) => key === +filterTags.city)?.label;
+    const filterCity =
+      filterTags.city &&
+      cities.find(({ key }) => key === +filterTags.city)?.label;
 
-  filterTags.location = formatCity(filterCountry, filterCity);
+    return formatCity(filterCountry, filterCity);
+  }, [paramsRouter.country, paramsRouter.city]);
 
   // Filter YOB
   formatFilterTagRange("yob", filterTags, "yob_from", "yob_to");
@@ -236,7 +263,7 @@ const Candidates = () => {
           const status = candidate_priority_status.find(
             ({ id }) => id === text
           );
-          return <span color={status.color}>{status.label}</span>;
+          return <Tag color={status.color}>{status.label}</Tag>;
         },
       },
       // Languages
@@ -327,8 +354,8 @@ const Candidates = () => {
         ),
         filtered: !!paramsRouter.industry_id,
         filterIcon: <SearchOutlined />,
-        render: (_, record) => {
-          return record.industry?.map(item => (
+        render: text => {
+          return text?.map(item => (
             <p key={item.key}>* {getLabelIndustry(item)}</p>
           ));
         },
@@ -518,7 +545,6 @@ const Candidates = () => {
 
   return (
     <div style={{ marginTop: 100 }}>
-      {/* <Link to="/user/list">Go to User page</Link> */}
       <Row align="middle" justify="space-between">
         <Typography.Title type="secondary" level={4} style={{ margin: 0 }}>
           Candidate Lists ({count})
@@ -535,13 +561,7 @@ const Candidates = () => {
           </Button>
         </div>
       </Row>
-      {/* <CustomColumn /> */}
-      <FilterTags
-        data={filterTags}
-        onClose={onCloseFilterTag}
-        languages={filterTags.language ? languages : undefined}
-        activities={filterTags.flow_status ? candidate_flow_status : undefined}
-      />
+      <FilterTags data={filterTags} onClose={onCloseFilterTag} />
 
       {loading ? (
         <Table loading={loading} columns={columns} />

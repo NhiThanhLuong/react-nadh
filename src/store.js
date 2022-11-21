@@ -15,6 +15,8 @@ import modalReducer from "features/modalSlice";
 import companyReducer from "features/companySlice";
 import currencyReducer from "features/currencySlice";
 import fileReducer from "features/fileSlice";
+import clientReducer from "features/clientSlice";
+import userReducer from "features/userSlice";
 
 export const store = configureStore({
   reducer: {
@@ -34,5 +36,7 @@ export const store = configureStore({
     company: companyReducer,
     currency: currencyReducer,
     file: fileReducer,
+    client: clientReducer,
+    user: userReducer,
   },
 });

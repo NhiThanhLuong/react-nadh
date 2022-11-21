@@ -1,12 +1,7 @@
 import { Tag } from "antd";
-import {
-  formatKeyFilterTags,
-  formatValueFilterTags,
-  deleteKeyNull,
-  convertKeys,
-} from "ultis/func";
+import { formatKeyFilterTags, deleteKeyNull, convertKeys } from "ultis/func";
 
-const FilterTags = ({ data, onClose, languages, activities }) => {
+const FilterTags = ({ data, onClose }) => {
   const newData = {
     candidate_id: data.candidate_id,
     full_name: data.full_name,
@@ -36,7 +31,7 @@ const FilterTags = ({ data, onClose, languages, activities }) => {
             style={{ fontSize: "14px" }}
           >
             {formatKeyFilterTags(key)} : <span> </span>
-            {formatValueFilterTags(key, newData[key], languages, activities)}
+            {newData[key]}
           </Tag>
         );
       })}

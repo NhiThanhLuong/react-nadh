@@ -97,7 +97,7 @@ const UploadFile = () => {
         beforeUpload={() => false}
         onDownload={onDownload}
         // previewFile={previewFile}
-        // onChange={handleChange}
+        onChange={handleChange}
         // onPreview={onPreview}
       >
         Upload
