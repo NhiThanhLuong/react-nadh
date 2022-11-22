@@ -9,6 +9,7 @@ const DetailCandidate = lazy(() =>
 const AddCandidate = lazy(() => import("containers/candidate/add-candidate"));
 
 const Clients = lazy(() => import("containers/Clients"));
+const DetailClient = lazy(() => import("containers/client/detail-client"));
 const User = lazy(() => import("containers/User"));
 // const UserDetail = lazy(() => import("containers/UserDetail"));
 // const UserAdd = lazy(() => import("containers/UserAdd"));
@@ -50,13 +51,8 @@ const _nav = [
     display: 1,
     children: [
       {
-        key: "/candidates/list12",
-        label: "Danh sách nhân viên",
-        title: "Danh sách nhân viên",
-        // icon: <UserOutlined />,
-        component: props => <User {...props} />,
-        action_key: "VIEW_USER",
-        // display: 1,
+        key: "/client/:id",
+        component: props => <DetailClient {...props} />,
       },
     ],
   },

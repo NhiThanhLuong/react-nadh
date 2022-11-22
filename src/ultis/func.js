@@ -19,6 +19,7 @@ export const convertKeys = {
   status: "Status",
   contact_person_name: "Contact Person's Name",
   contact_person_title: "Contact Person's Title",
+  updated_on: "Updated on",
 };
 
 export const formatKeyFilterTags = key => convertKeys[key];

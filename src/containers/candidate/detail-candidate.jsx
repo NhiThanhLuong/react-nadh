@@ -45,7 +45,7 @@ import { fetchLanguages } from "features/languageSlice";
 import { fetchIndustries } from "features/categorySlice";
 import { showModal } from "features/modalSlice";
 import { fetchCurrency } from "features/currencySlice";
-import { Item } from "styles/styled";
+import { Item, RowTitle } from "styles/styled";
 
 const validateMessages = {
   required: "${label} is required!",
@@ -658,28 +658,6 @@ const RowSubmit = styled(Row)`
   bottom: 0;
   padding: 8px 80px;
   background-color: #e9e9e9;
-`;
-
-const RowTitle = styled(Row)`
-  position: sticky;
-  top: 105px;
-  left: 0px;
-  z-index: 10;
-  line-height: 3;
-  font-size: 14px;
-  background-color: rgb(244, 244, 244);
-  a {
-    color: rgba(0, 0, 0, 0.45);
-    &:hover {
-      color: rgb(24, 144, 255);
-      transition: color 0.25 ease;
-    }
-  }
-  span {
-    text-transform: uppercase;
-    font-weight: 700;
-    color: rgba(0, 0, 0, 0.65);
-  }
 `;
 
 export default DetailCandidate;

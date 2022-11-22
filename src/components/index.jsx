@@ -30,6 +30,8 @@ import PersonalInformation from "./card-candidate/personal-information";
 import RemunerationAndRewards from "./card-candidate/remuneration-and-rewards";
 import SkillAndIndustry from "./card-candidate/skill-and-industry";
 
+import ClientInfo from "./card-client/client-info";
+
 import FilterTags from "./table/filter-tags";
 
 import UploadFile from "./upload-file";
@@ -64,4 +66,5 @@ export {
   PersonalInformation,
   RemunerationAndRewards,
   SkillAndIndustry,
+  ClientInfo,
 };

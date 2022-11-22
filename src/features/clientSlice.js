@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getClients } from "ultis/api";
+import { getClients, getDetailClient } from "ultis/api";
 
 export const fetchClients = createAsyncThunk(
   "client/fetchClients",
@@ -13,12 +13,18 @@ export const fetchClients = createAsyncThunk(
     })
 );
 
+export const fetchDetailClient = createAsyncThunk(
+  "clients/fetchDetailClient",
+  getDetailClient
+);
+
 export const clientSlice = createSlice({
   name: "client",
   initialState: {
     loading: false,
     count: 0,
     data: [],
+    detailData: undefined,
   },
   reducer: {},
   extraReducers: {
@@ -29,6 +35,15 @@ export const clientSlice = createSlice({
       state.loading = false;
       state.count = payload.count;
       state.data = payload.data;
+    },
+
+    // Get Detail Candidate
+    [fetchDetailClient.pending.type]: state => {
+      state.loading = true;
+    },
+    [fetchDetailClient.fulfilled.type]: (state, { payload }) => {
+      state.detailData = payload;
+      state.loading = false;
     },
   },
 });

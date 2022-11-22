@@ -1,6 +1,9 @@
 /* eslint-disable no-unused-vars */
 import { Col, DatePicker } from "antd";
+import moment from "moment";
 import { useEffect, useState } from "react";
+import { createSearchParams } from "react-router-dom";
+import { deleteKeyNull } from "ultis/func";
 import CustomSearch from "./custom-search";
 
 const FilterDropdownRangeDate = ({
@@ -14,13 +17,38 @@ const FilterDropdownRangeDate = ({
   const [timeTo, setTimeTo] = useState(null);
 
   useEffect(() => {
-    setTimeFrom(paramsRouter[keySearchFrom]);
-    setTimeTo(paramsRouter[keySearchTo]);
+    setTimeFrom(
+      paramsRouter[keySearchFrom] ? moment(paramsRouter[keySearchFrom]) : null
+    );
+    setTimeTo(
+      paramsRouter[keySearchTo] ? moment(paramsRouter[keySearchTo]) : null
+    );
   }, [paramsRouter[keySearchFrom], paramsRouter[keySearchTo]]);
+
+  const onSearch = () => {
+    resetPage();
+    const params = {
+      [keySearchFrom]: timeFrom,
+      [keySearchTo]: timeTo,
+    };
+    deleteKeyNull(params);
+    setSearchParams(
+      createSearchParams({
+        ...paramsRouter,
+        ...params,
+      })
+    );
+  };
+
+  const onReset = () => {
+    resetPage();
+    delete paramsRouter[keySearchFrom];
+    delete paramsRouter[keySearchTo];
+    setSearchParams(createSearchParams(paramsRouter));
+  };
 
   const onChangeFrom = (_, dateString) => {
     setTimeFrom(dateString);
-    console.log(dateString);
   };
 
   const onChangeTo = (_, dateString) => {
@@ -28,16 +56,28 @@ const FilterDropdownRangeDate = ({
   };
 
   return (
-    <CustomSearch widthCard={400}>
+    <CustomSearch widthCard={400} onSearch={onSearch} onReset={onReset}>
       <Col span={12}>
         <DatePicker
           className="w-full"
           placeholder="From"
+          value={timeFrom ? moment(timeFrom) : null}
+          disabledDate={current =>
+            current && current.valueOf() > moment(timeTo)
+          }
           onChange={onChangeFrom}
         />
       </Col>
       <Col span={12}>
-        <DatePicker className="w-full" placeholder="To" onChange={onChangeTo} />
+        <DatePicker
+          className="w-full"
+          placeholder="To"
+          value={timeTo ? moment(timeTo) : null}
+          disabledDate={current =>
+            current && current.valueOf() < moment(timeFrom)
+          }
+          onChange={onChangeTo}
+        />
       </Col>
     </CustomSearch>
   );

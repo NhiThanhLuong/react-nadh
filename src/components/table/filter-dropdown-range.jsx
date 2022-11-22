@@ -38,8 +38,6 @@ const FilterDropdownRange = ({
 
   const onReset = () => {
     resetPage();
-    setYearFrom();
-    setYearTo();
     delete paramsRouter[keySearchFrom];
     delete paramsRouter[keySearchTo];
     setSearchParams(createSearchParams(paramsRouter));

@@ -88,6 +88,7 @@ export const key_of_keys = {
   client_jobs: ["client_jobs_from", "client_jobs_to"],
   industry_years: ["industry_years_from", "industry_years_to"],
   management_years: ["management_years_from", "management_years_to"],
+  updated_on: ["updated_on_from", "updated_on_to"],
 };
 
 export const imgPath = path =>

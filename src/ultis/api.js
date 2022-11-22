@@ -42,6 +42,10 @@ export const getUsers = async params => {
   return await axiosClient.get("/api/users", params);
 };
 
+export const getDetailClient = async id => {
+  return await axiosClient.get(`/api/clients/${id}`);
+};
+
 // Delete
 export const deleteCandidateHistories = async id =>
   await axiosClient.delete(`/api/candidate_histories/${id}`);
