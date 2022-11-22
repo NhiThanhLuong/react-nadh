@@ -1,5 +1,6 @@
 export const convertKeys = {
   candidate_id: "ID",
+  client_id: "ID",
   full_name: "Name",
   priority_status: "Primary Status",
   language: "Language",
@@ -7,11 +8,17 @@ export const convertKeys = {
   location: "City",
   industry_text: "Industry",
   yob: "YOB",
+  client_jobs: "Job(s)",
   flow_status: "Activity",
   current_company_text: "Recent Company",
   current_position_text: "Recent positions",
   industry_years: "Year of services",
   management_years: "Year of management",
+  name: "Trade Name",
+  type: "Type",
+  status: "Status",
+  contact_person_name: "Contact Person's Name",
+  contact_person_title: "Contact Person's Title",
 };
 
 export const formatKeyFilterTags = key => convertKeys[key];

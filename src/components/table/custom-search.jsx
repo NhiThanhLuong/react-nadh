@@ -1,12 +1,18 @@
 import { Card, Button, Row, Col } from "antd";
 import PropTypes from "prop-types";
 
-const CustomSearch = ({ value, onSearch, onReset, children }) => {
+const CustomSearch = ({
+  onSearch,
+  onReset,
+  children,
+  widthCard = 200,
+  disabled,
+}) => {
   return (
     <Card
       size="small"
       style={{
-        width: "200px",
+        width: widthCard,
       }}
     >
       <Row gutter={[8, 8]}>
@@ -17,7 +23,8 @@ const CustomSearch = ({ value, onSearch, onReset, children }) => {
         </Col>
         <Col span={12}>
           <Button
-            disabled={!value || value.length === 0}
+            // disabled={!value || value.length === 0}
+            disabled={disabled}
             onClick={onSearch}
             type="primary"
             size="small"

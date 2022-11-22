@@ -52,7 +52,7 @@ const FilterDropdownSelect = ({
   }, [paramsRouter[keySearch]]);
 
   return (
-    <CustomSearch onSearch={onSearch} onReset={onReset} value={value}>
+    <CustomSearch onSearch={onSearch} onReset={onReset} disabled={!value}>
       <Col span={24}>
         <SelectSearch
           placeholder={placeholder}

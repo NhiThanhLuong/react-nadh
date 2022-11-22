@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { Card, Button, Row, Col, InputNumber } from "antd";
 import PropTypes from "prop-types";
+import CustomSearch from "./custom-search";
 
 const validation = (yearFrom, yearTo) => {
   if (!yearFrom && !yearTo) return {};
@@ -23,61 +24,43 @@ const CustomSearchYearRange = ({
 }) => {
   const isDisableSearch = validation(yearFrom, yearTo);
   return (
-    <Card
-      size="small"
-      style={{
-        width: "400px",
-      }}
+    <CustomSearch
+      onReset={onReset}
+      onSearch={onSearch}
+      disabled={isDisableSearch}
+      widthCard={400}
     >
-      <Row gutter={[8, 8]}>
-        <Col span={12}>
-          <Button onClick={onReset} size="small" style={{ width: "100%" }}>
-            Reset
-          </Button>
-        </Col>
-        <Col span={12}>
-          <Button
-            disabled={isDisableSearch}
-            onClick={onSearch}
-            type="primary"
-            size="small"
-            style={{ width: "100%" }}
-          >
-            Search
-          </Button>
-        </Col>
-        <Col span={12}>
-          <InputNumber
-            min={0}
-            value={yearFrom}
-            onChange={onChangeFrom}
-            placeholder="From"
-            type="number"
-            style={{
-              width: "100%",
-            }}
-          />
-          <p style={{ color: "#b91c1c", fontWeight: "500" }}>
-            {isDisableSearch && isDisableSearch.er1}
-          </p>
-        </Col>
-        <Col span={12}>
-          <InputNumber
-            min={0}
-            value={yearTo}
-            onChange={onChangeTo}
-            placeholder="To"
-            type="number"
-            style={{
-              width: "100%",
-            }}
-          />
-          <p style={{ color: "#b91c1c", fontWeight: "500" }}>
-            {isDisableSearch && isDisableSearch.er2}
-          </p>
-        </Col>
-      </Row>
-    </Card>
+      <Col span={12}>
+        <InputNumber
+          min={0}
+          value={yearFrom}
+          onChange={onChangeFrom}
+          placeholder="From"
+          type="number"
+          style={{
+            width: "100%",
+          }}
+        />
+        <p style={{ color: "#b91c1c", fontWeight: "500" }}>
+          {isDisableSearch && isDisableSearch.er1}
+        </p>
+      </Col>
+      <Col span={12}>
+        <InputNumber
+          min={0}
+          value={yearTo}
+          onChange={onChangeTo}
+          placeholder="To"
+          type="number"
+          style={{
+            width: "100%",
+          }}
+        />
+        <p style={{ color: "#b91c1c", fontWeight: "500" }}>
+          {isDisableSearch && isDisableSearch.er2}
+        </p>
+      </Col>
+    </CustomSearch>
   );
 };
 

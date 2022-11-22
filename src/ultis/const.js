@@ -85,6 +85,7 @@ export const key_of_keys = {
     "category",
   ],
   yob: ["yob_from", "yob_to"],
+  client_jobs: ["client_jobs_from", "client_jobs_to"],
   industry_years: ["industry_years_from", "industry_years_to"],
   management_years: ["management_years_from", "management_years_to"],
 };
@@ -295,3 +296,53 @@ export const KEYS_FIELDS_NOT_PUSH_PARAMS = [
 ];
 
 export const URL_FILE = "https://lubrytics.com:8443/nadh-mediafile/file";
+
+const TYPE_A = {
+  key: 1,
+  label: "Type A",
+};
+const TYPE_B = {
+  key: 2,
+  label: "Type B",
+};
+const TYPE_C = {
+  key: 3,
+  label: "Type C",
+};
+const TYPE_D = {
+  key: 4,
+  label: "Type D",
+};
+const TYPE_T = {
+  key: 5,
+  label: "Type T",
+};
+const TYPE_L = {
+  key: 6,
+  label: "Type L",
+};
+
+export const TYPE_CLIENT = [TYPE_A, TYPE_B, TYPE_C, TYPE_D, TYPE_T, TYPE_L];
+
+export const STATUS_CLIENT = [
+  {
+    key: 9,
+    label: "Active",
+    color: "green",
+  },
+  {
+    key: 11,
+    label: "Off-limit",
+    color: "geekblue",
+  },
+  {
+    key: 10,
+    label: "Blacklist",
+    color: "magenta",
+  },
+  {
+    key: 12,
+    label: "Inactive",
+    color: "red",
+  },
+];

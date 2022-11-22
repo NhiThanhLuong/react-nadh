@@ -169,22 +169,33 @@ const Candidates = () => {
   }, [paramsRouter.country, paramsRouter.city]);
 
   // Filter YOB
-  formatFilterTagRange("yob", filterTags, "yob_from", "yob_to");
+  useMemo(
+    () => formatFilterTagRange("yob", filterTags, "yob_from", "yob_to"),
+    [paramsRouter.yob_from, paramsRouter.yob_to]
+  );
 
   // Filter Year of service
-  formatFilterTagRange(
-    "industry_years",
-    filterTags,
-    "industry_years_from",
-    "industry_years_to"
+  useMemo(
+    () =>
+      formatFilterTagRange(
+        "industry_years",
+        filterTags,
+        "industry_years_from",
+        "industry_years_to"
+      ),
+    [paramsRouter.industry_years_from, paramsRouter.industry_years_to]
   );
 
   // Filter Year of management
-  formatFilterTagRange(
-    "management_years",
-    filterTags,
-    "management_years_from",
-    "management_years_to"
+  useMemo(
+    () =>
+      formatFilterTagRange(
+        "management_years",
+        filterTags,
+        "management_years_from",
+        "management_years_to"
+      ),
+    [paramsRouter.management_years_from, paramsRouter.management_years_to]
   );
 
   const columns = useMemo(
@@ -561,7 +572,25 @@ const Candidates = () => {
           </Button>
         </div>
       </Row>
-      <FilterTags data={filterTags} onClose={onCloseFilterTag} />
+      <FilterTags
+        data={{
+          candidate_id: filterTags.candidate_id,
+          full_name: filterTags.full_name,
+          priority_status: filterTags.priority_status,
+          language: filterTags.language,
+          highest_education: filterTags.highest_education,
+          location: filterTags.location,
+          industry_text: filterTags.industry_text,
+          yob: filterTags.yob,
+          flow_status: filterTags.flow_status,
+          current_company_text: filterTags.current_company_text,
+          current_position_text: filterTags.current_position_text,
+          industry_years: filterTags.industry_years,
+          management_years: filterTags.management_years,
+          ...filterTags,
+        }}
+        onClose={onCloseFilterTag}
+      />
 
       {loading ? (
         <Table loading={loading} columns={columns} />

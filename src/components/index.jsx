@@ -2,12 +2,12 @@ import CustomSearch from "./table/custom-search";
 import CustomSearchYearRange from "./table/custom-search-year-range";
 import AcademicCandidate from "./table/academic-candidate";
 import CertificateCandidate from "./table/certificate-candidate";
-import CustomSearch3Select from "./table/custom-search-3-select";
 import FilterDropdownText from "./table/filter-dropdown-text";
 import FilterDropdownSelect from "./table/filter-dropdown-select";
 import FilterDropdown2Select from "./table/filter-dropdown-2-select";
 import FilterDropdown3Select from "./table/filter-dropdown-3-select";
 import FilterDropdownRange from "./table/filter-dropdown-range";
+import FilterDropdownRangeDate from "./table/filter-dropdown-range-date";
 import IndustryDetailCandidate from "./table/industry-detail-candidate";
 import WorkingHistoryCandidate from "./table/working-history-candidate";
 
@@ -31,6 +31,7 @@ import RemunerationAndRewards from "./card-candidate/remuneration-and-rewards";
 import SkillAndIndustry from "./card-candidate/skill-and-industry";
 
 import FilterTags from "./table/filter-tags";
+
 import UploadFile from "./upload-file";
 
 export {
@@ -41,12 +42,12 @@ export {
   CustomSearchYearRange,
   AcademicCandidate,
   CertificateCandidate,
-  CustomSearch3Select,
   FilterDropdownText,
   FilterDropdownSelect,
   FilterDropdown2Select,
   FilterDropdown3Select,
   FilterDropdownRange,
+  FilterDropdownRangeDate,
   IndustryDetailCandidate,
   WorkingHistoryCandidate,
   FormAddEducation,

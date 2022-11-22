@@ -126,7 +126,7 @@ const FilterDropdown3Select = ({
   };
 
   return (
-    <CustomSearch onSearch={onSearch} onReset={onReset} value={value1}>
+    <CustomSearch onSearch={onSearch} onReset={onReset} disabled={!value1}>
       <Col span={24}>
         <SelectSearch
           placeholder={placeholder1}

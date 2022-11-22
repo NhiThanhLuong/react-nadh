@@ -35,7 +35,7 @@ const FilterDropdownText = ({
   }, [paramsRouter[keySearch]]);
 
   return (
-    <CustomSearch value={value} onSearch={onSearch} onReset={onReset}>
+    <CustomSearch disabled={!value} onSearch={onSearch} onReset={onReset}>
       <InputSearch
         value={value}
         placeholder={placeholder}
