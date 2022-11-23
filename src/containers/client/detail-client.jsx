@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Col, Form, Row } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchDetailClient } from "features/clientSlice";
+import { fetchClients, fetchDetailClient } from "features/clientSlice";
 import { RowTitle } from "styles/styled";
 import { ClientInfo } from "components";
 
@@ -15,6 +15,11 @@ const DetailClient = () => {
   const detailData = useSelector(state => state.client.detailData);
 
   useEffect(() => {
+    dispatch(
+      fetchClients({
+        getAll: true,
+      })
+    );
     dispatch(fetchDetailClient(id));
   }, []);
 
@@ -42,6 +47,10 @@ const DetailClient = () => {
                 fax: detailData.fax?.number,
                 email: detailData.email || "",
                 tax_code: detailData.tax_code || "",
+                status: detailData.status,
+                code: detailData.code,
+                parent_id: detailData.parent_id,
+                factory_site: detailData.factory_site,
               }}
             >
               <Row>

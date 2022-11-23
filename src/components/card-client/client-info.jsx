@@ -1,31 +1,31 @@
 /* eslint-disable no-unused-vars */
 import {
-  Button,
   Card,
   Col,
   Form,
   Input,
   Row,
+  Select,
+  Tag,
+  Typography,
   Upload as StyleUpload,
 } from "antd";
-import { CancelSave, FormSelect } from "components";
-import FormSelectDepend from "components/form/form-select-depend";
+import { CancelSave, FormAddress, FormSelect } from "components";
 import {
-  fetchDetailClientNotLoading,
   putDetailClientNotLoading,
   putDetailClientTaxCode,
 } from "features/clientSlice";
-import { fetchFiles, fetchPostFile } from "features/fileSlice";
-import {
-  fetchCities,
-  fetchDistricts,
-  fetchLocations,
-} from "features/locationSlice";
+import { fetchPostFile } from "features/fileSlice";
+
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { imgPath } from "ultis/const";
-import { deleteKeyNull, format_address_obj_to_text } from "ultis/func";
+import { imgPath, STATUS_CLIENT } from "ultis/const";
+import {
+  deleteKeyNull,
+  format_address_obj_to_text,
+  get_obj_key_label_from_key,
+} from "ultis/func";
 import { beforeUploadImage } from "ultis/uploadFile";
 import validator from "ultis/validate";
 
@@ -34,11 +34,9 @@ const ClientInfo = ({ data, form }) => {
 
   const [isEdit, setIsEdit] = useState(false);
 
-  const countries = useSelector(state => state.location.countries);
-  const cities = useSelector(state => state.location.cities);
-  const districts = useSelector(state => state.location.districts);
-
   const file = useSelector(state => state.file.file);
+
+  const clients = useSelector(state => state.client.data);
 
   useEffect(() => {
     if (file.id) {
@@ -89,65 +87,6 @@ const ClientInfo = ({ data, form }) => {
       })
     );
     setIsEdit(false);
-  };
-
-  const onDropdownCountry = open => {
-    open &&
-      countries.length === 0 &&
-      dispatch(
-        fetchLocations({
-          type: 4,
-        })
-      );
-  };
-
-  const onChangeCountry = (_, option) => {
-    form.setFieldsValue({
-      address: {
-        country: option,
-        city: null,
-        district: null,
-      },
-    });
-  };
-
-  const onDropdownCity = open => {
-    if (open) {
-      const country = form.getFieldValue(["address", "country"]);
-      dispatch(
-        fetchCities({
-          parent_id: country.key,
-        })
-      );
-    }
-  };
-
-  const onChangeCity = (_, option) => {
-    form.setFieldsValue({
-      address: {
-        city: option,
-        district: null,
-      },
-    });
-  };
-
-  const onDropdownDistrict = open => {
-    if (open) {
-      const city = form.getFieldValue(["address", "city"]);
-      dispatch(
-        fetchDistricts({
-          parent_id: city.key,
-        })
-      );
-    }
-  };
-
-  const onChangeDistrict = (_, option) => {
-    form.setFieldsValue({
-      address: {
-        district: option,
-      },
-    });
   };
 
   const onCancelPhone = () => {
@@ -239,9 +178,130 @@ const ClientInfo = ({ data, form }) => {
     }
   };
 
+  const StatusTag = () => {
+    const onCancelStatus = () => {
+      setIsEdit(false);
+      form.resetFields(["status"]);
+    };
+
+    const onSaveStatus = () => {
+      const status = form.getFieldValue("status");
+      dispatch(
+        putDetailClientNotLoading({
+          id: data.id,
+          params: {
+            status,
+          },
+        })
+      );
+      setIsEdit(false);
+    };
+
+    if (isEdit === "status") {
+      return (
+        <>
+          <FormSelect
+            name="status"
+            optionFilterProp="label"
+            options={STATUS_CLIENT}
+          />
+          <CancelSave onCancel={onCancelStatus} onSave={onSaveStatus} />
+        </>
+      );
+    }
+
+    if (data.status) {
+      const status_obj = get_obj_key_label_from_key(STATUS_CLIENT, data.status);
+      return (
+        <Tag color={status_obj.color} onDoubleClick={() => setIsEdit("status")}>
+          {status_obj.label}
+        </Tag>
+      );
+    }
+    return null;
+  };
+
+  const CodeValue = () => {
+    const onCancel = () => {
+      setIsEdit(false);
+      form.resetFields(["code"]);
+    };
+
+    const onSave = () => {
+      const code = form.getFieldValue("code");
+      dispatch(
+        putDetailClientNotLoading({
+          id: data.id,
+          params: {
+            code,
+          },
+        })
+      );
+      setIsEdit(false);
+    };
+
+    return isEdit === "code" ? (
+      <>
+        <Form.Item name="code">
+          <Input className="w-full" />
+        </Form.Item>
+        <CancelSave onCancel={onCancel} onSave={onSave} />
+      </>
+    ) : (
+      <span onDoubleClick={() => setIsEdit("code")}>{data.code || "-"}</span>
+    );
+  };
+
+  const ParentCompanyValue = () => {
+    const onCancel = () => {
+      setIsEdit(false);
+      form.resetFields(["parent_id"]);
+    };
+
+    const onSave = () => {
+      const parent_id = form.getFieldValue("parent_id") || null;
+      dispatch(
+        putDetailClientNotLoading({
+          id: data.id,
+          params: {
+            parent_id,
+          },
+        })
+      );
+      setIsEdit(false);
+    };
+
+    return isEdit === "parent_id" ? (
+      <>
+        <Form.Item name="parent_id" optionFilterProp="label">
+          <Select
+            allowClear
+            showSearch
+            style={{
+              width: "100%",
+            }}
+          >
+            {clients.map(({ id, name }) => (
+              <Select.Option key={id} value={id} label={name}>
+                {name}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
+        <CancelSave onCancel={onCancel} onSave={onSave} />
+      </>
+    ) : (
+      <span onDoubleClick={() => setIsEdit("parent_id")}>
+        {data.parent_id
+          ? clients.find(({ id }) => id === data.parent_id)?.name
+          : "-"}
+      </span>
+    );
+  };
+
   return (
     <Card>
-      <Row>
+      <Row gutter={16}>
         <Col span={14}>
           {isEdit === "name" ? (
             <>
@@ -251,58 +311,18 @@ const ClientInfo = ({ data, form }) => {
               <CancelSave onCancel={onCancelName} onSave={onSaveName} />
             </>
           ) : (
-            <h3 onDoubleClick={() => setIsEdit("name")}>{data.name}</h3>
+            <Typography.Title level={3} onDoubleClick={() => setIsEdit("name")}>
+              {data.name}
+            </Typography.Title>
           )}
           <Row>
             <Col span={6}>
-              <span>Address</span>
+              <Typography.Paragraph strong>Address</Typography.Paragraph>
             </Col>
             <Col span={18}>
               {isEdit === "address" ? (
                 <Row gutter={[16, 16]}>
-                  <Col span={8}>
-                    <FormSelect
-                      name={["address", "country"]}
-                      allowClear
-                      placeholder="Country"
-                      options={countries}
-                      optionFilterProp="label"
-                      onDropdownVisibleChange={onDropdownCountry}
-                      onChange={onChangeCountry}
-                    />
-                  </Col>
-                  <Col span={8}>
-                    <FormSelectDepend
-                      allowClear
-                      placeholder="City"
-                      name={["address", "city"]}
-                      name_parent={["address", "country"]}
-                      optionFilterProp="label"
-                      options={cities}
-                      onDropdownVisibleChange={onDropdownCity}
-                      onChange={onChangeCity}
-                    />
-                  </Col>
-                  <Col span={8}>
-                    <FormSelectDepend
-                      allowClear
-                      placeholder="District"
-                      name={["address", "district"]}
-                      name_parent={["address", "city"]}
-                      optionFilterProp="label"
-                      options={districts}
-                      onDropdownVisibleChange={onDropdownDistrict}
-                      onChange={onChangeDistrict}
-                    />
-                  </Col>
-                  <Col span={24}>
-                    <Form.Item name={["address", "address"]} className="m-0">
-                      <Input
-                        className="w-full"
-                        placeholder="ex: 2 Hai Trieu, Bitexco Financial Tower"
-                      />
-                    </Form.Item>
-                  </Col>
+                  <FormAddress form={form} />
                   <Col span={24}>
                     <CancelSave
                       onCancel={onCancelAddress}
@@ -317,7 +337,7 @@ const ClientInfo = ({ data, form }) => {
               )}
             </Col>
             <Col span={6}>
-              <span>Phone number</span>
+              <Typography.Paragraph strong>Phone number</Typography.Paragraph>
             </Col>
             <Col span={18}>
               {isEdit === "phone number" ? (
@@ -337,7 +357,7 @@ const ClientInfo = ({ data, form }) => {
               )}
             </Col>
             <Col span={6}>
-              <span>Fax</span>
+              <Typography.Paragraph strong>Fax</Typography.Paragraph>
             </Col>
             <Col span={18}>
               {isEdit === "fax" ? (
@@ -354,7 +374,7 @@ const ClientInfo = ({ data, form }) => {
               )}
             </Col>
             <Col span={6}>
-              <span>Email</span>
+              <Typography.Paragraph strong>Email</Typography.Paragraph>
             </Col>
             <Col span={18}>
               {isEdit === "email" ? (
@@ -371,7 +391,7 @@ const ClientInfo = ({ data, form }) => {
               )}
             </Col>
             <Col span={6}>
-              <span>Tax Code</span>
+              <Typography.Paragraph strong>Tax Code</Typography.Paragraph>
             </Col>
             <Col span={18}>
               {isEdit === "tax_code" ? (
@@ -413,6 +433,69 @@ const ClientInfo = ({ data, form }) => {
               "Upload"
             )}
           </Upload>
+        </Col>
+        <Col span={24}>
+          <Typography.Title level={5}>Client Information</Typography.Title>
+        </Col>
+        <Col span={12}>
+          <Row gutter={8}>
+            <Col span={8}>
+              <Typography.Paragraph strong>Client ID</Typography.Paragraph>
+            </Col>
+            <Col span={16}>
+              <Typography.Text disabled style={{ color: "rgba(0,0,0,0.65)" }}>
+                {data.client_id}
+              </Typography.Text>
+            </Col>
+            <Col span={8}>
+              <Typography.Paragraph strong>Status</Typography.Paragraph>
+            </Col>
+            <Col span={16}>
+              <StatusTag />
+            </Col>
+            <Col span={8}>
+              <Typography.Paragraph strong>
+                {"Client's shortened name"}
+              </Typography.Paragraph>
+            </Col>
+            <Col span={16}>
+              <CodeValue />
+            </Col>
+            <Col span={8}>
+              <Typography.Paragraph strong>Parent Company</Typography.Paragraph>
+            </Col>
+            <Col span={16}>
+              <ParentCompanyValue />
+            </Col>
+            <Col span={8}>
+              <Typography.Paragraph strong>Factory Site 1</Typography.Paragraph>
+            </Col>
+            <Col span={16}>
+              <Row gutter={[16, 16]}>
+                <FormAddress form={form} name={["factory_site", 0]} />
+                <Col span={24}>
+                  <CancelSave
+                  // onCancel={onCancelFactory1}
+                  // onSave={onSaveFactory1}
+                  />
+                </Col>
+              </Row>
+            </Col>
+            <Col span={8}>
+              <Typography.Paragraph strong>Factory Site 2</Typography.Paragraph>
+            </Col>
+            <Col span={16}>
+              <Row gutter={[16, 16]}>
+                <FormAddress form={form} name={["factory_site", 1]} />
+                <Col span={24}>
+                  <CancelSave
+                  // onCancel={onCancelFactory2}
+                  // onSave={onSaveFactory2}
+                  />
+                </Col>
+              </Row>
+            </Col>
+          </Row>
         </Col>
       </Row>
     </Card>

@@ -19,6 +19,7 @@ import FormCertificate from "./form/form-certificate";
 import FormWorkingHistory from "./form/form-working-history";
 import FormBenefit from "./form/form-benefit";
 import FormCkeditor from "./form/form-ckeditor";
+import FormAddress from "./form/form-address";
 
 import CancelSave from "./button/cancel-save";
 import ClearAllFilter from "./button/clear-all-filter";
@@ -42,6 +43,7 @@ export {
   FilterTags,
   UploadFile,
   FormCkeditor,
+  FormAddress,
   CustomSearchYearRange,
   AcademicCandidate,
   CertificateCandidate,
