@@ -9,12 +9,20 @@ import { useDispatch, useSelector } from "react-redux";
 import FormSelect from "./form-select";
 import FormSelectDepend from "./form-select-depend";
 
-const FormAddress = ({ form, name = ["address"] }) => {
+const FormAddress = ({
+  form,
+  name = ["address"],
+  onChangeCountry,
+  onChangeCity,
+  onChangeDistrict,
+}) => {
   const dispatch = useDispatch();
 
   const countries = useSelector(state => state.location.countries);
   const cities = useSelector(state => state.location.cities);
   const districts = useSelector(state => state.location.districts);
+
+  console.log(form.getFieldValue(name));
 
   const onDropdownCountry = open => {
     open &&
@@ -24,16 +32,6 @@ const FormAddress = ({ form, name = ["address"] }) => {
           type: 4,
         })
       );
-  };
-
-  const onChangeCountry = (_, option) => {
-    form.setFieldsValue({
-      address: {
-        country: option,
-        city: null,
-        district: null,
-      },
-    });
   };
 
   const onDropdownCity = open => {
@@ -47,15 +45,6 @@ const FormAddress = ({ form, name = ["address"] }) => {
     }
   };
 
-  const onChangeCity = (_, option) => {
-    form.setFieldsValue({
-      address: {
-        city: option,
-        district: null,
-      },
-    });
-  };
-
   const onDropdownDistrict = open => {
     if (open) {
       const city = form.getFieldValue([...name, "city"]);
@@ -65,14 +54,6 @@ const FormAddress = ({ form, name = ["address"] }) => {
         })
       );
     }
-  };
-
-  const onChangeDistrict = (_, option) => {
-    form.setFieldsValue({
-      address: {
-        district: option,
-      },
-    });
   };
 
   return (
@@ -93,7 +74,7 @@ const FormAddress = ({ form, name = ["address"] }) => {
           allowClear
           placeholder="City"
           name={[...name, "city"]}
-          name_parent={[name, "country"]}
+          name_parent={[...name, "country"]}
           optionFilterProp="label"
           options={cities}
           onDropdownVisibleChange={onDropdownCity}

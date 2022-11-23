@@ -22,8 +22,10 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { imgPath, STATUS_CLIENT } from "ultis/const";
 import {
+  clearEmpties,
   deleteKeyNull,
   format_address_obj_to_text,
+  getPropertyKeyLabelObj,
   get_obj_key_label_from_key,
 } from "ultis/func";
 import { beforeUploadImage } from "ultis/uploadFile";
@@ -76,9 +78,9 @@ const ClientInfo = ({ data, form }) => {
     form.resetFields(["address"]);
   };
 
-  const onSaveAddress = async () => {
+  const onSaveAddress = () => {
     const address = deleteKeyNull(form.getFieldValue("address"));
-    await dispatch(
+    dispatch(
       putDetailClientNotLoading({
         id: data.id,
         params: {
@@ -87,6 +89,33 @@ const ClientInfo = ({ data, form }) => {
       })
     );
     setIsEdit(false);
+  };
+
+  const onChangeCountry = (_, option) => {
+    form.setFieldsValue({
+      address: {
+        country: _ ? getPropertyKeyLabelObj(option) : null,
+        city: null,
+        district: null,
+      },
+    });
+  };
+
+  const onChangeCity = (_, option) => {
+    form.setFieldsValue({
+      address: {
+        city: _ ? getPropertyKeyLabelObj(option) : null,
+        district: null,
+      },
+    });
+  };
+
+  const onChangeDistrict = (_, option) => {
+    form.setFieldsValue({
+      address: {
+        district: _ ? getPropertyKeyLabelObj(option) : null,
+      },
+    });
   };
 
   const onCancelPhone = () => {
@@ -299,6 +328,51 @@ const ClientInfo = ({ data, form }) => {
     );
   };
 
+  const onCancelFactory = () => {
+    setIsEdit(false);
+    form.resetFields(["factory_site"]);
+  };
+
+  const onSaveFactory = () => {
+    const factory_site = form
+      .getFieldValue("factory_site")
+      .map(item => deleteKeyNull(item))
+      .filter(item => Object.keys(item).length !== 0);
+    dispatch(
+      putDetailClientNotLoading({
+        id: data.id,
+        params: {
+          factory_site,
+        },
+      })
+    );
+    setIsEdit(false);
+  };
+
+  const onChangeCountryFactory = (_, option, index) => {
+    form.setFieldValue(
+      ["factory_site", index, "country"],
+      _ ? getPropertyKeyLabelObj(option) : null
+    );
+    form.setFieldValue(["factory_site", index, "city"], null);
+    form.setFieldValue(["factory_site", index, "district"], null);
+  };
+
+  const onChangeCityFactory = (_, option, index) => {
+    form.setFieldValue(
+      ["factory_site", index, "city"],
+      _ ? getPropertyKeyLabelObj(option) : null
+    );
+    form.setFieldValue(["factory_site", index, "district"], null);
+  };
+
+  const onChangeDistrictFactory = (_, option, index) => {
+    form.setFieldValue(
+      ["factory_site", index, "district"],
+      _ ? getPropertyKeyLabelObj(option) : null
+    );
+  };
+
   return (
     <Card>
       <Row gutter={16}>
@@ -322,7 +396,12 @@ const ClientInfo = ({ data, form }) => {
             <Col span={18}>
               {isEdit === "address" ? (
                 <Row gutter={[16, 16]}>
-                  <FormAddress form={form} />
+                  <FormAddress
+                    form={form}
+                    onChangeCountry={onChangeCountry}
+                    onChangeCity={onChangeCity}
+                    onChangeDistrict={onChangeDistrict}
+                  />
                   <Col span={24}>
                     <CancelSave
                       onCancel={onCancelAddress}
@@ -471,29 +550,63 @@ const ClientInfo = ({ data, form }) => {
               <Typography.Paragraph strong>Factory Site 1</Typography.Paragraph>
             </Col>
             <Col span={16}>
-              <Row gutter={[16, 16]}>
-                <FormAddress form={form} name={["factory_site", 0]} />
-                <Col span={24}>
-                  <CancelSave
-                  // onCancel={onCancelFactory1}
-                  // onSave={onSaveFactory1}
+              {isEdit === "factory_site0" ? (
+                <Row gutter={[16, 16]}>
+                  <FormAddress
+                    form={form}
+                    name={["factory_site", 0]}
+                    onChangeCountry={(_, __) =>
+                      onChangeCountryFactory(_, __, 0)
+                    }
+                    onChangeCity={(_, __) => onChangeCityFactory(_, __, 0)}
+                    onChangeDistrict={(_, __) =>
+                      onChangeDistrictFactory(_, __, 0)
+                    }
                   />
-                </Col>
-              </Row>
+                  <Col span={24}>
+                    <CancelSave
+                      onCancel={onCancelFactory}
+                      onSave={onSaveFactory}
+                    />
+                  </Col>
+                </Row>
+              ) : (
+                <span onDoubleClick={() => setIsEdit("factory_site0")}>
+                  {format_address_obj_to_text(data.factory_site[0]) || "-"}
+                </span>
+              )}
             </Col>
             <Col span={8}>
               <Typography.Paragraph strong>Factory Site 2</Typography.Paragraph>
             </Col>
             <Col span={16}>
-              <Row gutter={[16, 16]}>
-                <FormAddress form={form} name={["factory_site", 1]} />
-                <Col span={24}>
-                  <CancelSave
-                  // onCancel={onCancelFactory2}
-                  // onSave={onSaveFactory2}
+              {isEdit === "factory_site1" ? (
+                <Row gutter={[16, 16]}>
+                  <FormAddress
+                    form={form}
+                    name={["factory_site", 1]}
+                    onChangeCountry={(_, __) =>
+                      onChangeCountryFactory(_, __, 1)
+                    }
+                    onChangeCity={(_, __) => onChangeCityFactory(_, __, 1)}
+                    onChangeDistrict={(_, __) =>
+                      onChangeDistrictFactory(_, __, 1)
+                    }
                   />
-                </Col>
-              </Row>
+                  <Col span={24}>
+                    <CancelSave
+                      onCancel={onCancelFactory}
+                      onSave={onSaveFactory}
+                    />
+                  </Col>
+                </Row>
+              ) : (
+                <span onDoubleClick={() => setIsEdit("factory_site1")}>
+                  {data.factory_site[1]
+                    ? format_address_obj_to_text(data.factory_site[1])
+                    : "-"}
+                </span>
+              )}
             </Col>
           </Row>
         </Col>

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Col, Form, Row } from "antd";
+import { Button, Col, Form, Row } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchClients, fetchDetailClient } from "features/clientSlice";
 import { RowTitle } from "styles/styled";
@@ -58,6 +58,9 @@ const DetailClient = () => {
                   <ClientInfo form={form} data={detailData} />
                 </Col>
               </Row>
+              <Button onClick={() => console.log(form.setFieldsValue())}>
+                Test
+              </Button>
             </Form>
           </>
         )}
