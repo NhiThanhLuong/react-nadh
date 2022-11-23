@@ -1,5 +1,13 @@
 /* eslint-disable no-unused-vars */
-import { Button, Card, Col, Form, Input, InputNumber, Row } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  Form,
+  Input,
+  Row,
+  Upload as StyleUpload,
+} from "antd";
 import { CancelSave, FormSelect } from "components";
 import FormSelectDepend from "components/form/form-select-depend";
 import {
@@ -7,14 +15,18 @@ import {
   putDetailClientNotLoading,
   putDetailClientTaxCode,
 } from "features/clientSlice";
+import { fetchFiles, fetchPostFile } from "features/fileSlice";
 import {
   fetchCities,
   fetchDistricts,
   fetchLocations,
 } from "features/locationSlice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import styled from "styled-components";
+import { imgPath } from "ultis/const";
 import { deleteKeyNull, format_address_obj_to_text } from "ultis/func";
+import { beforeUploadImage } from "ultis/uploadFile";
 import validator from "ultis/validate";
 
 const ClientInfo = ({ data, form }) => {
@@ -26,7 +38,22 @@ const ClientInfo = ({ data, form }) => {
   const cities = useSelector(state => state.location.cities);
   const districts = useSelector(state => state.location.districts);
 
-  console.log(countries);
+  const file = useSelector(state => state.file.file);
+
+  useEffect(() => {
+    if (file.id) {
+      dispatch(
+        putDetailClientNotLoading({
+          id: data.id,
+          params: {
+            mediafiles: {
+              logo: file.id,
+            },
+          },
+        })
+      );
+    }
+  }, [file.id]);
 
   const onCancelName = () => {
     setIsEdit(false);
@@ -199,6 +226,19 @@ const ClientInfo = ({ data, form }) => {
     setIsEdit(false);
   };
 
+  const customRequest = async () => {};
+
+  const handleChangeUpload = async info => {
+    const { status } = info.file;
+    if (status === "uploading") {
+      let formData = new FormData();
+      formData.append("file", info.file.originFileObj);
+      formData.append("type", "avatar");
+      formData.append("uploadedByUserId", 12);
+      await dispatch(fetchPostFile(formData));
+    }
+  };
+
   return (
     <Card>
       <Row>
@@ -309,7 +349,7 @@ const ClientInfo = ({ data, form }) => {
                 </>
               ) : (
                 <span onDoubleClick={() => setIsEdit("fax")}>
-                  {data.fax.number}
+                  {data.fax?.number || "-"}
                 </span>
               )}
             </Col>
@@ -349,9 +389,42 @@ const ClientInfo = ({ data, form }) => {
             </Col>
           </Row>
         </Col>
+        <Col span={10}>
+          <Upload
+            // accept="image/png, image/jpeg"
+            showUploadList={false}
+            name="file"
+            onChange={handleChangeUpload}
+            beforeUpload={beforeUploadImage}
+            customRequest={customRequest}
+            listType="picture-card"
+          >
+            {data.mediafiles.logo ? (
+              <img
+                alt=""
+                src={imgPath(data.mediafiles?.logo)}
+                style={{
+                  display: "block",
+                  width: "98%",
+                  height: "100%",
+                }}
+              />
+            ) : (
+              "Upload"
+            )}
+          </Upload>
+        </Col>
       </Row>
     </Card>
   );
 };
+
+const Upload = styled(StyleUpload)`
+  .ant-upload {
+    min-width: 300px;
+    max-width: 100%;
+    height: 200px;
+  }
+`;
 
 export default ClientInfo;

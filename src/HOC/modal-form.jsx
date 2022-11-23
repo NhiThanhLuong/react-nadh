@@ -153,7 +153,6 @@ const ModalForm = Component => {
           })
         );
       } else {
-        console.log("asdasd");
         await dispatch(PostCandidateHistory(params));
       }
       await dispatch(fetchDetailCandidateNotLoading(detailData.candidate_id));

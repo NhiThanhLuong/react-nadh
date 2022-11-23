@@ -39,7 +39,7 @@ const DetailClient = () => {
                 name: detailData.name,
                 address: detailData.address,
                 phone_number: detailData.phone.number,
-                fax: detailData.fax.number,
+                fax: detailData.fax?.number,
                 email: detailData.email || "",
                 tax_code: detailData.tax_code || "",
               }}

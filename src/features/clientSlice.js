@@ -64,6 +64,7 @@ export const clientSlice = createSlice({
 
     // put Detail Candidate not loading
     [putDetailClientNotLoading.fulfilled.type]: (state, { payload }) => {
+      console.log("put");
       state.detailData = payload;
       toast.success("Updated successful", {
         position: "top-right",
