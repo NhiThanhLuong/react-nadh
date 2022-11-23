@@ -131,3 +131,10 @@ export const get_params_payload_id_from_industry_form_arr = arr =>
 export const delete_key_object = (obj, key) => {
   if (obj[key]) delete obj[key];
 };
+
+export const format_address_obj_to_text = obj =>
+  `${obj.address ? `${obj.address}, ` : ""}${
+    obj.district ? `${obj.district.label}, ` : ""
+  }${obj.city ? `${obj.city.label}, ` : ""}${
+    obj.country ? `${obj.country.label}, ` : ""
+  }`.slice(0, -2);

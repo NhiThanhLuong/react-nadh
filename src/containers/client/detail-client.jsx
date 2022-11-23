@@ -9,11 +9,10 @@ import { ClientInfo } from "components";
 const DetailClient = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
+  const [form] = Form.useForm();
 
   const loading = useSelector(state => state.client.loading);
   const detailData = useSelector(state => state.client.detailData);
-
-  console.log(loading);
 
   useEffect(() => {
     dispatch(fetchDetailClient(id));
@@ -34,10 +33,20 @@ const DetailClient = () => {
                 {id} | {detailData.name}
               </span>
             </RowTitle>
-            <Form>
+            <Form
+              form={form}
+              initialValues={{
+                name: detailData.name,
+                address: detailData.address,
+                phone_number: detailData.phone.number,
+                fax: detailData.fax.number,
+                email: detailData.email || "",
+                tax_code: detailData.tax_code || "",
+              }}
+            >
               <Row>
                 <Col span={24}>
-                  <ClientInfo />
+                  <ClientInfo form={form} data={detailData} />
                 </Col>
               </Row>
             </Form>

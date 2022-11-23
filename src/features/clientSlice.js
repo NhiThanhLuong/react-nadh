@@ -1,5 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getClients, getDetailClient } from "ultis/api";
+import {
+  getClients,
+  getDetailClient,
+  putDetailClient,
+  putDetailClientTax,
+} from "ultis/api";
+import { toast } from "react-toastify";
 
 export const fetchClients = createAsyncThunk(
   "client/fetchClients",
@@ -16,6 +22,16 @@ export const fetchClients = createAsyncThunk(
 export const fetchDetailClient = createAsyncThunk(
   "clients/fetchDetailClient",
   getDetailClient
+);
+
+export const putDetailClientNotLoading = createAsyncThunk(
+  "clients/putDetailClientNotLoading",
+  async ({ id, params }) => await putDetailClient(id, params)
+);
+
+export const putDetailClientTaxCode = createAsyncThunk(
+  "clients/putDetailClientTaxCode",
+  async ({ id, tax_code }) => await putDetailClientTax(id, tax_code)
 );
 
 export const clientSlice = createSlice({
@@ -44,6 +60,32 @@ export const clientSlice = createSlice({
     [fetchDetailClient.fulfilled.type]: (state, { payload }) => {
       state.detailData = payload;
       state.loading = false;
+    },
+
+    // put Detail Candidate not loading
+    [putDetailClientNotLoading.fulfilled.type]: (state, { payload }) => {
+      state.detailData = payload;
+      toast.success("Updated successful", {
+        position: "top-right",
+      });
+    },
+    [putDetailClientNotLoading.rejected.type]: () => {
+      toast.error("Updated error", {
+        position: "top-right",
+      });
+    },
+
+    // put Detail Candidate tax code
+    [putDetailClientTaxCode.fulfilled.type]: (state, { payload }) => {
+      state.detailData = payload;
+      toast.success("Updated successful", {
+        position: "top-right",
+      });
+    },
+    [putDetailClientTaxCode.rejected.type]: () => {
+      toast.error("Updated error", {
+        position: "top-right",
+      });
     },
   },
 });

@@ -4,6 +4,7 @@ import { FaMinusCircle } from "react-icons/fa";
 
 export const Item = styled(Form.Item)`
   font-weight: 500;
+  margin: 0 !important;
 `;
 
 export const AddSelect = styled.div`

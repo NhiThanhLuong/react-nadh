@@ -88,3 +88,11 @@ export const putDetailCandidate = async (id, params) => {
 
 export const putCandidateHistories = async (id, params) =>
   await axiosClient.put(`/api/candidate_histories/${id}`, params);
+
+export const putDetailClient = async (id, params) => {
+  return await axiosClient.put(`/api/clients/${id}`, params);
+};
+
+export const putDetailClientTax = async (id, tax_code) => {
+  return await axiosClient.put(`/api/clients/${id}/tax`, { tax_code });
+};

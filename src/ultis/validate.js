@@ -6,6 +6,12 @@ const validator = key => {
         message: "only allow number",
       },
     ],
+    email: [
+      {
+        type: "email",
+        message: "The input is not valid E-mail!",
+      },
+    ],
   };
   return validate[key];
 };

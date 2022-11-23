@@ -20,6 +20,7 @@ import FormWorkingHistory from "./form/form-working-history";
 import FormBenefit from "./form/form-benefit";
 import FormCkeditor from "./form/form-ckeditor";
 
+import CancelSave from "./button/cancel-save";
 import ClearAllFilter from "./button/clear-all-filter";
 import CustomColumn from "./button/custom-column";
 
@@ -59,6 +60,7 @@ export {
   FormCertificate,
   FormWorkingHistory,
   FormBenefit,
+  CancelSave,
   ClearAllFilter,
   CustomColumn,
   UserInfo,
