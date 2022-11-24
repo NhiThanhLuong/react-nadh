@@ -22,8 +22,6 @@ const FormAddress = ({
   const cities = useSelector(state => state.location.cities);
   const districts = useSelector(state => state.location.districts);
 
-  console.log(form.getFieldValue(name));
-
   const onDropdownCountry = open => {
     open &&
       countries.length === 0 &&

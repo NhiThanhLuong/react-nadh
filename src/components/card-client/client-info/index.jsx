@@ -10,7 +10,13 @@ import {
   Typography,
   Upload as StyleUpload,
 } from "antd";
-import { CancelSave, FormAddress, FormSelect } from "components";
+import {
+  CancelSave,
+  FormAddress,
+  FormSelect,
+  InfoItemDisabled,
+  InfoItemSelect,
+} from "components";
 import {
   putDetailClientNotLoading,
   putDetailClientTaxCode,
@@ -20,9 +26,8 @@ import { fetchPostFile } from "features/fileSlice";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { imgPath, STATUS_CLIENT } from "ultis/const";
+import { CPA, imgPath, STATUS_CLIENT, TYPE_CLIENT } from "ultis/const";
 import {
-  clearEmpties,
   deleteKeyNull,
   format_address_obj_to_text,
   getPropertyKeyLabelObj,
@@ -39,6 +44,13 @@ const ClientInfo = ({ data, form }) => {
   const file = useSelector(state => state.file.file);
 
   const clients = useSelector(state => state.client.data);
+
+  const users = useSelector(state => state.user.users);
+
+  const usersKeylabel = users.map(({ id, full_name }) => ({
+    key: id,
+    label: full_name,
+  }));
 
   useEffect(() => {
     if (file.id) {
@@ -373,8 +385,47 @@ const ClientInfo = ({ data, form }) => {
     );
   };
 
+  const onSaveType = setState => {
+    const type = form.getFieldValue("type") || null;
+    dispatch(
+      putDetailClientNotLoading({
+        id: data.id,
+        params: {
+          type,
+        },
+      })
+    );
+    setState(false);
+  };
+
+  const onSaveCpa = setState => {
+    const cpa = form.getFieldValue("cpa") || null;
+    dispatch(
+      putDetailClientNotLoading({
+        id: data.id,
+        params: {
+          cpa,
+        },
+      })
+    );
+    setState(false);
+  };
+
+  const onSaveLeadConsultant = setState => {
+    const lead_consultants = form.getFieldValue("lead_consultants");
+    dispatch(
+      putDetailClientNotLoading({
+        id: data.id,
+        params: {
+          lead_consultants: [lead_consultants],
+        },
+      })
+    );
+    setState(false);
+  };
+
   return (
-    <Card>
+    <Card className="mb-1">
       <Row gutter={16}>
         <Col span={14}>
           {isEdit === "name" ? (
@@ -518,14 +569,9 @@ const ClientInfo = ({ data, form }) => {
         </Col>
         <Col span={12}>
           <Row gutter={8}>
-            <Col span={8}>
-              <Typography.Paragraph strong>Client ID</Typography.Paragraph>
-            </Col>
-            <Col span={16}>
-              <Typography.Text disabled style={{ color: "rgba(0,0,0,0.65)" }}>
-                {data.client_id}
-              </Typography.Text>
-            </Col>
+            <InfoItemDisabled title="Client ID">
+              {data.client_id}
+            </InfoItemDisabled>
             <Col span={8}>
               <Typography.Paragraph strong>Status</Typography.Paragraph>
             </Col>
@@ -572,7 +618,9 @@ const ClientInfo = ({ data, form }) => {
                 </Row>
               ) : (
                 <span onDoubleClick={() => setIsEdit("factory_site0")}>
-                  {format_address_obj_to_text(data.factory_site[0]) || "-"}
+                  {data.factory_site[0]
+                    ? format_address_obj_to_text(data.factory_site[0])
+                    : "-"}
                 </span>
               )}
             </Col>
@@ -608,6 +656,72 @@ const ClientInfo = ({ data, form }) => {
                 </span>
               )}
             </Col>
+          </Row>
+        </Col>
+        <Col span={12}>
+          <Row gutter={8}>
+            <InfoItemSelect
+              title="Client Type"
+              name="type"
+              optionFilterProp="label"
+              options={TYPE_CLIENT}
+              onCancel={setState => {
+                setState(false);
+                form.resetFields(["type"]);
+              }}
+              onSave={onSaveType}
+            >
+              {data.type
+                ? get_obj_key_label_from_key(TYPE_CLIENT, data.type).label
+                : "-"}
+            </InfoItemSelect>
+            <InfoItemSelect
+              title="CPA"
+              name="cpa"
+              optionFilterProp="label"
+              options={CPA}
+              onCancel={setState => {
+                setState(false);
+                form.resetFields(["cpa"]);
+              }}
+              onSave={onSaveCpa}
+            >
+              {data.cpa ? get_obj_key_label_from_key(CPA, data.cpa).label : "-"}
+            </InfoItemSelect>
+            <InfoItemSelect
+              title="Lead Consultant"
+              name="lead_consultants"
+              optionFilterProp="label"
+              options={usersKeylabel}
+              onCancel={setState => {
+                setState(false);
+                form.resetFields(["lead_consultants"]);
+              }}
+              onSave={onSaveLeadConsultant}
+              className="capitalize"
+              classNameOption="capitalize"
+            >
+              <span className="capitalize">
+                {data.lead_consultants[0]?.full_name || "-"}
+              </span>
+            </InfoItemSelect>
+            <InfoItemDisabled title="Search Consultant">
+              <span className="capitalize">
+                {data.relate_consultants.reduce(
+                  (str, { full_name }) =>
+                    str ? `${str}, ${full_name}` : full_name,
+                  ""
+                )}
+              </span>
+            </InfoItemDisabled>
+            <InfoItemDisabled title="Updated By">
+              <span className="capitalize">
+                {data.meta?.lastUpdated.user.full_name}
+              </span>
+            </InfoItemDisabled>
+            <InfoItemDisabled title="Updated On">
+              {data.updatedAt ? new Date(data.updatedAt).toLocaleString() : "-"}
+            </InfoItemDisabled>
           </Row>
         </Col>
       </Row>

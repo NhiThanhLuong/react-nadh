@@ -347,3 +347,69 @@ export const STATUS_CLIENT = [
     color: "red",
   },
 ];
+
+export const ACCOUNT_STATUS = [
+  {
+    key: 1,
+    label: "Create Client",
+    color: "geekblue",
+  },
+  {
+    key: 2,
+    label: "Tele Marketing",
+    color: "green",
+  },
+  {
+    key: 3,
+    label: "Client Meeting",
+    color: "magenta",
+  },
+  {
+    key: 4,
+    label: "Proposal Sent",
+    color: "cyan",
+  },
+  {
+    key: 5,
+    label: "Follow Up",
+    color: "orange",
+  },
+  {
+    key: 6,
+    label: "Sign Contract",
+    color: "purple",
+  },
+  {
+    key: 7,
+    label: "Job Order Received",
+    color: "blue",
+  },
+];
+
+export const CPA = [
+  {
+    key: 1,
+    label: "Retained Plus",
+    color: "green",
+  },
+  {
+    key: 2,
+    label: "Retained Minus",
+    color: "magenta",
+  },
+  {
+    key: 3,
+    label: "New",
+    color: "blue",
+  },
+  {
+    key: 4,
+    label: "Prospecting",
+    color: "orange",
+  },
+  {
+    key: 5,
+    label: "Lost",
+    color: "purple",
+  },
+];

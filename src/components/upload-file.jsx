@@ -47,12 +47,10 @@ const UploadFile = () => {
 
       case "uploading": {
         let formData = new FormData();
-        console.log(info.file);
         formData.append("file", info.file.originFileObj);
         formData.append("obj_table", "candidates");
         formData.append("obj_uid", detailData.id);
         formData.append("uploadedByUserId", 12);
-        console.log(formData);
         await dispatch(fetchPostFile(formData));
         await dispatch(
           putEditDetailCandidateNotLoading({

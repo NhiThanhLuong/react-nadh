@@ -21,6 +21,8 @@ import {
   FilterTags,
 } from "components";
 import {
+  ACCOUNT_STATUS,
+  CPA,
   defaultColor,
   key_of_keys,
   STATUS_CLIENT,
@@ -65,8 +67,6 @@ const Clients = () => {
 
   const filterTags = useMemo(() => ({ ...paramsRouter }), [searchParams]);
 
-  // console.log(users);
-
   useEffect(() => {
     dispatch(fetchUsers());
     dispatch(
@@ -82,7 +82,7 @@ const Clients = () => {
     // delete newParamsRouter.sector;
     // delete newParamsRouter.category;
     dispatch(fetchClients(paramsRouter));
-    // setCurrentPage(+paramsRouter.page || 1);
+    setCurrentPage(+paramsRouter.page || 1);
   }, [searchParams]);
 
   const resetPage = () => {
@@ -201,6 +201,27 @@ const Clients = () => {
       },
     },
     // Activity
+    {
+      title: "Activity",
+      dataIndex: "account_status",
+      key: "account_status",
+      filterDropdown: (
+        <FilterDropdownSelect
+          paramsRouter={paramsRouter}
+          keySearch="account_status"
+          placeholder="Select Activity"
+          resetPage={resetPage}
+          setSearchParams={setSearchParams}
+          options={ACCOUNT_STATUS}
+        />
+      ),
+      filterIcon: <SearchOutlined />,
+      filtered: !!paramsRouter.account_status,
+      render: text => {
+        const account_status = get_obj_key_label_from_key(ACCOUNT_STATUS, text);
+        return <Tag color={account_status.color}>{account_status.label}</Tag>;
+      },
+    },
     // Tax code
     {
       title: "Tax Code",
@@ -219,6 +240,28 @@ const Clients = () => {
       filterIcon: <SearchOutlined style={{ color: "inherit" }} />,
     },
     // CPA
+    {
+      title: "CPA",
+      dataIndex: "cpa",
+      key: "cpa",
+      filterDropdown: (
+        <FilterDropdownSelect
+          paramsRouter={paramsRouter}
+          keySearch="cpa"
+          placeholder="Select CPA"
+          resetPage={resetPage}
+          setSearchParams={setSearchParams}
+          options={CPA}
+          isMutiple
+        />
+      ),
+      filterIcon: <SearchOutlined />,
+      filtered: !!paramsRouter.cpa,
+      render: text => {
+        const cpa = get_obj_key_label_from_key(CPA, text);
+        return <Tag color={cpa.color}>{cpa.label}</Tag>;
+      },
+    },
     // Industry
     {
       title: "Industry",
@@ -432,9 +475,33 @@ const Clients = () => {
         contact_person_title: item.contact_person_current,
         update_last_by: item.meta.lastUpdated?.user.full_name,
         updated_on: item.createdAt,
+        account_status: item.account_development?.status,
+        cpa: item.cpa,
       })),
     [data]
   );
+
+  // Filter Activity
+  filterTags.account_status = useMemo(() => {
+    const itemMatch = ACCOUNT_STATUS.find(
+      item => item.key === +paramsRouter.account_status
+    );
+    return itemMatch ? itemMatch.label : paramsRouter.account_status;
+  }, [paramsRouter.account_status]);
+
+  // Filter Status
+  filterTags.status = useMemo(() => {
+    const itemMatch = STATUS_CLIENT.find(
+      item => item.key === +paramsRouter.status
+    );
+    return itemMatch ? itemMatch.label : paramsRouter.status;
+  }, [paramsRouter.status]);
+
+  // Filter CPA
+  filterTags.cpa = useMemo(() => {
+    const itemMatch = CPA.find(item => item.key === +paramsRouter.cpa);
+    return itemMatch ? itemMatch.label : paramsRouter.cpa;
+  }, [paramsRouter.cpa]);
 
   // Filter Job(s)
   useMemo(

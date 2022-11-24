@@ -49,7 +49,16 @@ const IndustryDetailCandidate = ({
     },
   ];
 
-  return <Table columns={columns} dataSource={dataSource} {...props} />;
+  return (
+    <Table
+      columns={columns}
+      dataSource={dataSource}
+      {...props}
+      pagination={{
+        pageSize: 5,
+      }}
+    />
+  );
 };
 
 IndustryDetailCandidate.propTypes = {};

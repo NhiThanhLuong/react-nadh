@@ -11,6 +11,7 @@ const SelectSearch = ({
   options,
   value,
   isDisabled,
+  classNameOption = "capitalize",
 }) => {
   return (
     <Select
@@ -27,7 +28,12 @@ const SelectSearch = ({
       }}
     >
       {options.map(({ key, label }) => (
-        <Option key={key} value={+key} label={label} className="capitalize">
+        <Option
+          key={key}
+          value={+key}
+          label={label}
+          className={classNameOption}
+        >
           {label}
         </Option>
       ))}

@@ -20,6 +20,7 @@ import FormWorkingHistory from "./form/form-working-history";
 import FormBenefit from "./form/form-benefit";
 import FormCkeditor from "./form/form-ckeditor";
 import FormAddress from "./form/form-address";
+import FormIndustry from "./form/form-industry";
 
 import CancelSave from "./button/cancel-save";
 import ClearAllFilter from "./button/clear-all-filter";
@@ -33,6 +34,9 @@ import RemunerationAndRewards from "./card-candidate/remuneration-and-rewards";
 import SkillAndIndustry from "./card-candidate/skill-and-industry";
 
 import ClientInfo from "./card-client/client-info";
+import InfoItemSelect from "./card-client/client-info/info-item-select";
+import InfoItemDisabled from "./card-client/client-info/info-item-disabled";
+import ClientIndustry from "./card-client/client-industry";
 
 import FilterTags from "./table/filter-tags";
 
@@ -44,6 +48,7 @@ export {
   UploadFile,
   FormCkeditor,
   FormAddress,
+  FormIndustry,
   CustomSearchYearRange,
   AcademicCandidate,
   CertificateCandidate,
@@ -71,4 +76,7 @@ export {
   RemunerationAndRewards,
   SkillAndIndustry,
   ClientInfo,
+  InfoItemSelect,
+  InfoItemDisabled,
+  ClientIndustry,
 };

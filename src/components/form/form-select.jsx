@@ -14,6 +14,7 @@ const FormSelect = ({
   showSearch = true,
   isKeyLabel = true,
   dropdownRender,
+  classNameOption,
   ...props
 }) => {
   return (
@@ -41,7 +42,12 @@ const FormSelect = ({
       >
         {isKeyLabel
           ? options?.map(({ key, label }) => (
-              <Option key={key} value={+key} label={label}>
+              <Option
+                key={key}
+                value={isNaN(+key) ? key : +key}
+                label={label}
+                className={classNameOption}
+              >
                 {label}
               </Option>
             ))
