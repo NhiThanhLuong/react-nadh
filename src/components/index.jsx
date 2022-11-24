@@ -10,6 +10,8 @@ import FilterDropdownRange from "./table/filter-dropdown-range";
 import FilterDropdownRangeDate from "./table/filter-dropdown-range-date";
 import IndustryDetailCandidate from "./table/industry-detail-candidate";
 import WorkingHistoryCandidate from "./table/working-history-candidate";
+import ContactPerson from "./table/contact-person";
+import FilterTags from "./table/filter-tags";
 
 import FormAddEducation from "./form/form-add-education";
 import FormSelect from "./form/form-select";
@@ -21,6 +23,7 @@ import FormBenefit from "./form/form-benefit";
 import FormCkeditor from "./form/form-ckeditor";
 import FormAddress from "./form/form-address";
 import FormIndustry from "./form/form-industry";
+import FormContactPerson from "./form/form-contact-person";
 
 import CancelSave from "./button/cancel-save";
 import ClearAllFilter from "./button/clear-all-filter";
@@ -36,9 +39,10 @@ import SkillAndIndustry from "./card-candidate/skill-and-industry";
 import ClientInfo from "./card-client/client-info";
 import InfoItemSelect from "./card-client/client-info/info-item-select";
 import InfoItemDisabled from "./card-client/client-info/info-item-disabled";
+import ClientContactPerson from "./card-client/client-contact-person";
 import ClientIndustry from "./card-client/client-industry";
 
-import FilterTags from "./table/filter-tags";
+import ModalClientContactPerson from "./modal/modal-client-contact-person";
 
 import UploadFile from "./upload-file";
 
@@ -49,6 +53,7 @@ export {
   FormCkeditor,
   FormAddress,
   FormIndustry,
+  FormContactPerson,
   CustomSearchYearRange,
   AcademicCandidate,
   CertificateCandidate,
@@ -60,6 +65,7 @@ export {
   FilterDropdownRangeDate,
   IndustryDetailCandidate,
   WorkingHistoryCandidate,
+  ContactPerson,
   FormAddEducation,
   FormSelect,
   FormTextInput,
@@ -78,5 +84,7 @@ export {
   ClientInfo,
   InfoItemSelect,
   InfoItemDisabled,
+  ClientContactPerson,
   ClientIndustry,
+  ModalClientContactPerson,
 };

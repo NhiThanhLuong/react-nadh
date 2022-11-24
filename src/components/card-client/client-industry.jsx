@@ -93,11 +93,13 @@ const ClientIndustry = ({ data, callBack }) => {
             }}
           </Form.Item>
         </Col>
-        <IndustryDetailCandidate
-          dataSource={data}
-          onDeleteItem={onDeleteItem}
-          onChecked={onChecked}
-        />
+        {data.length > 0 && (
+          <IndustryDetailCandidate
+            dataSource={data}
+            onDeleteItem={onDeleteItem}
+            onChecked={onChecked}
+          />
+        )}
       </Form>
     </Card>
   );

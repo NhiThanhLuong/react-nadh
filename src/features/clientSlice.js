@@ -4,6 +4,7 @@ import {
   getDetailClient,
   putDetailClient,
   putDetailClientTax,
+  removeDetailClientPicItem,
 } from "ultis/api";
 import { toast } from "react-toastify";
 
@@ -41,8 +42,22 @@ export const clientSlice = createSlice({
     count: 0,
     data: [],
     detailData: undefined,
+    pic_item: {},
   },
-  reducer: {},
+  reducers: {
+    getPicItem: (state, { payload: id }) => {
+      state.pic_item = state.detailData.pic.find(item => item.id === id);
+    },
+    deletePicItem: (state, { payload: id }) => {
+      state.detailData.pic = state.detailData.pic.filter(
+        item => item.id !== id
+      );
+      removeDetailClientPicItem(id);
+      toast.success("Delete client contact person successful", {
+        position: "top-right",
+      });
+    },
+  },
   extraReducers: {
     [fetchClients.pending.type]: state => {
       state.loading = true;
@@ -91,5 +106,5 @@ export const clientSlice = createSlice({
 });
 
 const { reducer } = clientSlice;
-
+export const { getPicItem, deletePicItem } = clientSlice.actions;
 export default reducer;

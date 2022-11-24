@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Form, Modal, Row } from "antd";
@@ -13,8 +12,7 @@ import {
   putCandidateHistory,
 } from "features/candidatesSlice";
 import { TYPE_MODAL } from "ultis/const";
-import { deleteKeyNull, formatDate, pad2 } from "ultis/func";
-import { format } from "prettier";
+import { formatDate, pad2 } from "ultis/func";
 
 const ModalForm = Component => {
   const Comp = ({ ...props }) => {

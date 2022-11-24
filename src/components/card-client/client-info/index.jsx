@@ -425,7 +425,7 @@ const ClientInfo = ({ data, form }) => {
   };
 
   return (
-    <Card className="mb-1">
+    <Card>
       <Row gutter={16}>
         <Col span={14}>
           {isEdit === "name" ? (
@@ -716,7 +716,7 @@ const ClientInfo = ({ data, form }) => {
             </InfoItemDisabled>
             <InfoItemDisabled title="Updated By">
               <span className="capitalize">
-                {data.meta?.lastUpdated.user.full_name}
+                {data.meta?.lastUpdated?.user?.full_name || "-"}
               </span>
             </InfoItemDisabled>
             <InfoItemDisabled title="Updated On">

@@ -12,6 +12,12 @@ const validator = key => {
         message: "The input is not valid E-mail!",
       },
     ],
+    required: [
+      {
+        required: true,
+        message: "This field is required!",
+      },
+    ],
   };
   return validate[key];
 };

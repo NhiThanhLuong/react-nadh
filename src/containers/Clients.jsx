@@ -607,6 +607,9 @@ const Clients = () => {
             current: currentPage,
             onChange: onChangePage,
           }}
+          scroll={{
+            x: 1000,
+          }}
         />
       )}
     </div>

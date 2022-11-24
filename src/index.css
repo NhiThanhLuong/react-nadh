@@ -37,6 +37,10 @@ p {
   margin: 0 !important;
 }
 
+.mb-1 {
+  margin-bottom: 16px !important;
+}
+
 .mt-1 {
   margin-top: 16px !important;
 }

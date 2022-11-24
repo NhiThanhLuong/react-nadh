@@ -8,7 +8,7 @@ import {
   putDetailClientNotLoading,
 } from "features/clientSlice";
 import { RowTitle } from "styles/styled";
-import { ClientIndustry, ClientInfo } from "components";
+import { ClientContactPerson, ClientIndustry, ClientInfo } from "components";
 import { fetchUsers } from "features/userSlice";
 
 const DetailClient = () => {
@@ -80,6 +80,10 @@ const DetailClient = () => {
                 <ClientIndustry
                   data={detailData.business_line}
                   callBack={callBackIndustry}
+                />
+                <ClientContactPerson
+                  data={detailData.pic}
+                  client_id={detailData.id}
                 />
               </Col>
             </Row>

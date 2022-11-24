@@ -96,3 +96,7 @@ export const putDetailClient = async (id, params) => {
 export const putDetailClientTax = async (id, tax_code) => {
   return await axiosClient.put(`/api/clients/${id}/tax`, { tax_code });
 };
+
+export const removeDetailClientPicItem = async id => {
+  return await axiosClient.put(`/api/contact_persons/${id}/remove`);
+};

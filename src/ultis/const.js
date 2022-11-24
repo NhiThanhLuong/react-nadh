@@ -215,6 +215,17 @@ export const TYPE_MODAL = {
       title: "Add Working History",
     },
   },
+  contact_person: {
+    edit: {
+      type: 7,
+      title: "Edit Contact Person",
+    },
+
+    add: {
+      type: 8,
+      title: "Add Contact Person",
+    },
+  },
 };
 
 export const BENEFITS = [
