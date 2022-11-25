@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 // import PropTypes from 'prop-types'
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -23,7 +22,6 @@ import {
   formatDate,
   formatDDMMYYYY,
   isEmpty,
-  get_array_obj_key_label_from_array_key,
   format_day_month_year_to_date,
   getPropertyKeyLabelObj,
   delete_key_object,
@@ -34,7 +32,6 @@ import { fetchFunctionSoftSkills, fetchSoftSkills } from "features/skillSlice";
 import {
   AcademicCandidate,
   CertificateCandidate,
-  FormCkeditor,
   PersonalInformation,
   RemunerationAndRewards,
   SkillAndIndustry,
@@ -67,12 +64,8 @@ const DetailCandidate = () => {
   const detailData = useSelector(state => state.candidates.detailData);
   const loading = useSelector(state => state.candidates.loading);
 
-  const nationalities = useSelector(state => state.nationality.nationalities);
-  const positions = useSelector(state => state.position.positions);
-
   const isHiddenCancelSave = () => {
     if (isEmpty(fieldValues)) return true;
-    // return Object.keys(fieldValues).every(item => item === "soft_skills");
   };
 
   const {
@@ -297,7 +290,6 @@ const DetailCandidate = () => {
 
   const onChangeSkillOther = (event, editor) => {
     const data = editor.getData();
-    console.log({ event, editor, data });
     setFieldValues(prevState => ({
       ...prevState,
       skill_other: data,
@@ -516,12 +508,6 @@ const DetailCandidate = () => {
                 Log field values
               </Button>
               <UploadFile />
-              <FormCkeditor
-                name="skill_other"
-                label="Other"
-                data={detailData.extra.skill_other}
-                onChange={onChangeSkillOther}
-              />
 
               {/* Overview */}
               <Card
@@ -552,7 +538,10 @@ const DetailCandidate = () => {
               />
               {/* Skills And Industry */}
 
-              <SkillAndIndustry form={form} />
+              <SkillAndIndustry
+                form={form}
+                onChangeSkillOther={onChangeSkillOther}
+              />
               {/* Education */}
               <Card
                 title={<span style={{ color: "#465f7b" }}>Education</span>}

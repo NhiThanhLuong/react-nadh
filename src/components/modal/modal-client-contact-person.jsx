@@ -4,7 +4,7 @@ import { hideModal } from "features/modalSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { TYPE_MODAL } from "ultis/const";
 
-const ModalClientContactPerson = ({ Comp, ...props }) => {
+const ModalClientContactPerson = ({ children }) => {
   const dispatch = useDispatch();
 
   const isShowModal = useSelector(state => state.modal.isShowModal);
@@ -53,7 +53,7 @@ const ModalClientContactPerson = ({ Comp, ...props }) => {
         </Row>
       }
     >
-      <Comp isAdd={isAdd} {...props} />
+      {children(isAdd)}
     </Modal>
   );
 };

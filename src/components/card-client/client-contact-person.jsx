@@ -32,10 +32,9 @@ const ClientContactPerson = ({ data, client_id }) => {
         </Button>
       </Row>
       <ContactPerson data={data} onEdit={onEdit} />
-      <ModalClientContactPerson
-        Comp={FormContactPerson}
-        client_id={client_id}
-      />
+      <ModalClientContactPerson>
+        {isAdd => <FormContactPerson client_id={client_id} isAdd={isAdd} />}
+      </ModalClientContactPerson>
     </Card>
   );
 };

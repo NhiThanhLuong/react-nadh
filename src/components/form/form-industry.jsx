@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import { Button, Col, Form, Input, Row } from "antd";
+import { Col, Row } from "antd";
 import {
   fetchCategory,
   fetchIndustries,

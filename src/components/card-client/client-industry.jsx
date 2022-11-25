@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import { Button, Card, Col, Form, Input, Row } from "antd";
+import { Button, Card, Col, Form, Row } from "antd";
 import { FormIndustry, IndustryDetailCandidate } from "components";
 import React from "react";
 import { toast } from "react-toastify";
@@ -20,7 +19,7 @@ const ClientIndustry = ({ data, callBack }) => {
 
   const onDeleteItem = (_, __, index) => {
     const removeData = newData(data).filter((_, idx) => idx !== index);
-    callBack(removeData);
+    callBack("business_line", removeData);
   };
 
   const onSave = () => {
@@ -49,7 +48,7 @@ const ClientIndustry = ({ data, callBack }) => {
       return;
     }
 
-    callBack([business_line, ...newData(data)]);
+    callBack("business_line", [business_line, ...newData(data)]);
     form.resetFields();
   };
 
@@ -62,7 +61,7 @@ const ClientIndustry = ({ data, callBack }) => {
         };
       return item;
     });
-    callBack(checkedData);
+    callBack("business_line", checkedData);
   };
 
   return (
@@ -106,17 +105,3 @@ const ClientIndustry = ({ data, callBack }) => {
 };
 
 export default ClientIndustry;
-// <Form.Item name="a">
-//   <Row justify="end" style={{ marginBottom: 16 }}>
-//     <Button
-//       style={{ marginRight: 16 }}
-//       danger
-//       onClick={onReset}
-//     >
-//       Cancel
-//     </Button>
-//     <Button type="primary" onClick={onSave}>
-//       Save Industry
-//     </Button>
-//   </Row>
-// </Form.Item>

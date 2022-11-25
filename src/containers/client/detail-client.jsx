@@ -8,7 +8,12 @@ import {
   putDetailClientNotLoading,
 } from "features/clientSlice";
 import { RowTitle } from "styles/styled";
-import { ClientContactPerson, ClientIndustry, ClientInfo } from "components";
+import {
+  ClientContactPerson,
+  ClientDescription,
+  ClientIndustry,
+  ClientInfo,
+} from "components";
 import { fetchUsers } from "features/userSlice";
 
 const DetailClient = () => {
@@ -19,12 +24,12 @@ const DetailClient = () => {
   const loading = useSelector(state => state.client.loading);
   const detailData = useSelector(state => state.client.detailData);
 
-  const callBackIndustry = business_line =>
+  const callBackKey = (key, value) =>
     dispatch(
       putDetailClientNotLoading({
         id: detailData.id,
         params: {
-          business_line,
+          [key]: value,
         },
       })
     );
@@ -79,12 +84,15 @@ const DetailClient = () => {
               <Col span={16}>
                 <ClientIndustry
                   data={detailData.business_line}
-                  callBack={callBackIndustry}
+                  callBack={callBackKey}
                 />
                 <ClientContactPerson
                   data={detailData.pic}
                   client_id={detailData.id}
                 />
+              </Col>
+              <Col span={24}>
+                <ClientDescription form={form} callBack={callBackKey} />
               </Col>
             </Row>
           </Form>

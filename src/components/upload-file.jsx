@@ -1,8 +1,7 @@
-/* eslint-disable no-unused-vars */
 import { Row, Upload } from "antd";
 import { putEditDetailCandidateNotLoading } from "features/candidatesSlice";
 import { fetchFiles, fetchPostFile } from "features/fileSlice";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteFile } from "ultis/api";
 import axiosClient from "ultis/axios";

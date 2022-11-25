@@ -102,15 +102,6 @@ const FilterDropdown3Select = ({
         ...extraParams,
       })
     );
-    // !value2 && delete paramsRouter[keySearch2];
-    // !value3 && delete paramsRouter[keySearch3];
-    // deleteKeyNull(params);
-    // setSearchParams(
-    //   createSearchParams({
-    //     ...paramsRouter,
-    //     ...params,
-    //   })
-    // );
   };
   const onReset = () => {
     resetPage();

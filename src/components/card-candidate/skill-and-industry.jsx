@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { DeleteOutlined } from "@ant-design/icons";
 
 import { Item } from "styles/styled";
-import { IndustryDetailCandidate } from "components";
+import { FormCkeditor, IndustryDetailCandidate } from "components";
 import {
   deleteKeyNull,
   getPropertyKeyLabelObj,
@@ -27,7 +27,7 @@ import { fetchCategory, fetchSectors } from "features/categorySlice";
 const { Option } = Select;
 const { TreeNode } = TreeSelect;
 
-const SkillAndIndustry = ({ form }) => {
+const SkillAndIndustry = ({ form, onChangeSkillOther }) => {
   const dispatch = useDispatch();
   const [isChange, setIsChange] = useState(false);
 
@@ -398,6 +398,12 @@ const SkillAndIndustry = ({ form }) => {
           onChecked={onCheckedPrimaryIndustry}
         />
       )}
+      <FormCkeditor
+        name="skill_other"
+        label="Other"
+        data={detailData.extra.skill_other}
+        onChange={onChangeSkillOther}
+      />
     </Card>
   );
 };

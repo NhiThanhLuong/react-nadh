@@ -41,6 +41,8 @@ import InfoItemSelect from "./card-client/client-info/info-item-select";
 import InfoItemDisabled from "./card-client/client-info/info-item-disabled";
 import ClientContactPerson from "./card-client/client-contact-person";
 import ClientIndustry from "./card-client/client-industry";
+import ClientDescription from "./card-client/client-description";
+import ClientDesCkeditor from "./card-client/client-description/client-des-ckeditor";
 
 import ModalClientContactPerson from "./modal/modal-client-contact-person";
 
@@ -86,5 +88,7 @@ export {
   InfoItemDisabled,
   ClientContactPerson,
   ClientIndustry,
+  ClientDescription,
+  ClientDesCkeditor,
   ModalClientContactPerson,
 };
