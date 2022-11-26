@@ -81,6 +81,10 @@ export const postFile = async formData => {
   });
 };
 
+export const postComment = async params => {
+  return await axiosClient.post("/api/comments", params);
+};
+
 // Put
 export const putDetailCandidate = async (id, params) => {
   return await axiosClient.put(`/api/candidates/${id}`, params);

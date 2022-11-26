@@ -9,6 +9,7 @@ import {
 } from "features/clientSlice";
 import { RowTitle } from "styles/styled";
 import {
+  ClientComments,
   ClientContactPerson,
   ClientDescription,
   ClientIndustry,
@@ -93,6 +94,11 @@ const DetailClient = () => {
               </Col>
               <Col span={24}>
                 <ClientDescription form={form} callBack={callBackKey} />
+                <ClientComments
+                  data={detailData.detail_comments}
+                  form={form}
+                  id={detailData.id}
+                />
               </Col>
             </Row>
           </Form>

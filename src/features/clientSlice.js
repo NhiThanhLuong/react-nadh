@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   getClients,
   getDetailClient,
+  postComment,
   putDetailClient,
   putDetailClientTax,
   removeDetailClientPicItem,
@@ -33,6 +34,15 @@ export const putDetailClientNotLoading = createAsyncThunk(
 export const putDetailClientTaxCode = createAsyncThunk(
   "clients/putDetailClientTaxCode",
   async ({ id, tax_code }) => await putDetailClientTax(id, tax_code)
+);
+
+export const postCommentSlice = createAsyncThunk(
+  "comment/postCommentSlice",
+  async params =>
+    await postComment({
+      source: { module: "client", section: "detail" },
+      ...params,
+    })
 );
 
 export const clientSlice = createSlice({
@@ -99,6 +109,22 @@ export const clientSlice = createSlice({
     },
     [putDetailClientTaxCode.rejected.type]: () => {
       toast.error("Updated error", {
+        position: "top-right",
+      });
+    },
+
+    // Post Comment
+    [postCommentSlice.fulfilled.type]: (state, { payload }) => {
+      state.detailData.detail_comments = [
+        payload,
+        ...state.detailData.detail_comments,
+      ];
+      // toast.success("Commented successful", {
+      //   position: "top-right",
+      // });
+    },
+    [postCommentSlice.rejected.type]: () => {
+      toast.error("comment error", {
         position: "top-right",
       });
     },
