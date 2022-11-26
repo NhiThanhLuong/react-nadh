@@ -44,6 +44,7 @@ import ClientIndustry from "./card-client/client-industry";
 import ClientDescription from "./card-client/client-description";
 import ClientDesCkeditor from "./card-client/client-description/client-des-ckeditor";
 import ClientComments from "./card-client/client-comments";
+import ClientAttachments from "./card-client/client-attachments";
 
 import ModalClientContactPerson from "./modal/modal-client-contact-person";
 
@@ -92,5 +93,6 @@ export {
   ClientDescription,
   ClientDesCkeditor,
   ClientComments,
+  ClientAttachments,
   ModalClientContactPerson,
 };

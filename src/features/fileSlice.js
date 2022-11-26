@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getFile, postFile } from "ultis/api";
+import { deleteFile, getFile, postFile } from "ultis/api";
 import { URL_FILE } from "ultis/const";
 
 export const fetchFiles = createAsyncThunk(
@@ -14,7 +14,15 @@ export const fetchFiles = createAsyncThunk(
     })
 );
 
-export const fetchPostFile = createAsyncThunk("file/postFile", postFile);
+export const fetchPostFile = createAsyncThunk(
+  "file/postFile",
+  async formData => await postFile(formData)
+);
+
+export const deleteFileSlice = createAsyncThunk(
+  "file/deleteFileSlice",
+  async id => await deleteFile(id)
+);
 
 export const fileSlice = createSlice({
   name: "file",
@@ -22,6 +30,7 @@ export const fileSlice = createSlice({
     loading: false,
     file: {},
     files: [],
+    getFiles: false,
   },
   reducers: {},
   extraReducers: {
@@ -50,9 +59,14 @@ export const fileSlice = createSlice({
     [fetchPostFile.fulfilled.type]: (state, { payload }) => {
       state.loading = false;
       state.file = payload;
+      state.getFiles = !state.getFiles;
     },
     [fetchPostFile.rejected.type]: state => {
       state.loading = false;
+    },
+
+    [deleteFileSlice.fulfilled.type]: state => {
+      state.getFiles = !state.getFiles;
     },
   },
 });

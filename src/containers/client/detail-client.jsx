@@ -9,6 +9,7 @@ import {
 } from "features/clientSlice";
 import { RowTitle } from "styles/styled";
 import {
+  ClientAttachments,
   ClientComments,
   ClientContactPerson,
   ClientDescription,
@@ -16,6 +17,7 @@ import {
   ClientInfo,
 } from "components";
 import { fetchUsers } from "features/userSlice";
+import { fetchFiles, fetchPostFile } from "features/fileSlice";
 
 const DetailClient = () => {
   const dispatch = useDispatch();
@@ -24,6 +26,36 @@ const DetailClient = () => {
 
   const loading = useSelector(state => state.client.loading);
   const detailData = useSelector(state => state.client.detailData);
+
+  const file = useSelector(state => state.file.file);
+  const getFiles = useSelector(state => state.file.getFiles);
+
+  useEffect(() => {
+    dispatch(fetchUsers());
+    dispatch(
+      fetchClients({
+        getAll: true,
+      })
+    );
+    dispatch(fetchDetailClient(id));
+  }, []);
+
+  useEffect(() => {
+    if (detailData?.id)
+      dispatch(
+        fetchFiles({
+          obj_id: detailData.id,
+          obj_table: "client",
+        })
+      );
+  }, [detailData?.id, getFiles]);
+
+  useEffect(() => {
+    if (file?.id)
+      callBackKey("mediafiles", {
+        files: [file.id],
+      });
+  }, [file?.id]);
 
   const callBackKey = (key, value) =>
     dispatch(
@@ -35,15 +67,14 @@ const DetailClient = () => {
       })
     );
 
-  useEffect(() => {
-    dispatch(fetchUsers());
-    dispatch(
-      fetchClients({
-        getAll: true,
-      })
-    );
-    dispatch(fetchDetailClient(id));
-  }, []);
+  const upLoadingFile = async file => {
+    let formData = new FormData();
+    formData.append("file", file);
+    formData.append("obj_table", "client");
+    formData.append("obj_uid", detailData.id);
+    formData.append("uploadedByUserId", 12);
+    await dispatch(fetchPostFile(formData));
+  };
 
   return (
     <Row style={{ marginTop: "90px" }}>
@@ -99,6 +130,7 @@ const DetailClient = () => {
                   form={form}
                   id={detailData.id}
                 />
+                <ClientAttachments upLoadingFile={upLoadingFile} />
               </Col>
             </Row>
           </Form>

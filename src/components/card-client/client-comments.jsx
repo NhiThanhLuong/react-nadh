@@ -24,7 +24,7 @@ const ClientComments = ({ data, form, id }) => {
     dispatch(postCommentSlice(params));
   };
   return (
-    <Card>
+    <Card className="mb-1">
       <Title>Notes</Title>
       <ClientDesCkeditor name="comment" form={form} callBack={callBack} />
 

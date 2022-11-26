@@ -1,28 +1,16 @@
 import { Row, Upload } from "antd";
-import { putEditDetailCandidateNotLoading } from "features/candidatesSlice";
-import { fetchFiles, fetchPostFile } from "features/fileSlice";
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteFile } from "ultis/api";
+import styled from "styled-components";
+
+import { deleteFileSlice } from "features/fileSlice";
 import axiosClient from "ultis/axios";
 import { URL_FILE } from "ultis/const";
 import { beforeUpload3M } from "ultis/uploadFile";
 
-const UploadFile = () => {
+const UploadFile = ({ upLoadingFile }) => {
   const dispatch = useDispatch();
 
-  const detailData = useSelector(state => state.candidates.detailData);
-  const file = useSelector(state => state.file.file);
   const files = useSelector(state => state.file.files);
-
-  useEffect(() => {
-    dispatch(
-      fetchFiles({
-        obj_id: detailData.id,
-        obj_table: "candidates",
-      })
-    );
-  }, []);
 
   const customRequest = async () => {};
 
@@ -30,49 +18,18 @@ const UploadFile = () => {
     const { status } = info.file;
     switch (status) {
       case "removed": {
-        deleteFile(info.file.id);
-        await dispatch(
-          putEditDetailCandidateNotLoading({
-            id: detailData.id,
-            params: {
-              mediafiles: {
-                files: [],
-              },
-            },
-          })
-        );
+        await dispatch(deleteFileSlice(info.file.id));
         break;
       }
 
       case "uploading": {
-        let formData = new FormData();
-        formData.append("file", info.file.originFileObj);
-        formData.append("obj_table", "candidates");
-        formData.append("obj_uid", detailData.id);
-        formData.append("uploadedByUserId", 12);
-        await dispatch(fetchPostFile(formData));
-        await dispatch(
-          putEditDetailCandidateNotLoading({
-            id: detailData.id,
-            params: {
-              mediafiles: {
-                files: [file.id],
-              },
-            },
-          })
-        );
+        await upLoadingFile(info.file.originFileObj);
         break;
       }
 
       default:
         break;
     }
-    await dispatch(
-      fetchFiles({
-        obj_id: detailData.id,
-        obj_table: "candidates",
-      })
-    );
   };
 
   //   const previewFile = file => {
@@ -102,7 +59,7 @@ const UploadFile = () => {
 
   return (
     <Row>
-      <Upload
+      <StyledUpload
         name="file"
         customRequest={customRequest}
         fileList={files}
@@ -120,9 +77,22 @@ const UploadFile = () => {
         // onPreview={onPreview}
       >
         Upload
-      </Upload>
+      </StyledUpload>
     </Row>
   );
 };
+
+const StyledUpload = styled(Upload)`
+  .ant-upload-list-picture-card-container,
+  .ant-upload.ant-upload-select.ant-upload-select-picture-card {
+    width: 140px;
+    height: 180px;
+  }
+
+  .ant-upload-list-item-name {
+    height: 95px;
+    white-space: normal;
+  }
+`;
 
 export default UploadFile;

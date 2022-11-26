@@ -8,6 +8,7 @@ import styled from "styled-components";
 import {
   fetchDetailCandidate,
   fetchEditDetailCandidate,
+  putEditDetailCandidateNotLoading,
   resetHistory,
 } from "features/candidatesSlice";
 import {
@@ -32,10 +33,10 @@ import { fetchFunctionSoftSkills, fetchSoftSkills } from "features/skillSlice";
 import {
   AcademicCandidate,
   CertificateCandidate,
+  ClientAttachments,
   PersonalInformation,
   RemunerationAndRewards,
   SkillAndIndustry,
-  UploadFile,
   WorkingHistoryCandidate,
 } from "components";
 import { fetchLanguages } from "features/languageSlice";
@@ -43,6 +44,7 @@ import { fetchIndustries } from "features/categorySlice";
 import { showModal } from "features/modalSlice";
 import { fetchCurrency } from "features/currencySlice";
 import { Item, RowTitle } from "styles/styled";
+import { fetchFiles, fetchPostFile } from "features/fileSlice";
 
 const validateMessages = {
   required: "${label} is required!",
@@ -63,6 +65,9 @@ const DetailCandidate = () => {
 
   const detailData = useSelector(state => state.candidates.detailData);
   const loading = useSelector(state => state.candidates.loading);
+
+  const file = useSelector(state => state.file.file);
+  const getFiles = useSelector(state => state.file.getFiles);
 
   const isHiddenCancelSave = () => {
     if (isEmpty(fieldValues)) return true;
@@ -122,6 +127,30 @@ const DetailCandidate = () => {
     );
     dispatch(fetchCurrency());
   }, []);
+
+  useEffect(() => {
+    if (detailData?.id)
+      dispatch(
+        fetchFiles({
+          obj_id: detailData.id,
+          obj_table: "candidates",
+        })
+      );
+  }, [detailData?.id, getFiles]);
+
+  useEffect(() => {
+    if (file?.id)
+      dispatch(
+        putEditDetailCandidateNotLoading({
+          id: detailData.id,
+          params: {
+            mediafiles: {
+              files: [file.id],
+            },
+          },
+        })
+      );
+  }, [file?.id]);
 
   const onFinish = values => {
     console.log("values", values);
@@ -262,8 +291,6 @@ const DetailCandidate = () => {
     KEYS_FIELDS_NOT_PUSH_PARAMS.forEach(key =>
       delete_key_object(fieldValues, key)
     );
-
-    // console.log(fieldValues);
 
     dispatch(
       fetchEditDetailCandidate({
@@ -409,6 +436,15 @@ const DetailCandidate = () => {
     setFieldValues(() => ({}));
   };
 
+  const upLoadingFile = async file => {
+    let formData = new FormData();
+    formData.append("file", file);
+    formData.append("obj_table", "candidates");
+    formData.append("obj_uid", detailData.id);
+    formData.append("uploadedByUserId", 12);
+    await dispatch(fetchPostFile(formData));
+  };
+
   return (
     <Row style={{ marginTop: "90px" }}>
       <Col span={16}>
@@ -507,7 +543,6 @@ const DetailCandidate = () => {
               <Button onClick={() => console.log(form.getFieldsValue())}>
                 Log field values
               </Button>
-              <UploadFile />
 
               {/* Overview */}
               <Card
@@ -620,6 +655,8 @@ const DetailCandidate = () => {
                 </Row>
               </Card>
               <RemunerationAndRewards form={form} />
+              <ClientAttachments upLoadingFile={upLoadingFile} />
+
               {/* Cancel & Save */}
               {isHiddenCancelSave() ? null : (
                 <RowSubmit justify="end">
