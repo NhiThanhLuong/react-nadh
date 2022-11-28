@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // import PropTypes from 'prop-types'
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -129,7 +130,7 @@ const DetailCandidate = () => {
   }, []);
 
   useEffect(() => {
-    if (detailData?.id)
+    if (detailData?.id && file.obj_table === "candidates")
       dispatch(
         fetchFiles({
           obj_id: detailData.id,
@@ -139,7 +140,7 @@ const DetailCandidate = () => {
   }, [detailData?.id, getFiles]);
 
   useEffect(() => {
-    if (file?.id)
+    if (file?.id && file.obj_table === "candidates")
       dispatch(
         putEditDetailCandidateNotLoading({
           id: detailData.id,
@@ -313,14 +314,6 @@ const DetailCandidate = () => {
     delete_key_object(changedValues, "category_id");
     // delete_key_object(changedValues, "extra");
     setFieldValues(prevState => ({ ...prevState, ...changedValues }));
-  };
-
-  const onChangeSkillOther = (event, editor) => {
-    const data = editor.getData();
-    setFieldValues(prevState => ({
-      ...prevState,
-      skill_other: data,
-    }));
   };
 
   const onChangeBirthDay = () => {
@@ -502,7 +495,7 @@ const DetailCandidate = () => {
                 direct_reports: detailData?.direct_reports || 0,
                 soft_skills: detailData?.soft_skills || [],
                 functions_skills: detailData?.functions_skills || [],
-                extra: detailData?.extra || {},
+                skill_other: detailData?.extra?.skill_other || "",
                 certificate_text: detailData?.certificate_text || "",
                 current_salary: detailData?.remuneration.current_salary || null,
                 currency: detailData?.remuneration.currency.id,
@@ -573,10 +566,7 @@ const DetailCandidate = () => {
               />
               {/* Skills And Industry */}
 
-              <SkillAndIndustry
-                form={form}
-                onChangeSkillOther={onChangeSkillOther}
-              />
+              <SkillAndIndustry form={form} />
               {/* Education */}
               <Card
                 title={<span style={{ color: "#465f7b" }}>Education</span>}

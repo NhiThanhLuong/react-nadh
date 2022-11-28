@@ -9,6 +9,10 @@ import {
   Typography,
   Upload as StyleUpload,
 } from "antd";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import styled from "styled-components";
+
 import {
   CancelSave,
   FormAddress,
@@ -21,10 +25,6 @@ import {
   putDetailClientTaxCode,
 } from "features/clientSlice";
 import { fetchPostFile } from "features/fileSlice";
-
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components";
 import { CPA, imgPath, STATUS_CLIENT, TYPE_CLIENT } from "ultis/const";
 import {
   deleteKeyNull,
@@ -40,8 +40,6 @@ const ClientInfo = ({ data, form }) => {
 
   const [isEdit, setIsEdit] = useState(false);
 
-  const file = useSelector(state => state.file.file);
-
   const clients = useSelector(state => state.client.data);
 
   const users = useSelector(state => state.user.users);
@@ -50,21 +48,6 @@ const ClientInfo = ({ data, form }) => {
     key: id,
     label: full_name,
   }));
-
-  useEffect(() => {
-    if (file.id) {
-      dispatch(
-        putDetailClientNotLoading({
-          id: data.id,
-          params: {
-            mediafiles: {
-              logo: file.id,
-            },
-          },
-        })
-      );
-    }
-  }, [file.id]);
 
   const onCancelName = () => {
     setIsEdit(false);
@@ -540,7 +523,7 @@ const ClientInfo = ({ data, form }) => {
         </Col>
         <Col span={10}>
           <Upload
-            // accept="image/png, image/jpeg"
+            accept="image/png, image/jpeg"
             showUploadList={false}
             name="file"
             onChange={handleChangeUpload}

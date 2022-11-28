@@ -27,7 +27,7 @@ import { fetchCategory, fetchSectors } from "features/categorySlice";
 const { Option } = Select;
 const { TreeNode } = TreeSelect;
 
-const SkillAndIndustry = ({ form, onChangeSkillOther }) => {
+const SkillAndIndustry = ({ form }) => {
   const dispatch = useDispatch();
   const [isChange, setIsChange] = useState(false);
 
@@ -402,7 +402,6 @@ const SkillAndIndustry = ({ form, onChangeSkillOther }) => {
         name="skill_other"
         label="Other"
         data={detailData.extra.skill_other}
-        onChange={onChangeSkillOther}
       />
     </Card>
   );

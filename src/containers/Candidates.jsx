@@ -615,6 +615,7 @@ const Candidates = () => {
 const StyledTable = styled(props => <Table {...props} />)`
   && tbody > tr:hover > td {
     background-color: ${defaultColor.hover};
+    margin-left: 8px;
   }
 `;
 

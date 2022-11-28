@@ -77,6 +77,7 @@ export const clientSlice = createSlice({
   name: "client",
   initialState: {
     loading: false,
+    loadingDetail: false,
     count: 0,
     data: [],
     detailData: undefined,
@@ -105,6 +106,9 @@ export const clientSlice = createSlice({
       state.count = payload.count;
       state.data = payload.data;
     },
+    [fetchClients.rejected.type]: state => {
+      state.loading = false;
+    },
 
     // Get Detail Candidate
     [fetchDetailClient.pending.type]: state => {
@@ -116,13 +120,18 @@ export const clientSlice = createSlice({
     },
 
     // put Detail Candidate not loading
+    [putDetailClientNotLoading.pending.type]: state => {
+      state.loadingDetail = true;
+    },
     [putDetailClientNotLoading.fulfilled.type]: (state, { payload }) => {
+      state.loadingDetail = false;
       state.detailData = payload;
       toast.success("Updated successful", {
         position: "top-right",
       });
     },
-    [putDetailClientNotLoading.rejected.type]: () => {
+    [putDetailClientNotLoading.rejected.type]: state => {
+      state.loadingDetail = false;
       toast.error("Updated error", {
         position: "top-right",
       });

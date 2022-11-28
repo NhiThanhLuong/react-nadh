@@ -8,6 +8,7 @@ const ClientDesCkeditor = ({ name, title, data, form, callBack }) => {
 
   const onCancel = () => {
     setIsEdit(false);
+    form.resetFields([name]);
   };
 
   const onSave = () => {
