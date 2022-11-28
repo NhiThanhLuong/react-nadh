@@ -85,6 +85,10 @@ export const postComment = async params => {
   return await axiosClient.post("/api/comments", params);
 };
 
+export const postDetailClientPicItem = async params => {
+  return await axiosClient.post("/api/contact_persons", params);
+};
+
 // Put
 export const putDetailCandidate = async (id, params) => {
   return await axiosClient.put(`/api/candidates/${id}`, params);
@@ -103,4 +107,8 @@ export const putDetailClientTax = async (id, tax_code) => {
 
 export const removeDetailClientPicItem = async id => {
   return await axiosClient.put(`/api/contact_persons/${id}/remove`);
+};
+
+export const putDetailClientPicItem = async (id, params) => {
+  return await axiosClient.post(`/api/contact_persons/${id}`, params);
 };

@@ -1,9 +1,11 @@
 import { Checkbox, Col, Form, Input, Row } from "antd";
+import { postContactPerson } from "features/clientSlice";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import validator from "ultis/validate";
 
 const FormContactPerson = ({ isAdd, client_id }) => {
+  const dispatch = useDispatch();
   const [form] = Form.useForm();
 
   const pic_item = useSelector(state => state.client.pic_item);
@@ -24,6 +26,11 @@ const FormContactPerson = ({ isAdd, client_id }) => {
       role: 1,
     };
     console.log(params);
+    if (isAdd) {
+      dispatch(postContactPerson(params));
+    } else {
+      dispatch(postContactPerson(params));
+    }
   };
 
   return (

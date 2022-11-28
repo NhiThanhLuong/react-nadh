@@ -3,7 +3,9 @@ import {
   getClients,
   getDetailClient,
   postComment,
+  postDetailClientPicItem,
   putDetailClient,
+  putDetailClientPicItem,
   putDetailClientTax,
   removeDetailClientPicItem,
 } from "ultis/api";
@@ -36,11 +38,37 @@ export const putDetailClientTaxCode = createAsyncThunk(
   async ({ id, tax_code }) => await putDetailClientTax(id, tax_code)
 );
 
+export const postContactPerson = createAsyncThunk(
+  "comment/postContactPerson",
+  async params =>
+    await postDetailClientPicItem({
+      phone_codes: {
+        extra: { code: "VN", dial_code: "+84" },
+        key: "1280",
+        label: "Viet Nam",
+      },
+      ...params,
+    })
+);
+
 export const postCommentSlice = createAsyncThunk(
   "comment/postCommentSlice",
   async params =>
     await postComment({
       source: { module: "client", section: "detail" },
+      ...params,
+    })
+);
+
+export const putContactPerson = createAsyncThunk(
+  "comment/putContactPerson",
+  async ({ id, params }) =>
+    await putDetailClientPicItem(id, {
+      phone_codes: {
+        extra: { code: "VN", dial_code: "+84" },
+        key: "1280",
+        label: "Viet Nam",
+      },
       ...params,
     })
 );
@@ -101,12 +129,6 @@ export const clientSlice = createSlice({
     },
 
     // put Detail Candidate tax code
-    [putDetailClientTaxCode.fulfilled.type]: (state, { payload }) => {
-      state.detailData = payload;
-      toast.success("Updated successful", {
-        position: "top-right",
-      });
-    },
     [putDetailClientTaxCode.rejected.type]: () => {
       toast.error("Updated error", {
         position: "top-right",
@@ -125,6 +147,24 @@ export const clientSlice = createSlice({
     },
     [postCommentSlice.rejected.type]: () => {
       toast.error("comment error", {
+        position: "top-right",
+      });
+    },
+
+    // Post contact person
+    [postContactPerson.fulfilled.type]: (state, { payload }) => {
+      state.detailData.pic = [...state.detailData.pic, payload];
+      toast.success("Updated successful", {
+        position: "top-right",
+      });
+    },
+
+    [putContactPerson.fulfilled.type]: (state, { payload }) => {
+      state.detailData.pic = state.detailData.pic.map(item => {
+        if (item.id === state.pic.id) return payload;
+        return item;
+      });
+      toast.success("Updated successful", {
         position: "top-right",
       });
     },
