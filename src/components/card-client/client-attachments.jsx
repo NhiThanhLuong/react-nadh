@@ -16,6 +16,7 @@ const ClientAttachments = ({ upLoadingFile }) => {
 const Title = styled.p`
   color: #465f7b;
   font-size: 16px;
+  line-height: 24px;
   font-weight: 500;
 `;
 

@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getUserPage } from "ultis/api";
-// import { logout } from "./authSlice";
 
 export const fetchUserPage = createAsyncThunk(
   "userPage/fetchUserPage",

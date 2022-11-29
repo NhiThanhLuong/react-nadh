@@ -26,7 +26,6 @@ axiosClient.interceptors.response.use(
     return response;
   },
   error => {
-    console.log(error.response.data.message);
     if (
       error.response.data.message === "Invalid tokenForbiddenError: Forbidden"
     ) {

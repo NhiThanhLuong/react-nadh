@@ -46,6 +46,8 @@ import ClientDesCkeditor from "./card-client/client-description/client-des-ckedi
 import ClientComments from "./card-client/client-comments";
 import ClientAttachments from "./card-client/client-attachments";
 
+import AddClientInfo from "./card-client/add-client-info";
+
 import ModalClientContactPerson from "./modal/modal-client-contact-person";
 
 import UploadFile from "./upload-file";
@@ -94,5 +96,6 @@ export {
   ClientDesCkeditor,
   ClientComments,
   ClientAttachments,
+  AddClientInfo,
   ModalClientContactPerson,
 };

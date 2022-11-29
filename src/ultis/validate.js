@@ -19,6 +19,9 @@ const validator = key => {
       },
     ],
   };
+  if (Array.isArray(key)) {
+    return key.reduce((result, item) => [...result, ...validate[item]], []);
+  }
   return validate[key];
 };
 

@@ -10,6 +10,8 @@ const AddCandidate = lazy(() => import("containers/candidate/add-candidate"));
 
 const Clients = lazy(() => import("containers/Clients"));
 const DetailClient = lazy(() => import("containers/client/detail-client"));
+const AddClient = lazy(() => import("containers/client/add-client"));
+
 const User = lazy(() => import("containers/User"));
 // const UserDetail = lazy(() => import("containers/UserDetail"));
 // const UserAdd = lazy(() => import("containers/UserAdd"));
@@ -53,6 +55,10 @@ const _nav = [
       {
         key: "/client/:id",
         component: props => <DetailClient {...props} />,
+      },
+      {
+        key: "/client-add",
+        component: props => <AddClient {...props} />,
       },
     ],
   },

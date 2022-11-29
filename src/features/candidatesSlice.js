@@ -71,7 +71,7 @@ export const candidatesSlice = createSlice({
   name: "candidates",
   initialState: {
     loading: false,
-    isDetailLoading: false,
+    loadingDetail: false,
     count: 0,
     data: [],
     detailData: undefined,
@@ -121,18 +121,18 @@ export const candidatesSlice = createSlice({
       state.detailData = payload;
     },
     // Put Detail Candidate
-    [putLanguageDetailCandidate.pending.type]: state => {
-      state.loading = true;
+    [fetchEditDetailCandidate.pending.type]: state => {
+      state.loadingDetail = true;
     },
     [fetchEditDetailCandidate.fulfilled.type]: (state, { payload }) => {
-      state.loading = false;
+      state.loadingDetail = false;
       state.detailData = payload;
       toast.success("Successfully updated", {
         position: "top-right",
       });
     },
     [fetchEditDetailCandidate.rejected.type]: state => {
-      state.loading = false;
+      state.loadingDetail = false;
       toast.error("Update error", {
         position: "top-right",
       });
@@ -182,17 +182,17 @@ export const candidatesSlice = createSlice({
 
     // Put Candidate History
     [putCandidateHistory.pending.type]: state => {
-      state.isDetailLoading = true;
+      state.loadingDetail = true;
     },
     [putCandidateHistory.fulfilled.type]: state => {
-      state.isDetailLoading = false;
+      state.loadingDetail = false;
       // state.detailData.histories = payload.histories;
       toast.success("Successfully candidate history updated", {
         position: "top-right",
       });
     },
     [putCandidateHistory.rejected.type]: state => {
-      state.isDetailLoading = false;
+      state.loadingDetail = false;
       toast.error("Duplicated candidate history Value", {
         position: "top-right",
       });
@@ -200,17 +200,17 @@ export const candidatesSlice = createSlice({
 
     // Put Language
     [putLanguageDetailCandidate.pending.type]: state => {
-      state.isDetailLoading = true;
+      state.loadingDetail = true;
     },
     [putLanguageDetailCandidate.fulfilled.type]: (state, { payload }) => {
-      state.isDetailLoading = false;
+      state.loadingDetail = false;
       state.detailData.languages = payload.languages;
       toast.success("Successfully updated", {
         position: "top-right",
       });
     },
     [putLanguageDetailCandidate.rejected.type]: state => {
-      state.isDetailLoading = false;
+      state.loadingDetail = false;
       toast.error("Duplicated languages value", {
         position: "top-right",
       });
@@ -218,17 +218,17 @@ export const candidatesSlice = createSlice({
 
     // Put Industry
     [putIndustryDetailCandidate.pending.type]: state => {
-      state.isDetailLoading = true;
+      state.loadingDetail = true;
     },
     [putIndustryDetailCandidate.fulfilled.type]: (state, { payload }) => {
-      state.isDetailLoading = false;
+      state.loadingDetail = false;
       state.detailData.business_line = payload.business_line;
       toast.success("Successfully updated", {
         position: "top-right",
       });
     },
     [putIndustryDetailCandidate.rejected.type]: state => {
-      state.isDetailLoading = false;
+      state.loadingDetail = false;
       toast.error("Duplicated Industry Value", {
         position: "top-right",
       });

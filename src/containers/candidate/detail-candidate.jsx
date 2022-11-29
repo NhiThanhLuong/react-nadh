@@ -2,7 +2,7 @@
 // import PropTypes from 'prop-types'
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Form, Input, Row, Col, Card, Button } from "antd";
+import { Form, Input, Row, Col, Card, Button, Spin } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
@@ -66,6 +66,7 @@ const DetailCandidate = () => {
 
   const detailData = useSelector(state => state.candidates.detailData);
   const loading = useSelector(state => state.candidates.loading);
+  const loadingDetail = useSelector(state => state.candidates.loadingDetail);
 
   const file = useSelector(state => state.file.file);
   const getFiles = useSelector(state => state.file.getFiles);
@@ -441,226 +442,233 @@ const DetailCandidate = () => {
   return (
     <Row style={{ marginTop: "90px" }}>
       <Col span={16}>
-        {!loading && detailData?.candidate_id === id ? (
-          <>
-            <RowTitle>
-              <Link to="/candidates">Candidates List /</Link>
-              <span
-                style={{
-                  marginLeft: 8,
+        <StyledSpin spinning={loadingDetail} tip="Loading...">
+          {!loading && detailData?.candidate_id === id ? (
+            <>
+              <RowTitle>
+                <Link to="/candidates">Candidates List /</Link>
+                <span
+                  style={{
+                    marginLeft: 8,
+                  }}
+                >
+                  {id} - {detailData.full_name}
+                </span>
+              </RowTitle>
+              <Form
+                form={form}
+                onValuesChange={onValuesChange}
+                validateMessages={validateMessages}
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+                layout="vertical"
+                initialValues={{
+                  overview_text_new: detailData?.overview_text_new,
+                  first_name: detailData?.first_name,
+                  last_name: detailData?.last_name,
+                  middle_name: detailData?.middle_name,
+                  priority_status: detailData?.priority_status,
+                  day_of_birth: detailData?.dob
+                    ? +formatDate(detailData?.dob).day
+                    : null,
+                  month_of_birth: detailData?.dob
+                    ? +formatDate(detailData?.dob).month
+                    : null,
+                  year_of_birth: detailData?.dob
+                    ? +formatDate(detailData?.dob).year
+                    : null,
+                  dob: detailData?.dob,
+                  gender: detailData?.gender,
+                  martial_status: detailData?.extra?.martial_status,
+                  relocating_willingness: detailData?.relocating_willingness,
+                  source: detailData?.source,
+                  creator_full_name: detailData?.creator?.full_name,
+                  createdAt: formatDDMMYYYY(detailData?.createdAt),
+                  emails: detailData?.emails,
+                  phones: detailData?.phones,
+                  addresses: detailData?.addresses.length
+                    ? detailData?.addresses
+                    : [null],
+                  nationality: detailData?.nationality,
+                  prefer_position: detailData?.prefer_position,
+                  highest_education: detailData?.highest_education,
+                  industry_years: detailData?.industry_years || 0,
+                  management_years: detailData?.management_years || 0,
+                  direct_reports: detailData?.direct_reports || 0,
+                  soft_skills: detailData?.soft_skills || [],
+                  functions_skills: detailData?.functions_skills || [],
+                  skill_other: detailData?.extra?.skill_other || "",
+                  certificate_text: detailData?.certificate_text || "",
+                  current_salary:
+                    detailData?.remuneration.current_salary || null,
+                  currency: detailData?.remuneration.currency.id,
+                  over_thirteen: detailData?.remuneration.benefit.over_thirteen,
+                  over_thirteen_text:
+                    detailData?.remuneration.benefit.over_thirteen_text,
+                  lunch_check: detailData?.remuneration.benefit.lunch_check,
+                  lunch_check_text:
+                    detailData?.remuneration.benefit.lunch_check_text,
+                  car_parking: detailData?.remuneration.benefit.car_parking,
+                  car_parking_text:
+                    detailData?.remuneration.benefit.car_parking_text,
+                  car_allowance: detailData?.remuneration.benefit.car_allowance,
+                  car_allowance_text:
+                    detailData?.remuneration.benefit.car_allowance_text,
+                  phone: detailData?.remuneration.benefit.phone,
+                  phone_text: detailData?.remuneration.benefit.phone_text,
+                  laptop: detailData?.remuneration.benefit.laptop,
+                  laptop_text: detailData?.remuneration.benefit.laptop_text,
+                  share_option: detailData?.remuneration.benefit.share_option,
+                  share_option_text:
+                    detailData?.remuneration.benefit.share_option_text,
+                  health_cover: detailData?.remuneration.benefit.health_cover,
+                  health_cover_text:
+                    detailData?.remuneration.benefit.health_cover_text,
+                  pension_scheme:
+                    detailData?.remuneration.benefit.pension_scheme || 0,
+                  working_hour:
+                    detailData?.remuneration.benefit?.working_hour || 0,
+                  no_holiday: detailData?.remuneration.benefit?.no_holiday || 0,
+                  overtime_hour:
+                    detailData?.remuneration.benefit?.overtime_hour || 0,
+                  notice_days: detailData?.remuneration.notice_days || 0,
+                  salary_from: detailData?.remuneration.salary.from || 0,
+                  salary_to: detailData?.remuneration.salary.to || 0,
                 }}
               >
-                {id} - {detailData.full_name}
-              </span>
-            </RowTitle>
-            <Form
-              form={form}
-              onValuesChange={onValuesChange}
-              validateMessages={validateMessages}
-              onFinish={onFinish}
-              onFinishFailed={onFinishFailed}
-              layout="vertical"
-              initialValues={{
-                overview_text_new: detailData?.overview_text_new,
-                first_name: detailData?.first_name,
-                last_name: detailData?.last_name,
-                middle_name: detailData?.middle_name,
-                priority_status: detailData?.priority_status,
-                day_of_birth: detailData?.dob
-                  ? +formatDate(detailData?.dob).day
-                  : null,
-                month_of_birth: detailData?.dob
-                  ? +formatDate(detailData?.dob).month
-                  : null,
-                year_of_birth: detailData?.dob
-                  ? +formatDate(detailData?.dob).year
-                  : null,
-                dob: detailData?.dob,
-                gender: detailData?.gender,
-                martial_status: detailData?.extra?.martial_status,
-                relocating_willingness: detailData?.relocating_willingness,
-                source: detailData?.source,
-                creator_full_name: detailData?.creator?.full_name,
-                createdAt: formatDDMMYYYY(detailData?.createdAt),
-                emails: detailData?.emails,
-                phones: detailData?.phones,
-                addresses: detailData?.addresses.length
-                  ? detailData?.addresses
-                  : [null],
-                nationality: detailData?.nationality,
-                prefer_position: detailData?.prefer_position,
-                highest_education: detailData?.highest_education,
-                industry_years: detailData?.industry_years || 0,
-                management_years: detailData?.management_years || 0,
-                direct_reports: detailData?.direct_reports || 0,
-                soft_skills: detailData?.soft_skills || [],
-                functions_skills: detailData?.functions_skills || [],
-                skill_other: detailData?.extra?.skill_other || "",
-                certificate_text: detailData?.certificate_text || "",
-                current_salary: detailData?.remuneration.current_salary || null,
-                currency: detailData?.remuneration.currency.id,
-                over_thirteen: detailData?.remuneration.benefit.over_thirteen,
-                over_thirteen_text:
-                  detailData?.remuneration.benefit.over_thirteen_text,
-                lunch_check: detailData?.remuneration.benefit.lunch_check,
-                lunch_check_text:
-                  detailData?.remuneration.benefit.lunch_check_text,
-                car_parking: detailData?.remuneration.benefit.car_parking,
-                car_parking_text:
-                  detailData?.remuneration.benefit.car_parking_text,
-                car_allowance: detailData?.remuneration.benefit.car_allowance,
-                car_allowance_text:
-                  detailData?.remuneration.benefit.car_allowance_text,
-                phone: detailData?.remuneration.benefit.phone,
-                phone_text: detailData?.remuneration.benefit.phone_text,
-                laptop: detailData?.remuneration.benefit.laptop,
-                laptop_text: detailData?.remuneration.benefit.laptop_text,
-                share_option: detailData?.remuneration.benefit.share_option,
-                share_option_text:
-                  detailData?.remuneration.benefit.share_option_text,
-                health_cover: detailData?.remuneration.benefit.health_cover,
-                health_cover_text:
-                  detailData?.remuneration.benefit.health_cover_text,
-                pension_scheme:
-                  detailData?.remuneration.benefit.pension_scheme || 0,
-                working_hour:
-                  detailData?.remuneration.benefit?.working_hour || 0,
-                no_holiday: detailData?.remuneration.benefit?.no_holiday || 0,
-                overtime_hour:
-                  detailData?.remuneration.benefit?.overtime_hour || 0,
-                notice_days: detailData?.remuneration.notice_days || 0,
-                salary_from: detailData?.remuneration.salary.from || 0,
-                salary_to: detailData?.remuneration.salary.to || 0,
-              }}
-            >
-              <Button onClick={() => console.log(form.getFieldsValue())}>
-                Log field values
-              </Button>
+                <Button onClick={() => console.log(form.getFieldsValue())}>
+                  Log field values
+                </Button>
 
-              {/* Overview */}
-              <Card
-                title={<span style={{ color: "#465f7b" }}>Overview</span>}
-                style={{ marginBottom: 16 }}
-              >
-                <Item name="overview_text_new">
-                  <Input.TextArea placeholder="Overview" />
-                </Item>
-              </Card>
-              {/* Personal Information */}
-              <PersonalInformation
-                fieldValues={fieldValues}
-                setFieldValues={setFieldValues}
-                onChangeBirthDay={onChangeBirthDay}
-                onChangeCountry={onChangeCountry}
-                onDropdownCity={onDropdownCity}
-                onChangeCity={onChangeCity}
-                onDropdownDistrict={onDropdownDistrict}
-                onChangeDistrict={onChangeDistrict}
-                onSearchNationality={onSearchNationality}
-                onSearchPosition={onSearchPosition}
-                onChangePosition={onChangePosition}
-                onAddNationality={onAddNationality}
-                onAddPosition={onAddPosition}
-                onChangeEducation={onChangeEducation}
-                onChangeNationality={onChangeNationality}
-              />
-              {/* Skills And Industry */}
+                {/* Overview */}
+                <Card
+                  title={<span style={{ color: "#465f7b" }}>Overview</span>}
+                  style={{ marginBottom: 16 }}
+                >
+                  <Item name="overview_text_new">
+                    <Input.TextArea placeholder="Overview" />
+                  </Item>
+                </Card>
+                {/* Personal Information */}
+                <PersonalInformation
+                  fieldValues={fieldValues}
+                  setFieldValues={setFieldValues}
+                  onChangeBirthDay={onChangeBirthDay}
+                  onChangeCountry={onChangeCountry}
+                  onDropdownCity={onDropdownCity}
+                  onChangeCity={onChangeCity}
+                  onDropdownDistrict={onDropdownDistrict}
+                  onChangeDistrict={onChangeDistrict}
+                  onSearchNationality={onSearchNationality}
+                  onSearchPosition={onSearchPosition}
+                  onChangePosition={onChangePosition}
+                  onAddNationality={onAddNationality}
+                  onAddPosition={onAddPosition}
+                  onChangeEducation={onChangeEducation}
+                  onChangeNationality={onChangeNationality}
+                />
+                {/* Skills And Industry */}
 
-              <SkillAndIndustry form={form} />
-              {/* Education */}
-              <Card
-                title={<span style={{ color: "#465f7b" }}>Education</span>}
-                style={{ marginBottom: 16 }}
-              >
-                <Row gutter={(16, 16)}>
-                  {/* Academic */}
-                  <Col span={24} style={{ marginBottom: 8 }}>
-                    <Row align="middle" justify="space-between">
-                      <span style={{ fontWeight: 500 }}>ACADEMIC</span>
-                      <Button type="primary" ghost onClick={onAddEducation}>
-                        Add Education
-                      </Button>
-                    </Row>
-                  </Col>
-                  <Col span={24}>
-                    <AcademicCandidate
-                      dataSource={detailData.histories.filter(
-                        ({ type }) => type === 1
-                      )}
-                    />
-                  </Col>
-                  <Col span={24} style={{ marginBottom: 8 }}>
-                    <Row align="middle" justify="space-between">
-                      <span style={{ fontWeight: 500 }}>CERTIFICATE</span>
-                      <Button type="primary" ghost onClick={onAddCertificate}>
-                        Add Certificate
-                      </Button>
-                    </Row>
-                  </Col>
-                  <Col span={24}>
-                    <CertificateCandidate
-                      dataSource={detailData.histories.filter(
-                        ({ type }) => type === 3
-                      )}
-                    />
-                  </Col>
-                </Row>
-              </Card>
-              {/* Certificate */}
-              <Card
-                title={<span style={{ color: "#465f7b" }}>Certificate</span>}
-                style={{ marginBottom: 16 }}
-              >
-                <Item name="certificate_text">
-                  <Input.TextArea placeholder="Certificate" />
-                </Item>
-              </Card>
-              {/* Working History */}
-              <Card
-                title={
-                  <span style={{ color: "#465f7b" }}>Working History</span>
-                }
-                style={{ marginBottom: 16 }}
-              >
-                <Row>
-                  <Col span={24} style={{ marginBottom: 8 }}>
-                    <Row align="middle" justify="space-between">
-                      <span style={{ fontWeight: 500 }}>WORKING HISTORY</span>
-                      <Button
-                        type="primary"
-                        ghost
-                        onClick={onAddWorkingHistory}
-                      >
-                        Add Working History
-                      </Button>
-                    </Row>
-                  </Col>
-                  <Col span={24}>
-                    <WorkingHistoryCandidate
-                      dataSource={detailData.histories.filter(
-                        ({ type }) => type === 2
-                      )}
-                    />
-                  </Col>
-                </Row>
-              </Card>
-              <RemunerationAndRewards form={form} />
-              <ClientAttachments upLoadingFile={upLoadingFile} />
+                <SkillAndIndustry form={form} />
+                {/* Education */}
+                <Card
+                  title={<span style={{ color: "#465f7b" }}>Education</span>}
+                  style={{ marginBottom: 16 }}
+                >
+                  <Row gutter={(16, 16)}>
+                    {/* Academic */}
+                    <Col span={24} style={{ marginBottom: 8 }}>
+                      <Row align="middle" justify="space-between">
+                        <span style={{ fontWeight: 500 }}>ACADEMIC</span>
+                        <Button type="primary" ghost onClick={onAddEducation}>
+                          Add Education
+                        </Button>
+                      </Row>
+                    </Col>
+                    <Col span={24}>
+                      <AcademicCandidate
+                        dataSource={detailData.histories.filter(
+                          ({ type }) => type === 1
+                        )}
+                      />
+                    </Col>
+                    <Col span={24} style={{ marginBottom: 8 }}>
+                      <Row align="middle" justify="space-between">
+                        <span style={{ fontWeight: 500 }}>CERTIFICATE</span>
+                        <Button type="primary" ghost onClick={onAddCertificate}>
+                          Add Certificate
+                        </Button>
+                      </Row>
+                    </Col>
+                    <Col span={24}>
+                      <CertificateCandidate
+                        dataSource={detailData.histories.filter(
+                          ({ type }) => type === 3
+                        )}
+                      />
+                    </Col>
+                  </Row>
+                </Card>
+                {/* Certificate */}
+                <Card
+                  title={<span style={{ color: "#465f7b" }}>Certificate</span>}
+                  style={{ marginBottom: 16 }}
+                >
+                  <Item name="certificate_text">
+                    <Input.TextArea placeholder="Certificate" />
+                  </Item>
+                </Card>
+                {/* Working History */}
+                <Card
+                  title={
+                    <span style={{ color: "#465f7b" }}>Working History</span>
+                  }
+                  style={{ marginBottom: 16 }}
+                >
+                  <Row>
+                    <Col span={24} style={{ marginBottom: 8 }}>
+                      <Row align="middle" justify="space-between">
+                        <span style={{ fontWeight: 500 }}>WORKING HISTORY</span>
+                        <Button
+                          type="primary"
+                          ghost
+                          onClick={onAddWorkingHistory}
+                        >
+                          Add Working History
+                        </Button>
+                      </Row>
+                    </Col>
+                    <Col span={24}>
+                      <WorkingHistoryCandidate
+                        dataSource={detailData.histories.filter(
+                          ({ type }) => type === 2
+                        )}
+                      />
+                    </Col>
+                  </Row>
+                </Card>
+                <RemunerationAndRewards form={form} />
+                <ClientAttachments upLoadingFile={upLoadingFile} />
 
-              {/* Cancel & Save */}
-              {isHiddenCancelSave() ? null : (
-                <RowSubmit justify="end">
-                  <Button style={{ marginRight: 16 }} onClick={onResetFields}>
-                    Cancel
-                  </Button>
-                  <Button type="primary" htmlType="submit">
-                    Save
-                  </Button>
-                </RowSubmit>
-              )}
-            </Form>
-          </>
-        ) : null}
+                {/* Cancel & Save */}
+                {isHiddenCancelSave() ? null : (
+                  <RowSubmit justify="end">
+                    <Button style={{ marginRight: 16 }} onClick={onResetFields}>
+                      Cancel
+                    </Button>
+                    <Button type="primary" htmlType="submit">
+                      Save
+                    </Button>
+                  </RowSubmit>
+                )}
+              </Form>
+            </>
+          ) : (
+            <StyledRow align="middle" justify="center">
+              <Spin tip="Loading..." />
+            </StyledRow>
+          )}
+        </StyledSpin>
       </Col>
     </Row>
   );
@@ -668,12 +676,21 @@ const DetailCandidate = () => {
 
 DetailCandidate.propTypes = {};
 
+const StyledSpin = styled(Spin)`
+  position: fixed !important;
+  max-height: 100vh !important;
+`;
+
 const RowSubmit = styled(Row)`
   position: fixed;
   width: 100%;
   bottom: 0;
   padding: 8px 80px;
   background-color: #e9e9e9;
+`;
+
+const StyledRow = styled(Row)`
+  height: 100vh;
 `;
 
 export default DetailCandidate;
