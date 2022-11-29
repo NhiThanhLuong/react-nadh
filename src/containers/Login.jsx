@@ -14,21 +14,11 @@ const Login = () => {
   const [isSubmiting, setIsSubmiting] = useState(false);
   const username = sessionStorage?.username || "";
 
-  console.log(sessionStorage?.username);
-
   useEffect(() => {
     if (token && !loading) {
       navigate("/candidates", { replace: true });
     }
-    // setLoading(false);
   }, [token, navigate]);
-
-  // useEffect(() => {
-  //   dispatch(postLogin({
-  //     username: 'admin',
-  //     password: 'ABCde123@'
-  //   }))
-  // }, [])
 
   const onFinish = values => {
     setIsSubmiting(true);

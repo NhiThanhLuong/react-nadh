@@ -7,15 +7,24 @@ import { FaUser, FaLock } from "react-icons/fa";
 
 import { imgPath } from "ultis/const";
 import { logout } from "features/authSlice";
+import { useEffect } from "react";
+import { storage } from "_constants";
 
 const UserInfo = ({ info }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { full_name, user_name, role, avatar } = info;
+  const token = localStorage.getItem(storage.token);
+
+  const { full_name, user_name, role, avatar } = info || {};
+
   const onLogout = () => {
     dispatch(logout());
     navigate("/login", { replace: true });
   };
+
+  useEffect(() => {
+    if (!token) navigate("/login", { replace: true });
+  }, [token]);
 
   const menu = (
     <Menu

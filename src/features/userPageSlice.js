@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getUserPage } from "ultis/api";
+// import { logout } from "./authSlice";
 
 export const fetchUserPage = createAsyncThunk(
   "userPage/fetchUserPage",
@@ -23,6 +24,9 @@ export const userPageSlice = createSlice({
     [fetchUserPage.fulfilled.type]: (state, { payload }) => {
       state.loading = false;
       state.data = payload.data;
+    },
+    [fetchUserPage.rejected.type]: state => {
+      state.loading = true;
     },
   },
 });

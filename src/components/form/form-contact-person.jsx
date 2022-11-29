@@ -25,7 +25,6 @@ const FormContactPerson = ({ isAdd, client_id }) => {
       client_id,
       role: 1,
     };
-    console.log(params);
     if (isAdd) {
       dispatch(postContactPerson(params));
     } else {

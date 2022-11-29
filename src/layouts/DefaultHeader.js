@@ -9,7 +9,7 @@ import { logout } from "features/authSlice";
 import { UserInfo } from "components";
 
 const DefaultHeader = () => {
-  const { user_sent } = useSelector(state => state.auth);
+  const user_sent = useSelector(state => state.auth.user_sent);
   return (
     <Container>
       <Row align="center" gutter={[0]} justify="space-between" wrap={false}>
@@ -22,7 +22,7 @@ const DefaultHeader = () => {
           />
         </Col>
         <Col>
-          <UserInfo info={JSON.parse(user_sent)} />
+          <UserInfo info={user_sent ? JSON.parse(user_sent) : null} />
         </Col>
       </Row>
     </Container>

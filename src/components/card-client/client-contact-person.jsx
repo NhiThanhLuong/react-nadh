@@ -14,7 +14,6 @@ const ClientContactPerson = ({ data, client_id }) => {
   const dispatch = useDispatch();
 
   const onEdit = id => {
-    console.log(id);
     dispatch(getPicItem(id));
     dispatch(showModal(TYPE_MODAL.contact_person.edit));
   };

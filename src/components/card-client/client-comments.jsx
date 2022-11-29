@@ -13,13 +13,11 @@ const ClientComments = ({ data, form, id }) => {
   const dispatch = useDispatch();
 
   const callBack = (name, value) => {
-    console.log(name, value);
     const params = {
       content: value,
       source_uuid: id,
     };
     form.resetFields([name]);
-    console.log(params);
 
     dispatch(postCommentSlice(params));
   };

@@ -1,5 +1,6 @@
 import axios from "axios";
 import queryString from "query-string";
+import { storage } from "_constants";
 
 const axiosClient = axios.create({
   headers: {
@@ -25,6 +26,14 @@ axiosClient.interceptors.response.use(
     return response;
   },
   error => {
+    console.log(error.response.data.message);
+    if (
+      error.response.data.message === "Invalid tokenForbiddenError: Forbidden"
+    ) {
+      localStorage.removeItem(storage.token);
+      localStorage.removeItem(storage.user_sent);
+      window.location.reload();
+    }
     throw error;
   }
 );
