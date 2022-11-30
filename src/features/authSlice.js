@@ -20,14 +20,12 @@ export const authSlice = createSlice({
   reducers: {
     cancelLoginFailed: state => {
       state.err = undefined;
-      return state;
     },
     logout: state => {
       state.token = undefined;
       state.user_sent = undefined;
       localStorage.removeItem(storage.token);
       localStorage.removeItem(storage.user_sent);
-      return state;
     },
   },
   extraReducers: {

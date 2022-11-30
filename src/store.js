@@ -17,6 +17,7 @@ import currencyReducer from "features/currencySlice";
 import fileReducer from "features/fileSlice";
 import clientReducer from "features/clientSlice";
 import userReducer from "features/userSlice";
+import jobReducer from "features/jobSlice";
 
 export const store = configureStore({
   reducer: {
@@ -38,5 +39,6 @@ export const store = configureStore({
     file: fileReducer,
     client: clientReducer,
     user: userReducer,
+    job: jobReducer,
   },
 });

@@ -1,22 +1,24 @@
 /* eslint-disable no-unused-vars */
 import { Button, message, Steps } from "antd";
-import { AddClientInfo } from "components";
+import { AddClientContactPerson, AddClientInfo } from "components";
 import { useState } from "react";
+
+const { Step } = Steps;
 
 const AddClient = () => {
   const [current, setCurrent] = useState(0);
 
   const steps = [
     {
-      title: "First",
-      content: "First-content",
+      title: "Client Information",
+      content: <AddClientInfo />,
     },
     {
-      title: "Second",
-      content: "Second-content",
+      title: "Contact Person",
+      content: <AddClientContactPerson />,
     },
     {
-      title: "Last",
+      title: "Finish",
       content: "Last-content",
     },
   ];
@@ -27,25 +29,15 @@ const AddClient = () => {
   const prev = () => {
     setCurrent(current - 1);
   };
-  //   const items = steps.map(item => ({
-  //     key: item.title,
-  //     title: item.title,
-  //   }));
-  const items = [
-    { title: "first step" },
-    { title: "second step" },
-    { title: "third step" },
-  ];
-  console.log(items);
 
   return (
-    <div style={{ marginTop: 500 }}>
-      <Steps>
-        <Steps.Step title="first step" />
-        <Steps.Step title="second step" />
-        <Steps.Step title="third step" />
+    <div style={{ marginTop: 100 }}>
+      <Steps current={current}>
+        {steps.map(({ title }) => (
+          <Step key={title} title={title} />
+        ))}
       </Steps>
-      ;<div className="steps-content">{steps[current].content}</div>
+      <div className="steps-content">{steps[current].content}</div>
       <div className="steps-action">
         {current < steps.length - 1 && (
           <Button type="primary" onClick={() => next()}>
@@ -71,7 +63,6 @@ const AddClient = () => {
           </Button>
         )}
       </div>
-      <AddClientInfo />
     </div>
   );
 };

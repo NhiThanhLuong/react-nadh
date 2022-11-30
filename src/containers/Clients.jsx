@@ -63,7 +63,12 @@ const Clients = () => {
   const sectors = useSelector(state => state.category.sectors);
   const categories = useSelector(state => state.category.categories);
 
-  const users = useSelector(state => state.user.users);
+  const users = useSelector(state => state.user.users).map(
+    ({ id, full_name }) => ({
+      key: id,
+      label: full_name,
+    })
+  );
 
   const filterTags = useMemo(() => ({ ...paramsRouter }), [searchParams]);
 
@@ -108,7 +113,7 @@ const Clients = () => {
       filtered: !!paramsRouter.client_id,
       filterIcon: <SearchOutlined style={{ color: "inherit" }} />,
       render: text => (
-        <Link to={`/clients/${text}`} style={defaultColor}>
+        <Link to={`/client-detail/${text}`} style={defaultColor}>
           {text}
         </Link>
       ),
@@ -132,7 +137,7 @@ const Clients = () => {
       filtered: !!paramsRouter.name,
       render: (text, record) => (
         <Link
-          to={`/client/${record.client_id}`}
+          to={`/client-detail/${record.client_id}`}
           style={{
             textTransform: "capitalize",
             ...defaultColor,
@@ -183,10 +188,7 @@ const Clients = () => {
           placeholder="Select Lead Consultants"
           resetPage={resetPage}
           setSearchParams={setSearchParams}
-          options={users.map(({ id, full_name }) => ({
-            key: id,
-            label: full_name,
-          }))}
+          options={users}
           isMutiple
         />
       ),
@@ -418,16 +420,15 @@ const Clients = () => {
           placeholder="Select Updated by"
           resetPage={resetPage}
           setSearchParams={setSearchParams}
-          options={users.map(({ id, full_name }) => ({
-            key: id,
-            label: full_name,
-          }))}
+          options={users}
           isMutiple
         />
       ),
       filterIcon: <SearchOutlined />,
       filtered: !!paramsRouter.update_last_by,
       render: text => {
+        console.log(text);
+
         return (
           <Tag color="geekblue" className="capitalize">
             {text}
@@ -515,10 +516,22 @@ const Clients = () => {
     [paramsRouter.client_jobs_from, paramsRouter.client_jobs_to]
   );
 
+  // Filter lead consultant
+  filterTags.lead_consultants = useMemo(() => {
+    if (paramsRouter.lead_consultants)
+      return paramsRouter.lead_consultants
+        ?.split(",")
+        .map(val => get_obj_key_label_from_key(users, val)?.label)
+        .join(", ");
+  }, [paramsRouter.lead_consultants, users]);
+
   // Filter Type
   filterTags.type = useMemo(() => {
-    if (filterTags.type)
-      return get_obj_key_label_from_key(TYPE_CLIENT, +filterTags.type)?.label;
+    if (paramsRouter.type)
+      return paramsRouter.type
+        ?.split(",")
+        .map(val => get_obj_key_label_from_key(TYPE_CLIENT, +val)?.label)
+        .join(", ");
   }, [paramsRouter.type]);
 
   // Filter Updated on

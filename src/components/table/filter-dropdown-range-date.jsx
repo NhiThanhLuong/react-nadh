@@ -56,7 +56,12 @@ const FilterDropdownRangeDate = ({
   };
 
   return (
-    <CustomSearch widthCard={400} onSearch={onSearch} onReset={onReset}>
+    <CustomSearch
+      widthCard={400}
+      onSearch={onSearch}
+      onReset={onReset}
+      disabled={!timeFrom && !timeTo}
+    >
       <Col span={12}>
         <DatePicker
           className="w-full"

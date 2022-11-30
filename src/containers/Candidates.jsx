@@ -392,7 +392,6 @@ const Candidates = () => {
       {
         title: "Activity",
         dataIndex: "flow_status",
-        key: "flow_status",
         filterDropdown: (
           <FilterDropdownSelect
             paramsRouter={paramsRouter}

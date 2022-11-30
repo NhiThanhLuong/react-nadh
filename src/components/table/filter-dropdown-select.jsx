@@ -6,6 +6,14 @@ import { createSearchParams } from "react-router-dom";
 import CustomSearch from "./custom-search";
 import SelectSearch from "./type_search_filter/select-search";
 
+const getArr = text => {
+  try {
+    return JSON.parse("[" + text + "]");
+  } catch {
+    return text.split(",");
+  }
+};
+
 const FilterDropdownSelect = ({
   paramsRouter,
   keySearch,
@@ -18,10 +26,11 @@ const FilterDropdownSelect = ({
   const [value, setValue] = useState(
     isMutiple
       ? paramsRouter[keySearch]
-        ? JSON.parse("[" + paramsRouter[keySearch] + "]")
+        ? getArr(paramsRouter[keySearch])
         : []
-      : +paramsRouter[keySearch] || null
+      : +paramsRouter[keySearch] || paramsRouter[keySearch] || null
   );
+
   const onChange = val => {
     setValue(val);
   };
@@ -43,16 +52,16 @@ const FilterDropdownSelect = ({
 
   useEffect(() => {
     isMutiple
-      ? setValue(
-          paramsRouter[keySearch]
-            ? JSON.parse("[" + paramsRouter[keySearch] + "]")
-            : []
-        )
+      ? setValue(paramsRouter[keySearch] ? getArr(paramsRouter[keySearch]) : [])
       : setValue(+paramsRouter[keySearch] || null);
   }, [paramsRouter[keySearch]]);
 
   return (
-    <CustomSearch onSearch={onSearch} onReset={onReset} disabled={!value}>
+    <CustomSearch
+      onSearch={onSearch}
+      onReset={onReset}
+      disabled={!value || value.length === 0}
+    >
       <Col span={24}>
         <SelectSearch
           placeholder={placeholder}

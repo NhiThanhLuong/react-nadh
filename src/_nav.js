@@ -12,6 +12,9 @@ const Clients = lazy(() => import("containers/Clients"));
 const DetailClient = lazy(() => import("containers/client/detail-client"));
 const AddClient = lazy(() => import("containers/client/add-client"));
 
+const Jobs = lazy(() => import("containers/Jobs"));
+const DetailJob = lazy(() => import("containers/job/detail-job"));
+
 const User = lazy(() => import("containers/User"));
 // const UserDetail = lazy(() => import("containers/UserDetail"));
 // const UserAdd = lazy(() => import("containers/UserAdd"));
@@ -53,12 +56,27 @@ const _nav = [
     display: 1,
     children: [
       {
-        key: "/client/:id",
+        key: "/client-detail/:id",
         component: props => <DetailClient {...props} />,
       },
       {
         key: "/client-add",
         component: props => <AddClient {...props} />,
+      },
+    ],
+  },
+  {
+    key: "/jobs",
+    label: "Jobs",
+    title: "Jobs",
+    icon: <DashboardOutlined />,
+    component: props => <Jobs {...props} />,
+    action_key: "VIEW_JOBS",
+    display: 1,
+    children: [
+      {
+        key: "/job-detail/:id",
+        component: props => <DetailJob {...props} />,
       },
     ],
   },

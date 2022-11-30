@@ -47,6 +47,9 @@ import ClientComments from "./card-client/client-comments";
 import ClientAttachments from "./card-client/client-attachments";
 
 import AddClientInfo from "./card-client/add-client-info";
+import AddClientContactPerson from "./card-client/add-client-contact-person";
+
+import JobCandidateList from "./card-job/job-candidate-list";
 
 import ModalClientContactPerson from "./modal/modal-client-contact-person";
 
@@ -97,5 +100,7 @@ export {
   ClientComments,
   ClientAttachments,
   AddClientInfo,
+  AddClientContactPerson,
+  JobCandidateList,
   ModalClientContactPerson,
 };

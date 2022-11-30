@@ -46,6 +46,18 @@ export const getDetailClient = async id => {
   return await axiosClient.get(`/api/clients/${id}`);
 };
 
+export const getClientConflictTaxCode = async id => {
+  return await axiosClient.get(`/api/clients-conflict?tax_code=${id}`);
+};
+
+export const getJobs = async params => {
+  return await axiosClient.get("/api/jobs", params);
+};
+
+export const getDetailJob = async id => {
+  return await axiosClient.get(`/api/jobs/${id}`);
+};
+
 // Delete
 export const deleteCandidateHistories = async id =>
   await axiosClient.delete(`/api/candidate_histories/${id}`);

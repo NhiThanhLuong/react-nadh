@@ -15,6 +15,7 @@ export const convertKeys = {
   industry_years: "Year of services",
   management_years: "Year of management",
   name: "Trade Name",
+  lead_consultants: "Lead Consultants",
   type: "Type",
   status: "Status",
   contact_person_name: "Contact Person's Name",
@@ -22,6 +23,13 @@ export const convertKeys = {
   updated_on: "Updated on",
   account_status: "Activity",
   cpa: "CPA",
+  job_id: "ID",
+  title: "Title",
+  quantity: "Quantity",
+  target_date: "Open date",
+  end_date: "Expire date",
+  search_consultants: "Search Consultants",
+  candidate_flows_status: "Activity",
 };
 
 export const formatKeyFilterTags = key => convertKeys[key];
@@ -119,7 +127,7 @@ export const getPropertyKeyLabel = arr =>
 export const getPropertyKeyLabelObj = obj => {
   if (!obj) return {};
   return {
-    key: +obj.key,
+    key: +obj.key || obj.key,
     label: obj.label,
   };
 };

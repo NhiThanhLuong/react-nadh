@@ -37,6 +37,14 @@ p {
   margin: 0 !important;
 }
 
+.ml-1 {
+  margin-left: 16px;
+}
+
+.mr-1 {
+  margin-right: 16px;
+}
+
 .mb-1 {
   margin-bottom: 16px !important;
 }

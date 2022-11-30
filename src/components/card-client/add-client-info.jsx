@@ -1,7 +1,9 @@
+/* eslint-disable no-unused-vars */
 import { Card, Col, Form, Input, Row } from "antd";
 import React from "react";
 import styled from "styled-components";
 import { Item } from "styles/styled";
+import { getClientConflictTaxCode } from "ultis/api";
 import validator from "ultis/validate";
 
 const AddClientInfo = () => {
@@ -48,7 +50,22 @@ const AddClientInfo = () => {
             <Item
               name="tax_code"
               label="Tax code"
-              rules={validator(["number", "required"])}
+              rules={[
+                ...validator(["number", "required"]),
+                () => ({
+                  validator: async (_, value) => {
+                    if (!value) return Promise.resolve();
+                    try {
+                      await getClientConflictTaxCode(value);
+                      return Promise.resolve();
+                    } catch (err) {
+                      return Promise.reject(
+                        new Error(err.response.data[0].message)
+                      );
+                    }
+                  },
+                }),
+              ]}
             >
               <Input placeholder="Please enter tax code" />
             </Item>
@@ -63,6 +80,7 @@ const Title = styled.p`
   color: #465f7b;
   font-size: 16px;
   line-height: 24px;
+
   font-weight: 500;
 `;
 

@@ -30,7 +30,7 @@ const SelectSearch = ({
       {options.map(({ key, label }) => (
         <Option
           key={key}
-          value={+key}
+          value={+key || key}
           label={label}
           className={classNameOption}
         >

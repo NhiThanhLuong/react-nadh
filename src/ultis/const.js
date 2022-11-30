@@ -89,6 +89,9 @@ export const key_of_keys = {
   industry_years: ["industry_years_from", "industry_years_to"],
   management_years: ["management_years_from", "management_years_to"],
   updated_on: ["updated_on_from", "updated_on_to"],
+  quantity: ["quantity_from", "quantity_to"],
+  target_date: ["target_date_from", "target_date_to"],
+  end_date: ["end_date_from", "end_date_to"],
 };
 
 export const imgPath = path =>

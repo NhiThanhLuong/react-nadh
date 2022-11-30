@@ -23,7 +23,6 @@ const CustomSearch = ({
         </Col>
         <Col span={12}>
           <Button
-            // disabled={!value || value.length === 0}
             disabled={disabled}
             onClick={onSearch}
             type="primary"
