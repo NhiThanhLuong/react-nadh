@@ -37,6 +37,10 @@ p {
   margin: 0 !important;
 }
 
+.mb-0\.5 {
+  margin-bottom: 8px;
+}
+
 .ml-1 {
   margin-left: 16px;
 }
@@ -56,4 +60,8 @@ p {
 .my-1 {
   margin-top: 16px !important;
   margin-bottom: 16px !important;
+}
+
+.font-medium {
+  font-weight: 500;
 }

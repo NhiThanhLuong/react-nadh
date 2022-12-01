@@ -1,13 +1,24 @@
-import { Card } from "antd";
-import React from "react";
+import { PlusOutlined } from "@ant-design/icons";
+import { Button, Card, Row } from "antd";
 import styled from "styled-components";
 import CandidateListTable from "./candidate-list-table";
+import ModalCandidateList from "./modal-candidate-list";
 
-const JobCandidateList = () => {
+const JobCandidateList = ({ data }) => {
   return (
     <Card>
-      <Title>Candidates List</Title>
-      <CandidateListTable />
+      <Row justify="space-between" className="mb-0.5">
+        <Title>Candidates List</Title>
+        <Button
+          //   onClick={() => dispatch(showModal(TYPE_MODAL.contact_person.add))}
+          type="primary"
+          icon={<PlusOutlined />}
+        >
+          Pick Candidate
+        </Button>
+      </Row>
+      <CandidateListTable data={data.candidate_flows} />
+      <ModalCandidateList data={data} />
     </Card>
   );
 };

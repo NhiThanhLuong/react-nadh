@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 // import PropTypes from "prop-types";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -32,7 +31,7 @@ import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, Row, Table, Tag, Typography } from "antd";
 import styled from "styled-components";
 import { fetchUsers } from "features/userSlice";
-import { fetchCities, fetchLocations } from "features/locationSlice";
+import { fetchCities } from "features/locationSlice";
 import {
   fetchCategory,
   fetchIndustries,

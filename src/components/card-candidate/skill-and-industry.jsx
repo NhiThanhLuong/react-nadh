@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useCallback, useState } from "react";
 import { Button, Card, Col, Row, Select, TreeSelect } from "antd";
 import { useDispatch, useSelector } from "react-redux";

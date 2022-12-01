@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 import { Modal, Form, Checkbox, Row, Col, Button } from "antd";
 import { useDispatch, useSelector } from "react-redux";

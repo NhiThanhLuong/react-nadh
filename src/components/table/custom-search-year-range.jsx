@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import { Card, Button, Row, Col, InputNumber } from "antd";
+import { Col, InputNumber } from "antd";
 import PropTypes from "prop-types";
 import CustomSearch from "./custom-search";
 

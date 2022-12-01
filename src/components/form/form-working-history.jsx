@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 import { Row, Col, Checkbox } from "antd";
 import { Item } from "styles/styled";
@@ -6,7 +5,6 @@ import { getPropertyKeyLabelObj, years } from "ultis/func";
 import { FormSelect } from "components";
 import { useDispatch, useSelector } from "react-redux";
 import ModalForm from "HOC/modal-form";
-import { fetchCertificate } from "features/degreeSlice";
 import { MONTHS } from "ultis/const";
 import { fetchPosition, postPosition } from "features/positionSlice";
 import { fetchCompanys, postCompany } from "features/companySlice";

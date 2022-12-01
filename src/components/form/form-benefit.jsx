@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { Col, Input, Radio, Row, Space } from "antd";
 import { Item } from "styles/styled";
 

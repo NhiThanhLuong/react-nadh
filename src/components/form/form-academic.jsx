@@ -1,18 +1,12 @@
-/* eslint-disable no-unused-vars */
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Row, Col, Checkbox } from "antd";
 import { Item } from "styles/styled";
-import { deleteKeyNull, getPropertyKeyLabelObj, years } from "ultis/func";
+import { getPropertyKeyLabelObj, years } from "ultis/func";
 import { FormSelect } from "components";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSchools, postSchool } from "features/schoolSlice";
 import { fetchMajors, postMajor } from "features/majorSlice";
 import ModalForm from "HOC/modal-form";
-import {
-  fetchDetailCandidateNotLoading,
-  PostCandidateHistory,
-} from "features/candidatesSlice";
-import { hideModal } from "features/modalSlice";
 
 const FormAcademic = ({ fieldsChanges, form }) => {
   const dispatch = useDispatch();

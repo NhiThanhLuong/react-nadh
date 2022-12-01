@@ -139,8 +139,14 @@ export function isEmpty(obj) {
 export const get_obj_key_label_from_key = (options, key) =>
   options.find(item => item.key === key);
 
+export const get_obj_key_label_from_id = (options, id) =>
+  options.find(item => item.id === id);
+
 export const get_array_obj_key_label_from_array_key = (options, key_arr) =>
   key_arr.map(key => get_obj_key_label_from_key(options, key));
+
+export const get_array_obj_key_label_from_array_id = (options, id_arr) =>
+  id_arr.map(id => get_obj_key_label_from_id(options, id));
 
 export const get_params_payload_id_from_industry_form_arr = arr =>
   arr.map(item =>

@@ -1,7 +1,5 @@
-/* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
 import { createSearchParams } from "react-router-dom";
-// import PropTypes from "prop-types";
 
 import CustomSearch from "./custom-search";
 import SelectSearch from "./type_search_filter/select-search";
