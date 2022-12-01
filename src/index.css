@@ -29,6 +29,10 @@ p {
   text-transform: capitalize;
 }
 
+.w-4\/5 {
+  width: 80% !important;
+}
+
 .w-full {
   width: 100%;
 }
@@ -64,4 +68,25 @@ p {
 
 .font-medium {
   font-weight: 500;
+}
+
+.flex {
+  display: flex !important;
+}
+
+.items-center {
+  align-items: center !important;
+}
+
+.text-lg {
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.75rem; /* 28px */
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.overflow-y-auto {
+  overflow-y: auto !important;
 }

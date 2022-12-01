@@ -168,3 +168,10 @@ export const format_address_obj_to_text = obj =>
   }${obj.city ? `${obj.city.label}, ` : ""}${
     obj.country ? `${obj.country.label}, ` : ""
   }`.slice(0, -2);
+
+export const get_text_obj_industry = obj => {
+  const arr_industry = obj.industry ? [obj.industry.label] : [];
+  const arr_sector = obj.sector ? [obj.sector.label] : [];
+  const arr_category = obj.category ? [obj.category.label] : [];
+  return [...arr_industry, ...arr_sector, ...arr_category].join(" / ");
+};

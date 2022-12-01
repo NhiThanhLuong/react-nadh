@@ -101,6 +101,10 @@ export const postDetailClientPicItem = async params => {
   return await axiosClient.post("/api/contact_persons", params);
 };
 
+export const postCandidateFlows = async params => {
+  return await axiosClient.post("/api/candidate_flows", params);
+};
+
 // Put
 export const putDetailCandidate = async (id, params) => {
   return await axiosClient.put(`/api/candidates/${id}`, params);

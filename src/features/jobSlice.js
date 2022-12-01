@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getDetailJob, getJobs } from "ultis/api";
+import { getDetailJob, getJobs, postCandidateFlows } from "ultis/api";
 
 export const fetchJobs = createAsyncThunk(
   "job/fetchJobs",
@@ -14,8 +14,13 @@ export const fetchJobs = createAsyncThunk(
 );
 
 export const fetchDetailJob = createAsyncThunk(
-  "clients/fetchDetailJob",
+  "job/fetchDetailJob",
   getDetailJob
+);
+
+export const postJobCandidateFlows = createAsyncThunk(
+  "job/postJobCandidateFlows",
+  postCandidateFlows
 );
 
 export const jobSlice = createSlice({
@@ -51,6 +56,21 @@ export const jobSlice = createSlice({
     },
     [fetchDetailJob.rejected.type]: state => {
       state.loading = false;
+    },
+
+    // post job candidate flows
+    [postJobCandidateFlows.pending.type]: state => {
+      state.loadingDetail = true;
+    },
+    [postJobCandidateFlows.fulfilled.type]: (state, { payload }) => {
+      state.detailData.candidate_flows = [
+        ...state.detailData.candidate_flows,
+        ...payload,
+      ];
+      state.loadingDetail = false;
+    },
+    [postJobCandidateFlows.rejected.type]: state => {
+      state.loadingDetail = false;
     },
   },
 });

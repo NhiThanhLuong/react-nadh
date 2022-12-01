@@ -84,7 +84,13 @@ const CandidateListTable = ({ data }) => {
 
   return (
     <>
-      <Table columns={columns} dataSource={dataSource} />
+      <Table
+        columns={columns}
+        dataSource={dataSource}
+        pagination={{
+          pageSize: 5,
+        }}
+      />
       <Drawer
         open={open}
         closable={false}
