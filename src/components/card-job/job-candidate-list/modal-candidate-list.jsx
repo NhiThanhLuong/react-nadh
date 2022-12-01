@@ -59,7 +59,7 @@ const ModalCandidateList = ({ data, openModal, setOpenModal }) => {
       <RowItem title="Industry" label={industryLabel} />
       <RowItem title="Experience Level" label="" />
       <Select
-        className="w-4/5"
+        className="w-3/5"
         optionFilterProp={false}
         mode="multiple"
         value={[]}

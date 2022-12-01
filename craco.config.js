@@ -1,5 +1,4 @@
 const CracoLessPlugin = require("craco-less");
-
 module.exports = {
   plugins: [
     {
@@ -22,4 +21,9 @@ module.exports = {
       },
     },
   ],
+  style: {
+    postcssOptions: {
+      plugins: [require("tailwindcss"), require("autoprefixer")],
+    },
+  },
 };
