@@ -31,8 +31,16 @@ export const jobSlice = createSlice({
     count: 0,
     data: [],
     detailData: undefined,
+    filterIdCandidateList: 0,
   },
-  reducers: {},
+  reducers: {
+    filterCandidateListByID: (state, { payload }) => {
+      state.filterIdCandidateList = payload;
+    },
+    closeFilterTagCandidateList: state => {
+      state.filterIdCandidateList = 0;
+    },
+  },
   extraReducers: {
     [fetchJobs.pending.type]: state => {
       state.loading = true;
@@ -76,5 +84,6 @@ export const jobSlice = createSlice({
 });
 
 const { reducer } = jobSlice;
-// export const { getPicItem, deletePicItem } = jobSlice.actions;
+export const { filterCandidateListByID, closeFilterTagCandidateList } =
+  jobSlice.actions;
 export default reducer;

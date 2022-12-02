@@ -30,15 +30,21 @@ const ModalCandidateList = ({ data, openModal, setOpenModal }) => {
       ? `${data.business_line[0].industry.label} / ${data.business_line[0].sector.label}`
       : "";
 
-  const onOK = () => {
-    dispatch(
-      postJobCandidateFlows({
-        candidate_array: listPicked.map(({ id }) => id),
-        job_id: data.id,
-      })
-        .unwrap()
-        .then(() => setListPicked({}))
-    );
+  const onOK = async () => {
+    try {
+      await dispatch(
+        postJobCandidateFlows({
+          candidate_array: listPicked.map(({ id }) => id),
+          job_id: data.id,
+        })
+      ).unwrap();
+      setListPicked([]);
+      // handle result here
+    } catch (rejectedValueOrSerializedError) {
+      // handle error here
+    }
+
+    // setListPicked([]);
   };
 
   return (
@@ -59,7 +65,7 @@ const ModalCandidateList = ({ data, openModal, setOpenModal }) => {
       <RowItem title="Industry" label={industryLabel} />
       <RowItem title="Experience Level" label="" />
       <Select
-        className="w-3/5"
+        className="w-5/6"
         optionFilterProp={false}
         mode="multiple"
         value={[]}
@@ -130,7 +136,7 @@ const ModalCandidateList = ({ data, openModal, setOpenModal }) => {
                 ))}
               </div>
             </Col>
-            <Col span={4} className="text-center flex items-center text-lg">
+            <Col span={4} className="justify-center flex items-center text-lg">
               <DeleteOutlined
                 style={{ color: "red", cursor: "pointer" }}
                 onClick={() =>

@@ -58,6 +58,10 @@ export const getDetailJob = async id => {
   return await axiosClient.get(`/api/jobs/${id}`);
 };
 
+export const getAssessmentsCompare = async params => {
+  return await axiosClient.get(`/api/assessments/compare`, params);
+};
+
 // Delete
 export const deleteCandidateHistories = async id =>
   await axiosClient.delete(`/api/candidate_histories/${id}`);

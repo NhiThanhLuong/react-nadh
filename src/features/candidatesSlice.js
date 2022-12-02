@@ -7,6 +7,7 @@ import {
   deleteCandidateHistories,
   postCandidateHistories,
   putCandidateHistories,
+  getAssessmentsCompare,
 } from "ultis/api";
 import { toast } from "react-toastify";
 
@@ -67,6 +68,14 @@ export const putCandidateHistory = createAsyncThunk(
   async ({ id, params }) => await putCandidateHistories(id, params)
 );
 
+export const getObjAssessmentsCompare = createAsyncThunk(
+  "candidates/getObjAssessmentsCompare",
+  async params =>
+    await getAssessmentsCompare({
+      params,
+    })
+);
+
 export const candidatesSlice = createSlice({
   name: "candidates",
   initialState: {
@@ -76,11 +85,12 @@ export const candidatesSlice = createSlice({
     data: [],
     detailData: undefined,
     history: {},
+    assessmentCompare: {},
+    flow: {},
   },
   reducers: {
     getHistory: (state, { payload: id }) => {
       state.history = state.detailData.histories.find(item => item.id === id);
-      return state;
     },
     deleteHistory: (state, { payload: id }) => {
       state.detailData.histories = state.detailData.histories.filter(
@@ -90,11 +100,12 @@ export const candidatesSlice = createSlice({
       toast.success("Delete candidate history successful", {
         position: "top-right",
       });
-      return state;
     },
     resetHistory: state => {
       state.history = {};
-      return state;
+    },
+    viewFlowJob: (state, { payload }) => {
+      state.flow = payload;
     },
   },
   extraReducers: {
@@ -233,10 +244,22 @@ export const candidatesSlice = createSlice({
         position: "top-right",
       });
     },
+
+    // Get candidate and job from compare assessment
+    [getObjAssessmentsCompare.pending.type]: state => {
+      state.loadingDetail = true;
+    },
+    [getObjAssessmentsCompare.fulfilled.type]: (state, { payload }) => {
+      state.loadingDetail = false;
+      state.assessmentCompare = payload;
+    },
+    [getObjAssessmentsCompare.rejected.type]: state => {
+      state.loadingDetail = false;
+    },
   },
 });
 
 const { reducer } = candidatesSlice;
-export const { getHistory, deleteHistory, resetHistory } =
+export const { getHistory, deleteHistory, resetHistory, viewFlowJob } =
   candidatesSlice.actions;
 export default reducer;

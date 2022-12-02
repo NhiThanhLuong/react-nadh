@@ -35,6 +35,7 @@ import LoginFailed from "./auth/login-failed";
 import PersonalInformation from "./card-candidate/personal-information";
 import RemunerationAndRewards from "./card-candidate/remuneration-and-rewards";
 import SkillAndIndustry from "./card-candidate/skill-and-industry";
+import CandidateInterviewJob from "./card-candidate/candidate-interview-job";
 
 import ClientInfo from "./card-client/client-info";
 import InfoItemSelect from "./card-client/client-info/info-item-select";
@@ -50,6 +51,7 @@ import AddClientInfo from "./card-client/add-client-info";
 import AddClientContactPerson from "./card-client/add-client-contact-person";
 
 import JobCandidateList from "./card-job/job-candidate-list";
+import JobCountCandidate from "./card-job/job-count-candidate";
 
 import ModalClientContactPerson from "./modal/modal-client-contact-person";
 
@@ -90,6 +92,7 @@ export {
   PersonalInformation,
   RemunerationAndRewards,
   SkillAndIndustry,
+  CandidateInterviewJob,
   ClientInfo,
   InfoItemSelect,
   InfoItemDisabled,
@@ -102,5 +105,6 @@ export {
   AddClientInfo,
   AddClientContactPerson,
   JobCandidateList,
+  JobCountCandidate,
   ModalClientContactPerson,
 };

@@ -1,5 +1,5 @@
 import { Row, Spin } from "antd";
-import { JobCandidateList } from "components";
+import { JobCandidateList, JobCountCandidate } from "components";
 import { fetchDetailJob } from "features/jobSlice";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,6 +22,7 @@ const DetailJob = () => {
     <DivMt100>
       {!loading && detailData?.job_id === id ? (
         <StyledSpin spinning={loadingDetail} tip="Loading...">
+          <JobCountCandidate data={detailData.candidate_flows} />
           <JobCandidateList data={detailData} />
         </StyledSpin>
       ) : (

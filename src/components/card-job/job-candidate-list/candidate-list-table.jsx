@@ -2,6 +2,7 @@
 import { EyeOutlined } from "@ant-design/icons";
 import { Col, Drawer, Row, Table, Typography } from "antd";
 import { useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 import { candidate_flow_status } from "ultis/const";
 import {
   get_array_obj_key_label_from_array_id,
@@ -11,6 +12,15 @@ import {
 const CandidateListTable = ({ data }) => {
   const [open, setOpen] = useState(false);
   const [info, setInfo] = useState({});
+
+  const filterID = useSelector(state => state.job.filterIdCandidateList);
+
+  const dataFilter =
+    filterID === 0
+      ? data
+      : data.filter(({ previous_status }) =>
+          previous_status.includes(filterID)
+        );
 
   const columns = [
     {
@@ -66,7 +76,7 @@ const CandidateListTable = ({ data }) => {
 
   const dataSource = useMemo(
     () =>
-      data.map(item => ({
+      dataFilter.map(item => ({
         candidate_id: item.candidate.candidate_id,
         full_name: item.candidate.full_name,
         highest_education: item.candidate.highest_education?.label || "",
@@ -74,7 +84,7 @@ const CandidateListTable = ({ data }) => {
         previous_status: item.previous_status,
         status: item.status,
       })),
-    [data]
+    [dataFilter]
   );
 
   const onView = record => {
