@@ -13,12 +13,11 @@ const ModalCandidateAssessment = () => {
     state => state.candidates.assessmentCompare
   );
 
-  const isShowModal = useSelector(state => state.modal.isShowModal);
   const type_modal = useSelector(state => state.modal.type_modal);
 
   return (
     <Modal
-      open={isShowModal && type_modal === TYPE_MODAL.candidate_assessment.type}
+      open={type_modal === TYPE_MODAL.candidate_assessment.type}
       onCancel={() => dispatch(hideModal())}
       destroyOnClose
       title={<span>Candidate Assessment</span>}

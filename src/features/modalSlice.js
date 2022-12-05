@@ -4,6 +4,7 @@ const initialState = {
   isShowModal: false,
   type_modal: 0,
   title_modal: "",
+  data: {},
 };
 
 export const modalSlice = createSlice({
@@ -19,9 +20,12 @@ export const modalSlice = createSlice({
     hideModal: () => {
       return initialState;
     },
+    dataModal: (state, { payload }) => {
+      state.data = payload;
+    },
   },
 });
 
 const { reducer } = modalSlice;
-export const { showModal, hideModal } = modalSlice.actions;
+export const { showModal, hideModal, dataModal } = modalSlice.actions;
 export default reducer;

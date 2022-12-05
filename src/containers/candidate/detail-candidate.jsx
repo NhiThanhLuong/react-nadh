@@ -47,6 +47,7 @@ import { showModal } from "features/modalSlice";
 import { fetchCurrency } from "features/currencySlice";
 import { Item, RowTitle } from "styles/styled";
 import { fetchFiles, fetchPostFile } from "features/fileSlice";
+import { fetchUsers } from "features/userSlice";
 
 const validateMessages = {
   required: "${label} is required!",
@@ -111,6 +112,7 @@ const DetailCandidate = () => {
   } = form.getFieldsValue();
 
   useEffect(() => {
+    dispatch(fetchUsers());
     dispatch(fetchDetailCandidate(id));
     dispatch(
       fetchLocations({

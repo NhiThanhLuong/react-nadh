@@ -240,6 +240,9 @@ export const TYPE_MODAL = {
   candidate_assessment: {
     type: 9,
   },
+  candidate_interview_job_timeline: {
+    type: 10,
+  },
 };
 
 export const BENEFITS = [

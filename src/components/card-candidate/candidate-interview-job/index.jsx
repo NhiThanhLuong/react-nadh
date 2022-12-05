@@ -1,20 +1,44 @@
 /* eslint-disable no-unused-vars */
 import { MoreOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Card, Collapse, Dropdown } from "antd";
+import { Button, Card, Collapse, Dropdown, Timeline } from "antd";
 import {
   getObjAssessmentsCompare,
   viewFlowJob,
 } from "features/candidatesSlice";
-import { showModal } from "features/modalSlice";
+import { dataModal, showModal } from "features/modalSlice";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { TYPE_MODAL } from "ultis/const";
+import { candidate_flow_status, TYPE_MODAL } from "ultis/const";
+import { get_obj_key_label_from_id } from "ultis/func";
 import ModalCandidateAssessment from "./modal/candidate-assessment";
+import ModalTimelineActivity from "./modal/timeline-activity";
 
 const { Panel } = Collapse;
 
 const CandidateInterviewJob = ({ data, candidate_id }) => {
   const dispatch = useDispatch();
+
+  const showModalCandidateAssessment = flow => {
+    dispatch(viewFlowJob(flow));
+    dispatch(
+      getObjAssessmentsCompare({
+        candidate_id,
+        job_id: flow.job_id,
+      })
+    );
+    dispatch(showModal(TYPE_MODAL.candidate_assessment));
+  };
+
+  const showModalTimelineActivity = (job_id, timeline_id) => {
+    dispatch(showModal(TYPE_MODAL.candidate_interview_job_timeline));
+    dispatch(
+      dataModal({
+        job_id,
+        timeline_id,
+      })
+    );
+    // dispatch(viewFlowJob(flow));
+  };
 
   return (
     <Card
@@ -25,7 +49,7 @@ const CandidateInterviewJob = ({ data, candidate_id }) => {
         </Button>
       }
     >
-      <Collapse>
+      <Collapse accordion>
         {data.map(flow => (
           <Panel
             key={flow.job_id}
@@ -46,18 +70,7 @@ const CandidateInterviewJob = ({ data, candidate_id }) => {
                     {
                       label: (
                         <span
-                          onClick={() => {
-                            dispatch(viewFlowJob(flow));
-                            dispatch(
-                              getObjAssessmentsCompare({
-                                candidate_id,
-                                job_id: flow.job_id,
-                              })
-                            );
-                            dispatch(
-                              showModal(TYPE_MODAL.candidate_assessment)
-                            );
-                          }}
+                          onClick={() => showModalCandidateAssessment(flow)}
                           role="presentation"
                         >
                           Candidate Assessment
@@ -80,11 +93,31 @@ const CandidateInterviewJob = ({ data, candidate_id }) => {
               </Dropdown>
             }
           >
-            <span>{flow.job.job_id}</span>
+            <Timeline>
+              {flow.flow?.map(item => (
+                <Timeline.Item
+                  key={item?.id}
+                  color="green"
+                  onClick={() => showModalTimelineActivity(flow.id, item.id)}
+                >
+                  <p className="font-semibold">
+                    {
+                      get_obj_key_label_from_id(
+                        candidate_flow_status,
+                        item.current_status
+                      ).label
+                    }
+                  </p>
+                  <p>{item?.createdAt}</p>
+                  <p>{item?.comments.length} comments</p>
+                </Timeline.Item>
+              ))}
+            </Timeline>
           </Panel>
         ))}
       </Collapse>
       <ModalCandidateAssessment />
+      <ModalTimelineActivity />
     </Card>
   );
 };
