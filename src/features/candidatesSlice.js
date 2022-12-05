@@ -8,6 +8,7 @@ import {
   postCandidateHistories,
   putCandidateHistories,
   getAssessmentsCompare,
+  putCandidateFlowID,
 } from "ultis/api";
 import { toast } from "react-toastify";
 
@@ -74,6 +75,11 @@ export const getObjAssessmentsCompare = createAsyncThunk(
     await getAssessmentsCompare({
       params,
     })
+);
+
+export const putCandidateFlowIDSlice = createAsyncThunk(
+  "candidates/putCandidateFlowIDSlice",
+  async ({ job_id, params }) => await putCandidateFlowID(job_id, params)
 );
 
 export const candidatesSlice = createSlice({
@@ -255,6 +261,27 @@ export const candidatesSlice = createSlice({
     },
     [getObjAssessmentsCompare.rejected.type]: state => {
       state.loadingDetail = false;
+    },
+
+    // Put Candidate Flow ID
+    [putCandidateFlowIDSlice.pending.type]: state => {
+      state.loadingDetail = true;
+    },
+    [putCandidateFlowIDSlice.fulfilled.type]: (state, { payload }) => {
+      state.loadingDetail = false;
+      state.detailData.flows = state.detailData.flows.map(item => {
+        if (item.id === payload.id) return payload;
+        return item;
+      });
+      toast.success("Successfully updated", {
+        position: "top-right",
+      });
+    },
+    [putCandidateFlowIDSlice.rejected.type]: state => {
+      state.loadingDetail = false;
+      toast.error("Update error", {
+        position: "top-right",
+      });
     },
   },
 });

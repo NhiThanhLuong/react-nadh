@@ -3,7 +3,7 @@ import { CancelSave, FormCkeditor } from "components";
 import { useState } from "react";
 import styled from "styled-components";
 
-const ClientDesCkeditor = ({ name, title, data, form, callBack }) => {
+const CancelSaveCkeditor = ({ name, title, data, form, callBack }) => {
   const [isEdit, setIsEdit] = useState(false);
 
   const onCancel = () => {
@@ -31,4 +31,4 @@ const StyledDiv = styled.div`
   }
 `;
 
-export default ClientDesCkeditor;
+export default CancelSaveCkeditor;

@@ -1,6 +1,6 @@
 import { Card, Col, Row } from "antd";
 import { useSelector } from "react-redux";
-import { ClientDesCkeditor } from "components";
+import { CancelSaveCkeditor } from "components";
 
 const FIELDS = [
   {
@@ -35,7 +35,7 @@ const ClientDescription = ({ form, callBack }) => {
       <Row gutter={[16, 16]}>
         {FIELDS.map(item => (
           <Col key={item.key} span={12}>
-            <ClientDesCkeditor
+            <CancelSaveCkeditor
               name={item.name}
               title={item.title}
               data={detailData[item.name]}

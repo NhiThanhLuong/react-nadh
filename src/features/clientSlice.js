@@ -55,7 +55,6 @@ export const postCommentSlice = createAsyncThunk(
   "comment/postCommentSlice",
   async params =>
     await postComment({
-      source: { module: "client", section: "detail" },
       ...params,
     })
 );

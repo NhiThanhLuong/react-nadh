@@ -1,14 +1,18 @@
 /* eslint-disable no-unused-vars */
-import { Col, DatePicker, Form, Modal, Row } from "antd";
-import { FormSelect } from "components";
+import { Col, DatePicker, Form, Modal, Row, Spin } from "antd";
+import { CancelSave, FormCkeditor, FormSelect } from "components";
+import { putCandidateFlowIDSlice } from "features/candidatesSlice";
 import { hideModal } from "features/modalSlice";
 import moment from "moment";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import styled from "styled-components";
 import { candidate_flow_status, TYPE_MODAL } from "ultis/const";
 import { get_obj_key_label_from_id } from "ultis/func";
 
 const ModalTimelineActivity = () => {
   const dispatch = useDispatch();
+  const [form] = Form.useForm();
 
   const type_modal = useSelector(state => state.modal.type_modal);
   const { job_id, timeline_id } = useSelector(state => state.modal.data);
@@ -19,12 +23,40 @@ const ModalTimelineActivity = () => {
     })
   );
   const detailData = useSelector(state => state.candidates.detailData);
+  const loadingDetail = useSelector(state => state.candidates.loadingDetail);
 
   const job = detailData?.flows.find(({ id }) => id === job_id);
   const timeline = job?.flow.find(({ id }) => id === timeline_id);
 
-  //   console.log(timeline);
-  console.log(users);
+  const initialValues = timeline && {
+    time: timeline?.info?.time ? moment(timeline?.info.time) : null,
+    interviewer:
+      timeline?.info?.interviewer?.map(({ user_id }) => user_id) || [],
+  };
+
+  useEffect(() => {
+    form.setFieldsValue(initialValues);
+  }, [job_id, timeline_id]);
+
+  const onResetField = name => {
+    form.setFieldsValue({
+      [name]: initialValues[name],
+    });
+  };
+
+  const dispatchCustom = (key, value) => {
+    dispatch(
+      putCandidateFlowIDSlice({
+        job_id,
+        params: {
+          flow: {
+            id: timeline_id,
+            [key]: value,
+          },
+        },
+      })
+    );
+  };
 
   return (
     <Modal
@@ -45,49 +77,90 @@ const ModalTimelineActivity = () => {
       footer={null}
       width={900}
     >
-      {job_id && timeline_id && (
-        <Form
-          initialValues={{
-            time: moment(timeline.info.time),
-            interviewer: timeline.info.interviewer,
-          }}
-        >
-          <Row gutter={16}>
-            <Col span={12}>
-              <CustomRow
-                title="Creator"
-                label={
-                  <span>
-                    {timeline?.creator.full_name} -{" "}
-                    {timeline?.creator.role.name}
-                  </span>
-                }
-              />
-              <CustomRow title="Job" label={job?.job.title.label} />
-              <CustomRow title="Job code" label={job?.job.job_id} />
-              <CustomRow title="Job status" label="Opening" />
-              <CustomRow
-                title="Date"
-                label={
-                  <Form.Item name="time">
-                    <DatePicker showTime format="DD/MM/YYYY HH:mm:ss" />
-                  </Form.Item>
-                }
-              />
-              <CustomRow
-                title="Consultant"
-                label={
-                  <FormSelect
-                    name="interviewer"
-                    options={users}
-                    mode="multiple"
-                  />
-                }
-              />
-            </Col>
-          </Row>
-        </Form>
-      )}
+      <Spin spinning={loadingDetail} tip="Loading...">
+        {job_id && timeline_id && (
+          <Form form={form}>
+            <Row gutter={16}>
+              <Col span={12}>
+                <CustomRow
+                  title="Creator"
+                  label={
+                    <span>
+                      {timeline?.creator.full_name} -{" "}
+                      {timeline?.creator.role.name}
+                    </span>
+                  }
+                />
+                <CustomRow title="Job" label={job?.job.title.label} />
+                <CustomRow title="Job code" label={job?.job.job_id} />
+                <CustomRow title="Job status" label="Opening" />
+                <CustomRow
+                  title="Date"
+                  label={
+                    <>
+                      <Form.Item name="time" className="m-0">
+                        <DatePicker showTime format="DD/MM/YYYY HH:mm:ss" />
+                      </Form.Item>
+                      <FormItemDepend dependencies={["time"]}>
+                        {({ getFieldValue }) => {
+                          const time = getFieldValue("time");
+                          return (
+                            time?.format("YYYY-MM-DD HH:mm:ss") !==
+                              initialValues.time?._i && (
+                              <CancelSave
+                                onCancel={() => onResetField("time")}
+                                onSave={() =>
+                                  dispatchCustom(
+                                    "time",
+                                    time.format("YYYY-MM-DD HH:mm:ss")
+                                  )
+                                }
+                              />
+                            )
+                          );
+                        }}
+                      </FormItemDepend>
+                    </>
+                  }
+                />
+                <CustomRow
+                  title="Consultant"
+                  label={
+                    <>
+                      <FormSelect
+                        name="interviewer"
+                        options={users}
+                        mode="multiple"
+                      />
+                      <FormItemDepend dependencies={["interviewer"]}>
+                        {({ getFieldValue }) => {
+                          const interviewer = getFieldValue("interviewer");
+                          console.log(interviewer);
+                          console.log(initialValues.interviewer);
+                          return (
+                            JSON.stringify(interviewer) !==
+                              JSON.stringify(initialValues.interviewer) && (
+                              <CancelSave
+                                onCancel={() => onResetField("interviewer")}
+                                onSave={() =>
+                                  dispatchCustom("interviewer", interviewer)
+                                }
+                              />
+                            )
+                          );
+                        }}
+                      </FormItemDepend>
+                    </>
+                  }
+                />
+              </Col>
+              <Col span={12}>
+                <FormCkeditor label="Comments" />
+              </Col>
+            </Row>
+          </Form>
+        )}
+      </Spin>
     </Modal>
   );
 };
@@ -102,5 +175,12 @@ const CustomRow = ({ title, label }) => (
     </Col>
   </Row>
 );
+
+const FormItemDepend = styled(Form.Item)`
+  margin: 0;
+  .ant-form-item-control-input {
+    min-height: 0;
+  }
+`;
 
 export default ModalTimelineActivity;

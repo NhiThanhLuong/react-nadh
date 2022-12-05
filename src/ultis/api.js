@@ -132,3 +132,7 @@ export const removeDetailClientPicItem = async id => {
 export const putDetailClientPicItem = async (id, params) => {
   return await axiosClient.post(`/api/contact_persons/${id}`, params);
 };
+
+export const putCandidateFlowID = async (job_id, params) => {
+  return await axiosClient.put(`/api/candidate_flows/${job_id}`, params);
+};

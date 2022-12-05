@@ -43,7 +43,7 @@ import InfoItemDisabled from "./card-client/client-info/info-item-disabled";
 import ClientContactPerson from "./card-client/client-contact-person";
 import ClientIndustry from "./card-client/client-industry";
 import ClientDescription from "./card-client/client-description";
-import ClientDesCkeditor from "./card-client/client-description/client-des-ckeditor";
+import CancelSaveCkeditor from "./form/cancel-save-ckeditor";
 import ClientComments from "./card-client/client-comments";
 import ClientAttachments from "./card-client/client-attachments";
 
@@ -56,6 +56,7 @@ import JobCountCandidate from "./card-job/job-count-candidate";
 import ModalClientContactPerson from "./modal/modal-client-contact-person";
 
 import UploadFile from "./upload-file";
+import Comments from "./comments";
 
 export {
   CustomSearch,
@@ -99,7 +100,7 @@ export {
   ClientContactPerson,
   ClientIndustry,
   ClientDescription,
-  ClientDesCkeditor,
+  CancelSaveCkeditor,
   ClientComments,
   ClientAttachments,
   AddClientInfo,
@@ -107,4 +108,5 @@ export {
   JobCandidateList,
   JobCountCandidate,
   ModalClientContactPerson,
+  Comments,
 };
