@@ -1,4 +1,4 @@
-import { ClassicEditor } from "@ckeditor/ckeditor5-build-classic";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import { Avatar, Comment } from "antd";
 import moment from "moment";
@@ -7,11 +7,10 @@ import styled from "styled-components";
 import { imgPath } from "ultis/const";
 import { CancelSaveCkeditor } from "components";
 
-const Comments = ({ data, form, callBack }) => {
+const Comments = ({ name = "comment", data, form, callBack }) => {
   return (
     <>
-      <CancelSaveCkeditor name="comment" form={form} callBack={callBack} />
-
+      <CancelSaveCkeditor name={name} form={form} callBack={callBack} />
       {data.map(comment => (
         <StyledComment
           key={comment.id}

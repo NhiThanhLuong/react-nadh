@@ -49,75 +49,81 @@ const CandidateInterviewJob = ({ data, candidate_id }) => {
         </Button>
       }
     >
-      <Collapse accordion>
-        {data.map(flow => (
-          <Panel
-            key={flow.job_id}
-            header={
-              <div>
-                <p className="font-medium">
-                  {flow.job.job_id} - {flow.job.title.label}
-                </p>
-                <p className="text-gray-600 text-xs font-medium">
-                  {flow.job.client.name} - {flow.job.client.client_id}
-                </p>
-              </div>
-            }
-            extra={
-              <Dropdown
-                menu={{
-                  items: [
-                    {
-                      label: (
-                        <span
-                          onClick={() => showModalCandidateAssessment(flow)}
-                          role="presentation"
-                        >
-                          Candidate Assessment
-                        </span>
-                      ),
-                    },
-                  ],
-                }}
-                trigger={["click"]}
+      {data.length > 0 && (
+        <>
+          <Collapse accordion>
+            {data.map(flow => (
+              <Panel
+                key={flow.job_id}
+                header={
+                  <div>
+                    <p className="font-medium">
+                      {flow.job?.job_id} - {flow.job?.title.label}
+                    </p>
+                    <p className="text-gray-600 text-xs font-medium">
+                      {flow.job?.client.name} - {flow.job?.client.client_id}
+                    </p>
+                  </div>
+                }
+                extra={
+                  <Dropdown
+                    menu={{
+                      items: [
+                        {
+                          label: (
+                            <span
+                              onClick={() => showModalCandidateAssessment(flow)}
+                              role="presentation"
+                            >
+                              Candidate Assessment
+                            </span>
+                          ),
+                        },
+                      ],
+                    }}
+                    trigger={["click"]}
+                  >
+                    <span
+                      role="presentation"
+                      onClick={e => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }}
+                    >
+                      <MoreOutlined />
+                    </span>
+                  </Dropdown>
+                }
               >
-                <span
-                  role="presentation"
-                  onClick={e => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                  }}
-                >
-                  <MoreOutlined />
-                </span>
-              </Dropdown>
-            }
-          >
-            <Timeline>
-              {flow.flow?.map(item => (
-                <Timeline.Item
-                  key={item?.id}
-                  color="green"
-                  onClick={() => showModalTimelineActivity(flow.id, item.id)}
-                >
-                  <p className="font-semibold">
-                    {
-                      get_obj_key_label_from_id(
-                        candidate_flow_status,
-                        item.current_status
-                      ).label
-                    }
-                  </p>
-                  <p>{item?.createdAt}</p>
-                  <p>{item?.comments.length} comments</p>
-                </Timeline.Item>
-              ))}
-            </Timeline>
-          </Panel>
-        ))}
-      </Collapse>
-      <ModalCandidateAssessment />
-      <ModalTimelineActivity />
+                <Timeline>
+                  {flow.flow?.map(item => (
+                    <Timeline.Item
+                      key={item?.id}
+                      color="green"
+                      onClick={() =>
+                        showModalTimelineActivity(flow.id, item.id)
+                      }
+                    >
+                      <p className="font-semibold">
+                        {
+                          get_obj_key_label_from_id(
+                            candidate_flow_status,
+                            item.current_status
+                          ).label
+                        }
+                      </p>
+                      <p>{item?.createdAt}</p>
+                      <p>{item?.comments.length} comments</p>
+                    </Timeline.Item>
+                  ))}
+                </Timeline>
+              </Panel>
+            ))}
+          </Collapse>
+          <ModalCandidateAssessment />
+          <ModalTimelineActivity />
+        </>
+      )}
     </Card>
   );
 };

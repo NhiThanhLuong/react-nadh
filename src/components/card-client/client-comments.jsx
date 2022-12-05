@@ -2,8 +2,8 @@ import { Card } from "antd";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
-import { postCommentSlice } from "features/clientSlice";
 import { Comments } from "components";
+import { postCommentSlice } from "features/clientSlice";
 
 const ClientComments = ({ data, form, id }) => {
   const dispatch = useDispatch();

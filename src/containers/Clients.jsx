@@ -426,8 +426,6 @@ const Clients = () => {
       filterIcon: <SearchOutlined />,
       filtered: !!paramsRouter.update_last_by,
       render: text => {
-        console.log(text);
-
         return (
           <Tag color="geekblue" className="capitalize">
             {text}

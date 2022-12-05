@@ -9,6 +9,7 @@ import {
   putCandidateHistories,
   getAssessmentsCompare,
   putCandidateFlowID,
+  postComment,
 } from "ultis/api";
 import { toast } from "react-toastify";
 
@@ -80,6 +81,11 @@ export const getObjAssessmentsCompare = createAsyncThunk(
 export const putCandidateFlowIDSlice = createAsyncThunk(
   "candidates/putCandidateFlowIDSlice",
   async ({ job_id, params }) => await putCandidateFlowID(job_id, params)
+);
+
+export const postCommentFlow = createAsyncThunk(
+  "comment/postCommentFlow",
+  postComment
 );
 
 export const candidatesSlice = createSlice({
@@ -282,6 +288,37 @@ export const candidatesSlice = createSlice({
       toast.error("Update error", {
         position: "top-right",
       });
+    },
+
+    // Post Comment Flow
+    [postCommentFlow.pending.type]: state => {
+      state.loadingDetail = true;
+    },
+    [postCommentFlow.fulfilled.type]: (state, { payload }) => {
+      state.loadingDetail = false;
+      const {
+        source_uuid: job_id,
+        source: { id: timeline_id },
+      } = payload;
+
+      state.detailData.flows = state.detailData.flows.map(job => {
+        if (job.id === job_id)
+          return {
+            ...job,
+            flow: job.flow.map(item => {
+              if (item.id === timeline_id)
+                return {
+                  ...item,
+                  comments: [...item.comments, payload],
+                };
+              return item;
+            }),
+          };
+        return job;
+      });
+    },
+    [postCommentFlow.rejected.type]: state => {
+      state.loadingDetail = false;
     },
   },
 });

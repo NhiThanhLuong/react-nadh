@@ -1,12 +1,16 @@
 /* eslint-disable no-unused-vars */
 import { Col, DatePicker, Form, Modal, Row, Spin } from "antd";
-import { CancelSave, FormCkeditor, FormSelect } from "components";
-import { putCandidateFlowIDSlice } from "features/candidatesSlice";
-import { hideModal } from "features/modalSlice";
 import moment from "moment";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+
+import { CancelSave, Comments, FormSelect } from "components";
+import {
+  postCommentFlow,
+  putCandidateFlowIDSlice,
+} from "features/candidatesSlice";
+import { hideModal } from "features/modalSlice";
 import { candidate_flow_status, TYPE_MODAL } from "ultis/const";
 import { get_obj_key_label_from_id } from "ultis/func";
 
@@ -32,6 +36,7 @@ const ModalTimelineActivity = () => {
     time: timeline?.info?.time ? moment(timeline?.info.time) : null,
     interviewer:
       timeline?.info?.interviewer?.map(({ user_id }) => user_id) || [],
+    content: null,
   };
 
   useEffect(() => {
@@ -56,6 +61,23 @@ const ModalTimelineActivity = () => {
         },
       })
     );
+  };
+
+  console.log(job_id, timeline_id);
+
+  const postComment = (name, content) => {
+    dispatch(
+      postCommentFlow({
+        [name]: content,
+        source: {
+          id: timeline_id,
+          module: "candidate_flow",
+          section: "flow_status",
+        },
+        source_uuid: job_id,
+      })
+    );
+    form.resetFields([name]);
   };
 
   return (
@@ -135,8 +157,6 @@ const ModalTimelineActivity = () => {
                       <FormItemDepend dependencies={["interviewer"]}>
                         {({ getFieldValue }) => {
                           const interviewer = getFieldValue("interviewer");
-                          console.log(interviewer);
-                          console.log(initialValues.interviewer);
                           return (
                             JSON.stringify(interviewer) !==
                               JSON.stringify(initialValues.interviewer) && (
@@ -155,7 +175,12 @@ const ModalTimelineActivity = () => {
                 />
               </Col>
               <Col span={12}>
-                <FormCkeditor label="Comments" />
+                <Comments
+                  name="content"
+                  data={timeline?.comments}
+                  form={form}
+                  callBack={(name, value) => postComment(name, value)}
+                />
               </Col>
             </Row>
           </Form>

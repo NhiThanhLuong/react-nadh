@@ -308,8 +308,6 @@ const Jobs = () => {
     [columns, userPages]
   );
 
-  console.log(customColumns);
-
   const dataSource = useMemo(
     () =>
       data.map(item => ({

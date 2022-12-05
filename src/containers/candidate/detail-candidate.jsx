@@ -1,36 +1,11 @@
 /* eslint-disable no-unused-vars */
 // import PropTypes from 'prop-types'
-import { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
-import { Form, Input, Row, Col, Card, Button, Spin } from "antd";
+import { Button, Card, Col, Form, Input, Row, Spin } from "antd";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
 
-import {
-  fetchDetailCandidate,
-  fetchEditDetailCandidate,
-  putEditDetailCandidateNotLoading,
-  resetHistory,
-} from "features/candidatesSlice";
-import {
-  fetchCities,
-  fetchDistricts,
-  fetchLocations,
-} from "features/locationSlice";
-import { fetchNationality, postNationality } from "features/nationalitySlice";
-import { fetchPosition, postPosition } from "features/positionSlice";
-import { KEYS_FIELDS_NOT_PUSH_PARAMS, TYPE_MODAL } from "ultis/const";
-import {
-  formatDate,
-  formatDDMMYYYY,
-  isEmpty,
-  format_day_month_year_to_date,
-  getPropertyKeyLabelObj,
-  delete_key_object,
-  getPropertyKeyLabel,
-} from "ultis/func";
-import { fetchDegrees } from "features/degreeSlice";
-import { fetchFunctionSoftSkills, fetchSoftSkills } from "features/skillSlice";
 import {
   AcademicCandidate,
   CandidateInterviewJob,
@@ -41,13 +16,38 @@ import {
   SkillAndIndustry,
   WorkingHistoryCandidate,
 } from "components";
-import { fetchLanguages } from "features/languageSlice";
+import {
+  fetchDetailCandidate,
+  fetchEditDetailCandidate,
+  putEditDetailCandidateNotLoading,
+  resetHistory,
+} from "features/candidatesSlice";
 import { fetchIndustries } from "features/categorySlice";
-import { showModal } from "features/modalSlice";
 import { fetchCurrency } from "features/currencySlice";
-import { Item, RowTitle } from "styles/styled";
+import { fetchDegrees } from "features/degreeSlice";
 import { fetchFiles, fetchPostFile } from "features/fileSlice";
+import { fetchLanguages } from "features/languageSlice";
+import {
+  fetchCities,
+  fetchDistricts,
+  fetchLocations,
+} from "features/locationSlice";
+import { showModal } from "features/modalSlice";
+import { fetchNationality, postNationality } from "features/nationalitySlice";
+import { fetchPosition, postPosition } from "features/positionSlice";
+import { fetchFunctionSoftSkills, fetchSoftSkills } from "features/skillSlice";
 import { fetchUsers } from "features/userSlice";
+import { Item, RowTitle } from "styles/styled";
+import { KEYS_FIELDS_NOT_PUSH_PARAMS, TYPE_MODAL } from "ultis/const";
+import {
+  delete_key_object,
+  formatDate,
+  formatDDMMYYYY,
+  format_day_month_year_to_date,
+  getPropertyKeyLabel,
+  getPropertyKeyLabelObj,
+  isEmpty,
+} from "ultis/func";
 
 const validateMessages = {
   required: "${label} is required!",
