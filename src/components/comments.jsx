@@ -2,15 +2,18 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import { Avatar, Comment } from "antd";
 import moment from "moment";
-import React from "react";
 import styled from "styled-components";
-import { imgPath } from "ultis/const";
+
 import { CancelSaveCkeditor } from "components";
+import { imgPath } from "ultis/const";
 
 const Comments = ({ name = "comment", data, form, callBack }) => {
   return (
     <>
       <CancelSaveCkeditor name={name} form={form} callBack={callBack} />
+      <span className="text-neutral-700 font-medium">
+        {data.length} Comments
+      </span>
       {data.map(comment => (
         <StyledComment
           key={comment.id}

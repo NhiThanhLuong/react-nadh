@@ -42,10 +42,6 @@ const FormCkeditor = ({ name, label, data, onFocus, ...props }) => {
     extraPlugins: [uploadPlugin],
   };
 
-  const onChange = (_, editor) => {
-    console.log(_, editor);
-  };
-
   function uploadAdapter(loader) {
     return {
       upload: async () => {
@@ -74,7 +70,6 @@ const FormCkeditor = ({ name, label, data, onFocus, ...props }) => {
         editor={ClassicEditor}
         data={data}
         config={config}
-        onChange={onChange}
         onFocus={onFocus}
         {...props}
       />

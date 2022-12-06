@@ -136,3 +136,9 @@ export const putDetailClientPicItem = async (id, params) => {
 export const putCandidateFlowID = async (job_id, params) => {
   return await axiosClient.put(`/api/candidate_flows/${job_id}`, params);
 };
+
+export const putCandidateFlowIdStatus = async (job_id, status) => {
+  return await axiosClient.put(`/api/candidate_flows/${job_id}/status`, {
+    status,
+  });
+};

@@ -10,6 +10,8 @@ import {
   getAssessmentsCompare,
   putCandidateFlowID,
   postComment,
+  postCandidateFlows,
+  putCandidateFlowIdStatus,
 } from "ultis/api";
 import { toast } from "react-toastify";
 
@@ -80,12 +82,22 @@ export const getObjAssessmentsCompare = createAsyncThunk(
 
 export const putCandidateFlowIDSlice = createAsyncThunk(
   "candidates/putCandidateFlowIDSlice",
-  async ({ job_id, params }) => await putCandidateFlowID(job_id, params)
+  async ({ job_id, status }) => await putCandidateFlowID(job_id, status)
 );
 
 export const postCommentFlow = createAsyncThunk(
-  "comment/postCommentFlow",
+  "candidates/postCommentFlow",
   postComment
+);
+
+export const putCandidateFlowIDStatusSlice = createAsyncThunk(
+  "candidates/putCandidateFlowIDStatusSlice",
+  async ({ job_id, status }) => await putCandidateFlowIdStatus(job_id, status)
+);
+
+export const postCandidateFlowsSlice = createAsyncThunk(
+  "candidates/postCandidateFlowsSlice",
+  postCandidateFlows
 );
 
 export const candidatesSlice = createSlice({
@@ -318,6 +330,33 @@ export const candidatesSlice = createSlice({
       });
     },
     [postCommentFlow.rejected.type]: state => {
+      state.loadingDetail = false;
+    },
+
+    // post candidate candidate flows
+    [postCandidateFlowsSlice.pending.type]: state => {
+      state.loadingDetail = true;
+    },
+    [postCandidateFlowsSlice.fulfilled.type]: (state, { payload }) => {
+      state.detailData.flows = [...state.detailData.flows, ...payload];
+      state.loadingDetail = false;
+    },
+    [postCandidateFlowsSlice.rejected.type]: state => {
+      state.loadingDetail = false;
+    },
+
+    // put candidate candidate flows status
+    [putCandidateFlowIDStatusSlice.pending.type]: state => {
+      state.loadingDetail = true;
+    },
+    [putCandidateFlowIDStatusSlice.fulfilled.type]: (state, { payload }) => {
+      state.detailData.flows = state.detailData.flows.map(flow => {
+        if (flow.id === payload.id) return payload;
+        return flow;
+      });
+      state.loadingDetail = false;
+    },
+    [putCandidateFlowIDStatusSlice.rejected.type]: state => {
       state.loadingDetail = false;
     },
   },

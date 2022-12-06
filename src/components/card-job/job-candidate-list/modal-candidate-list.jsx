@@ -1,12 +1,10 @@
-/* eslint-disable no-unused-vars */
 import { DeleteOutlined } from "@ant-design/icons";
-import { Col, Form, Modal, Row, Select, Typography } from "antd";
+import { Col, Modal, Row, Select, Typography } from "antd";
 import { fetchCandidates } from "features/candidatesSlice";
 import { postJobCandidateFlows } from "features/jobSlice";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { postCandidateFlows } from "ultis/api";
 import { get_text_obj_industry } from "ultis/func";
 
 const { Option } = Select;
@@ -18,17 +16,13 @@ const ModalCandidateList = ({ data, openModal, setOpenModal }) => {
   const candidates = useSelector(state => state.candidates.data);
 
   useEffect(() => {
-    dispatch(
-      fetchCandidates({
-        perPage: 20,
-      })
-    );
-  }, []);
-
-  const industryLabel =
-    data.business_line.length > 0
-      ? `${data.business_line[0].industry.label} / ${data.business_line[0].sector.label}`
-      : "";
+    openModal &&
+      dispatch(
+        fetchCandidates({
+          perPage: 20,
+        })
+      );
+  }, [openModal]);
 
   const onOK = async () => {
     try {
@@ -43,13 +37,12 @@ const ModalCandidateList = ({ data, openModal, setOpenModal }) => {
     } catch (rejectedValueOrSerializedError) {
       // handle error here
     }
-
-    // setListPicked([]);
   };
 
   return (
     <Modal
       closable={false}
+      destroyOnClose
       open={openModal}
       title="Pick Candidate"
       width={700}
@@ -62,12 +55,20 @@ const ModalCandidateList = ({ data, openModal, setOpenModal }) => {
     >
       <RowItem title="Job Title" label={data?.title.label} />
       <RowItem title="Department" label={data.department.label} />
-      <RowItem title="Industry" label={industryLabel} />
+      <RowItem
+        title="Industry"
+        label={data?.business_line.map((item, idx) => (
+          <p key={idx} className="mb-0.5">
+            {get_text_obj_industry(item)}
+          </p>
+        ))}
+      />
       <RowItem title="Experience Level" label="" />
       <Select
         className="w-5/6"
         optionFilterProp={false}
         mode="multiple"
+        placeholder="Please select candidate"
         value={[]}
         onSelect={value => {
           setListPicked(prevState => [

@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import { Col, DatePicker, Form, Modal, Row, Spin } from "antd";
+import { Col, DatePicker, Form, Modal, Row, Select, Spin } from "antd";
 import moment from "moment";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,10 +8,13 @@ import { CancelSave, Comments, FormSelect } from "components";
 import {
   postCommentFlow,
   putCandidateFlowIDSlice,
+  putCandidateFlowIDStatusSlice,
 } from "features/candidatesSlice";
 import { hideModal } from "features/modalSlice";
 import { candidate_flow_status, TYPE_MODAL } from "ultis/const";
 import { get_obj_key_label_from_id } from "ultis/func";
+
+const { Option } = Select;
 
 const ModalTimelineActivity = () => {
   const dispatch = useDispatch();
@@ -62,8 +64,6 @@ const ModalTimelineActivity = () => {
       })
     );
   };
-
-  console.log(job_id, timeline_id);
 
   const postComment = (name, content) => {
     dispatch(
@@ -116,6 +116,57 @@ const ModalTimelineActivity = () => {
                 <CustomRow title="Job" label={job?.job.title.label} />
                 <CustomRow title="Job code" label={job?.job.job_id} />
                 <CustomRow title="Job status" label="Opening" />
+                {job?.flow.length === timeline_id && (
+                  <CustomRow
+                    title="Action"
+                    label={
+                      <>
+                        <Form.Item name="status" className="m-0">
+                          <Select
+                            optionFilterProp="label"
+                            className="w-full"
+                            placeholder="Please select flow status"
+                          >
+                            {candidate_flow_status.map(item => (
+                              <Option
+                                key={item.id}
+                                value={item.id}
+                                disabled={
+                                  timeline.current_status >= item.id &&
+                                  item.id > 0
+                                }
+                              >
+                                {item.label}
+                              </Option>
+                            ))}
+                          </Select>
+                        </Form.Item>
+                        <FormItemDepend dependencies={["status"]}>
+                          {({ getFieldValue }) => {
+                            const status = getFieldValue("status");
+                            return (
+                              !!status && (
+                                <CancelSave
+                                  onCancel={() => onResetField("status")}
+                                  onSave={async () => {
+                                    await dispatch(
+                                      putCandidateFlowIDStatusSlice({
+                                        job_id,
+                                        status,
+                                      })
+                                    ).unwrap();
+                                    onResetField("status");
+                                    dispatch(hideModal());
+                                  }}
+                                />
+                              )
+                            );
+                          }}
+                        </FormItemDepend>
+                      </>
+                    }
+                  />
+                )}
                 <CustomRow
                   title="Date"
                   label={
@@ -153,6 +204,7 @@ const ModalTimelineActivity = () => {
                         name="interviewer"
                         options={users}
                         mode="multiple"
+                        placeholder="Please select interview"
                       />
                       <FormItemDepend dependencies={["interviewer"]}>
                         {({ getFieldValue }) => {
@@ -174,7 +226,11 @@ const ModalTimelineActivity = () => {
                   }
                 />
               </Col>
-              <Col span={12}>
+              <Col
+                span={12}
+                className="border-l border-y-0 border-r-0 border-solid border-neutral-400"
+              >
+                <span className="font-medium">Comments</span>
                 <Comments
                   name="content"
                   data={timeline?.comments}

@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-// import PropTypes from 'prop-types'
 import { Button, Card, Col, Form, Input, Row, Spin } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -157,9 +155,7 @@ const DetailCandidate = () => {
       );
   }, [file?.id]);
 
-  const onFinish = values => {
-    console.log("values", values);
-
+  const onFinish = () => {
     if (fieldValues.addresses)
       fieldValues.addresses = addresses.map(item => {
         if (item.city && isEmpty(item.city)) delete item.city;
@@ -304,10 +300,6 @@ const DetailCandidate = () => {
       })
     );
     setFieldValues(() => ({}));
-  };
-
-  const onFinishFailed = errorInfo => {
-    console.log("Failed:", errorInfo);
   };
 
   const onValuesChange = changedValues => {
@@ -464,7 +456,6 @@ const DetailCandidate = () => {
                   onValuesChange={onValuesChange}
                   validateMessages={validateMessages}
                   onFinish={onFinish}
-                  onFinishFailed={onFinishFailed}
                   layout="vertical"
                   initialValues={{
                     overview_text_new: detailData?.overview_text_new,
@@ -543,10 +534,6 @@ const DetailCandidate = () => {
                     salary_to: detailData?.remuneration.salary.to || 0,
                   }}
                 >
-                  <Button onClick={() => console.log(form.getFieldsValue())}>
-                    Log field values
-                  </Button>
-
                   {/* Overview */}
                   <Card
                     title={<span style={{ color: "#465f7b" }}>Overview</span>}

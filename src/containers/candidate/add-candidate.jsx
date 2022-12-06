@@ -1,42 +1,43 @@
 // import React from 'react'
 // import PropTypes from 'prop-types'
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { FaMinusCircle } from "react-icons/fa";
 import { PlusOutlined } from "@ant-design/icons";
-import styled from "styled-components";
 import {
+  Button,
+  Card,
+  Col,
+  Divider,
   Form,
   Input,
-  Row,
-  Col,
-  Card,
-  Select,
-  Radio,
-  Button,
-  Divider,
   InputNumber,
+  Radio,
+  Row,
+  Select,
 } from "antd";
+import { useEffect, useState } from "react";
+import { FaMinusCircle } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import styled from "styled-components";
+
+import { fetchPostCandidate } from "features/candidatesSlice";
+import { fetchDegrees } from "features/degreeSlice";
 import {
   candidate_priority_status,
   DAYS_RANGE,
-  MONTHS,
   GENDERS,
   MARITAL_STATUS,
+  MONTHS,
   RELOCATING_WILLINGNESS,
 } from "ultis/const";
 import {
+  format_day_month_year_to_date,
+  getPropertyKeyLabel,
+  getPropertyKeyLabelObj,
+  get_array_obj_key_label_from_array_key,
+  isEmpty,
   pad2,
   years,
-  isEmpty,
-  get_array_obj_key_label_from_array_key,
-  format_day_month_year_to_date,
-  getPropertyKeyLabelObj,
-  getPropertyKeyLabel,
 } from "ultis/func";
 import validator from "ultis/validate";
-import { fetchPostCandidate } from "features/candidatesSlice";
-import { fetchDegrees } from "features/degreeSlice";
 
 import {
   fetchCities,
@@ -53,11 +54,7 @@ const validateMessages = {
   required: "${label} is required!",
   types: {
     email: "${label} is not a valid email!",
-    // number: "${label} is not a valid number!",
   },
-  //   number: {
-  //     range: "${label} must be between ${min} and ${max}",
-  //   },
 };
 
 const AddCandidate = () => {
@@ -87,15 +84,11 @@ const AddCandidate = () => {
     dispatch(fetchDegrees());
   }, []);
 
-  const onValuesChange = (changedValues, allValues) => {
+  const onValuesChange = changedValues => {
     setFieldValues(prevState => ({ ...prevState, ...changedValues }));
-
-    console.log("allValues", allValues);
   };
 
-  const onFinish = values => {
-    console.log("values", values);
-
+  const onFinish = () => {
     if (fieldValues.addresses)
       fieldValues.addresses = form.getFieldsValue().addresses.map(item => {
         if (isEmpty(item.city)) delete item.city;

@@ -1,22 +1,27 @@
-/* eslint-disable no-unused-vars */
 import { MoreOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Card, Collapse, Dropdown, Timeline } from "antd";
+import moment from "moment";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import styled from "styled-components";
+
 import {
   getObjAssessmentsCompare,
   viewFlowJob,
 } from "features/candidatesSlice";
 import { dataModal, showModal } from "features/modalSlice";
-import { useDispatch } from "react-redux";
-import styled from "styled-components";
 import { candidate_flow_status, TYPE_MODAL } from "ultis/const";
 import { get_obj_key_label_from_id } from "ultis/func";
 import ModalCandidateAssessment from "./modal/candidate-assessment";
+import ModalInterviewPickJob from "./modal/interview-pick-job";
 import ModalTimelineActivity from "./modal/timeline-activity";
 
 const { Panel } = Collapse;
 
 const CandidateInterviewJob = ({ data, candidate_id }) => {
   const dispatch = useDispatch();
+
+  const [openModalPickjob, setOpenModalPickjob] = useState(false);
 
   const showModalCandidateAssessment = flow => {
     dispatch(viewFlowJob(flow));
@@ -44,7 +49,12 @@ const CandidateInterviewJob = ({ data, candidate_id }) => {
     <Card
       title={<Title>Interview Loop</Title>}
       extra={
-        <Button ghost type="primary" icon={<PlusOutlined />}>
+        <Button
+          ghost
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={() => setOpenModalPickjob(true)}
+        >
           Pick Job
         </Button>
       }
@@ -112,7 +122,11 @@ const CandidateInterviewJob = ({ data, candidate_id }) => {
                           ).label
                         }
                       </p>
-                      <p>{item?.createdAt}</p>
+                      <p>
+                        {item?.createdAt
+                          ? moment(item.createdAt).format("DD/MM/YYYY HH:mm:ss")
+                          : "-"}
+                      </p>
                       <p>{item?.comments.length} comments</p>
                     </Timeline.Item>
                   ))}
@@ -124,6 +138,10 @@ const CandidateInterviewJob = ({ data, candidate_id }) => {
           <ModalTimelineActivity />
         </>
       )}
+      <ModalInterviewPickJob
+        openModal={openModalPickjob}
+        setOpenModal={setOpenModalPickjob}
+      />
     </Card>
   );
 };
