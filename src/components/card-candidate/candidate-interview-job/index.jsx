@@ -47,6 +47,7 @@ const CandidateInterviewJob = ({ data, candidate_id }) => {
 
   return (
     <Card
+      className="fixed"
       title={<Title>Interview Loop</Title>}
       extra={
         <Button

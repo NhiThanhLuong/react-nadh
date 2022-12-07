@@ -142,3 +142,7 @@ export const putCandidateFlowIdStatus = async (job_id, status) => {
     status,
   });
 };
+
+export const putUserPage = async params => {
+  return await axiosClient.put("/api/user_pages", params);
+};

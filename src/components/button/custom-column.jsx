@@ -1,88 +1,26 @@
 /* eslint-disable no-unused-vars */
 // import PropTypes from "prop-types";
-import { DownOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Checkbox, Dropdown, Menu } from "antd";
-import React from "react";
-
-const columns = {
-  jobs: [
-    {
-      title: "job_id",
-      label: "ID",
-    },
-    {
-      title: "title",
-      label: "Title",
-    },
-    {
-      title: "quantity",
-      label: "Quantity",
-    },
-    {
-      title: "target_date",
-      label: "Open Date",
-    },
-    {
-      title: "end_date",
-      label: "Expire Date",
-    },
-    {
-      title: "status",
-      label: "Status",
-    },
-    {
-      title: "client",
-      label: "Client",
-    },
-    {
-      title: "search_consultants",
-      label: "Search Consultant",
-    },
-    {
-      title: "candidate_flows_status",
-      label: "Activity",
-    },
-    {
-      title: "experience_level",
-      label: "Experience level",
-    },
-    {
-      title: "mapping_by",
-      label: "Mapping by",
-    },
-    {
-      title: "location",
-      label: "City",
-    },
-    {
-      title: "industry",
-      label: "Industry",
-    },
-    {
-      title: "industry_year",
-      label: "Year of services",
-    },
-    {
-      title: "salary",
-      label: "Salary Range",
-    },
-    {
-      title: "action",
-      label: "Action",
-    },
-  ],
-};
-
-const menu = (
-  <Menu
-    items={columns.jobs.map(item => ({
-      key: item.title,
-      label: <Checkbox>{item.label}</Checkbox>,
-    }))}
-  />
-);
+import { DownOutlined } from "@ant-design/icons";
+import { Button, Checkbox, Dropdown, Form, Menu } from "antd";
+import { CUSTOM_COLUMNS } from "ultis/const";
 
 const CustomColumn = () => {
+  const menu = (
+    <Menu
+      onClick={e => {
+        e.stopPropagation();
+      }}
+      items={CUSTOM_COLUMNS.jobs.map(item => ({
+        key: item.title,
+        label: (
+          <Form.Item name={item.title} className="m-0" valuePropName="checked">
+            <Checkbox disabled={item.disabled || false}>{item.label}</Checkbox>
+          </Form.Item>
+        ),
+      }))}
+    />
+  );
+
   return (
     <Dropdown overlay={menu}>
       <Button type="primary" ghost>

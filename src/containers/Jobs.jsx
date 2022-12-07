@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Row, Table, Tag, Typography } from "antd";
+import { Button, Form, Row, Table, Tag, Typography } from "antd";
 import {
   ClearAllFilter,
   CustomColumn,
@@ -12,7 +12,7 @@ import {
 } from "components";
 import { fetchClients } from "features/clientSlice";
 import { fetchJobs } from "features/jobSlice";
-import { fetchUserPage } from "features/userPageSlice";
+import { fetchUserPage, putUserPageSlice } from "features/userPageSlice";
 import { fetchUsers } from "features/userSlice";
 import moment from "moment";
 import { useEffect, useMemo, useState } from "react";
@@ -24,20 +24,29 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import styled from "styled-components";
-import { candidate_flow_status, defaultColor, key_of_keys } from "ultis/const";
 import {
+  candidate_flow_status,
+  CUSTOM_COLUMNS,
+  defaultColor,
+  key_of_keys,
+} from "ultis/const";
+import {
+  deleteKeyNull,
   formatFilterTagRange,
-  getPropertyKeyLabelObj,
+  format_arr_to_obj_key_the_same_value,
   get_obj_key_label_from_key,
 } from "ultis/func";
 
 const Jobs = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [form] = Form.useForm();
 
   const data = useSelector(state => state.job.data);
   const count = useSelector(state => state.job.count);
   const loading = useSelector(state => state.job.loading);
+
+  const userPages = useSelector(state => state.userPage.data);
 
   const users = useSelector(state => state.user.users).map(
     ({ id, full_name }) => ({
@@ -58,39 +67,10 @@ const Jobs = () => {
   const [currentPage, setCurrentPage] = useState(+paramsRouter.page || 1);
 
   const filterTags = useMemo(() => ({ ...paramsRouter }), [searchParams]);
-  const userPages = useSelector(state => state.userPage.data);
-
-  useEffect(() => {
-    dispatch(fetchUsers());
-    dispatch(
-      fetchClients({
-        page: null,
-        perPage: null,
-      })
-    );
-    dispatch(
-      fetchUserPage({
-        key_page: "jobs",
-      })
-    );
-  }, []);
-
-  useEffect(() => {
-    dispatch(fetchJobs(paramsRouter));
-    setCurrentPage(+paramsRouter.page || 1);
-  }, [searchParams]);
 
   const resetPage = () => {
     delete paramsRouter.page;
     setCurrentPage(1);
-  };
-
-  const onCloseFilterTag = key => {
-    resetPage();
-    if (key_of_keys[key]) {
-      key_of_keys[key].forEach(item => delete paramsRouter[item]);
-    } else delete paramsRouter[key];
-    setSearchParams(createSearchParams(paramsRouter));
   };
 
   const columns = [
@@ -308,6 +288,49 @@ const Jobs = () => {
     [columns, userPages]
   );
 
+  const initValuesColumn = format_arr_to_obj_key_the_same_value(
+    userPages,
+    true
+  );
+
+  useEffect(() => {
+    form.setFieldsValue({
+      ...format_arr_to_obj_key_the_same_value(
+        CUSTOM_COLUMNS.jobs.map(({ title }) => title),
+        false
+      ),
+      ...initValuesColumn,
+    });
+  }, [initValuesColumn]);
+
+  useEffect(() => {
+    dispatch(fetchUsers());
+    dispatch(
+      fetchClients({
+        page: null,
+        perPage: null,
+      })
+    );
+    dispatch(
+      fetchUserPage({
+        key_page: "jobs",
+      })
+    );
+  }, []);
+
+  useEffect(() => {
+    dispatch(fetchJobs(paramsRouter));
+    setCurrentPage(+paramsRouter.page || 1);
+  }, [searchParams]);
+
+  const onCloseFilterTag = key => {
+    resetPage();
+    if (key_of_keys[key]) {
+      key_of_keys[key].forEach(item => delete paramsRouter[item]);
+    } else delete paramsRouter[key];
+    setSearchParams(createSearchParams(paramsRouter));
+  };
+
   const dataSource = useMemo(
     () =>
       data.map(item => ({
@@ -400,7 +423,20 @@ const Jobs = () => {
         </div>
       </Row>
       <Row justify="end" className="my-1">
-        <CustomColumn />
+        <Form
+          form={form}
+          onValuesChange={(_, allValues) => {
+            const data = [...Object.keys(deleteKeyNull(allValues))];
+            dispatch(
+              putUserPageSlice({
+                key_page: "jobs",
+                data,
+              })
+            );
+          }}
+        >
+          <CustomColumn form={form} initValues={initValuesColumn} />
+        </Form>
       </Row>
       <FilterTags
         data={{
@@ -418,10 +454,10 @@ const Jobs = () => {
         onClose={onCloseFilterTag}
       />
       {loading ? (
-        <Table loading={loading} columns={columns} />
+        <Table loading={loading} columns={customColumns} />
       ) : (
         <StyledTable
-          columns={columns}
+          columns={customColumns}
           dataSource={dataSource}
           pagination={{
             showSizeChanger: false,

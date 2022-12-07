@@ -175,3 +175,6 @@ export const get_text_obj_industry = obj => {
   const arr_category = obj.category ? [obj.category.label] : [];
   return [...arr_industry, ...arr_sector, ...arr_category].join(" / ");
 };
+
+export const format_arr_to_obj_key_the_same_value = (arr, value) =>
+  arr.reduce((a, v) => ({ ...a, [v]: value }), {});

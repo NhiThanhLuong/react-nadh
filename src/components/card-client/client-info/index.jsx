@@ -49,21 +49,25 @@ const ClientInfo = ({ data, form }) => {
     label: full_name,
   }));
 
+  const customDispatch = (key, value) => {
+    dispatch(
+      putDetailClientNotLoading({
+        id: data.id,
+        params: {
+          [key]: value,
+        },
+      })
+    );
+  };
+
   const onCancelName = () => {
     setIsEdit(false);
     form.resetFields(["name"]);
   };
 
-  const onSaveName = async () => {
+  const onSaveName = () => {
     const name = form.getFieldValue("name");
-    await dispatch(
-      putDetailClientNotLoading({
-        id: data.id,
-        params: {
-          name,
-        },
-      })
-    );
+    customDispatch("name", name);
     setIsEdit(false);
   };
 
@@ -74,14 +78,7 @@ const ClientInfo = ({ data, form }) => {
 
   const onSaveAddress = () => {
     const address = deleteKeyNull(form.getFieldValue("address"));
-    dispatch(
-      putDetailClientNotLoading({
-        id: data.id,
-        params: {
-          address,
-        },
-      })
-    );
+    customDispatch("address", address);
     setIsEdit(false);
   };
 
@@ -117,19 +114,12 @@ const ClientInfo = ({ data, form }) => {
     form.resetFields(["phone_number"]);
   };
 
-  const onSavePhone = async () => {
+  const onSavePhone = () => {
     const phone_number = form.getFieldValue("phone_number");
-    await dispatch(
-      putDetailClientNotLoading({
-        id: data.id,
-        params: {
-          phone: {
-            number: phone_number,
-            phone_code: { key: "1280" },
-          },
-        },
-      })
-    );
+    customDispatch("phone_number", {
+      number: phone_number,
+      phone_code: { key: "1280" },
+    });
     setIsEdit(false);
   };
 
@@ -138,19 +128,12 @@ const ClientInfo = ({ data, form }) => {
     form.resetFields(["fax"]);
   };
 
-  const onSaveFax = async () => {
+  const onSaveFax = () => {
     const fax = form.getFieldValue("fax");
-    await dispatch(
-      putDetailClientNotLoading({
-        id: data.id,
-        params: {
-          fax: {
-            number: fax,
-            phone_code: { key: "1280" },
-          },
-        },
-      })
-    );
+    customDispatch("fax", {
+      number: fax,
+      phone_code: { key: "1280" },
+    });
     setIsEdit(false);
   };
 
@@ -159,16 +142,9 @@ const ClientInfo = ({ data, form }) => {
     form.resetFields(["email"]);
   };
 
-  const onSaveEmail = async () => {
+  const onSaveEmail = () => {
     const email = form.getFieldValue("email");
-    await dispatch(
-      putDetailClientNotLoading({
-        id: data.id,
-        params: {
-          email,
-        },
-      })
-    );
+    customDispatch("email", email);
     setIsEdit(false);
   };
 
@@ -197,7 +173,10 @@ const ClientInfo = ({ data, form }) => {
       formData.append("file", info.file.originFileObj);
       formData.append("type", "avatar");
       formData.append("uploadedByUserId", 12);
-      await dispatch(fetchPostFile(formData));
+      const file = await dispatch(fetchPostFile(formData)).unwrap();
+      customDispatch("mediafiles", {
+        logo: file.id,
+      });
     }
   };
 
@@ -209,14 +188,7 @@ const ClientInfo = ({ data, form }) => {
 
     const onSaveStatus = () => {
       const status = form.getFieldValue("status");
-      dispatch(
-        putDetailClientNotLoading({
-          id: data.id,
-          params: {
-            status,
-          },
-        })
-      );
+      customDispatch("status", status);
       setIsEdit(false);
     };
 
@@ -252,14 +224,7 @@ const ClientInfo = ({ data, form }) => {
 
     const onSave = () => {
       const code = form.getFieldValue("code");
-      dispatch(
-        putDetailClientNotLoading({
-          id: data.id,
-          params: {
-            code,
-          },
-        })
-      );
+      customDispatch("code", code);
       setIsEdit(false);
     };
 
@@ -283,14 +248,7 @@ const ClientInfo = ({ data, form }) => {
 
     const onSave = () => {
       const parent_id = form.getFieldValue("parent_id") || null;
-      dispatch(
-        putDetailClientNotLoading({
-          id: data.id,
-          params: {
-            parent_id,
-          },
-        })
-      );
+      customDispatch("parent_id", parent_id);
       setIsEdit(false);
     };
 
@@ -332,14 +290,8 @@ const ClientInfo = ({ data, form }) => {
       .getFieldValue("factory_site")
       .map(item => deleteKeyNull(item))
       .filter(item => Object.keys(item).length !== 0);
-    dispatch(
-      putDetailClientNotLoading({
-        id: data.id,
-        params: {
-          factory_site,
-        },
-      })
-    );
+
+    customDispatch("factory_site", factory_site);
     setIsEdit(false);
   };
 
@@ -369,40 +321,19 @@ const ClientInfo = ({ data, form }) => {
 
   const onSaveType = setState => {
     const type = form.getFieldValue("type") || null;
-    dispatch(
-      putDetailClientNotLoading({
-        id: data.id,
-        params: {
-          type,
-        },
-      })
-    );
+    customDispatch("type", type);
     setState(false);
   };
 
   const onSaveCpa = setState => {
     const cpa = form.getFieldValue("cpa") || null;
-    dispatch(
-      putDetailClientNotLoading({
-        id: data.id,
-        params: {
-          cpa,
-        },
-      })
-    );
+    customDispatch("cpa", cpa);
     setState(false);
   };
 
   const onSaveLeadConsultant = setState => {
     const lead_consultants = form.getFieldValue("lead_consultants");
-    dispatch(
-      putDetailClientNotLoading({
-        id: data.id,
-        params: {
-          lead_consultants: [lead_consultants],
-        },
-      })
-    );
+    customDispatch("lead_consultants", [lead_consultants]);
     setState(false);
   };
 

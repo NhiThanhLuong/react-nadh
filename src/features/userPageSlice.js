@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getUserPage } from "ultis/api";
+import { getUserPage, putUserPage } from "ultis/api";
 
 export const fetchUserPage = createAsyncThunk(
   "userPage/fetchUserPage",
@@ -7,6 +7,11 @@ export const fetchUserPage = createAsyncThunk(
     await getUserPage({
       params,
     })
+);
+
+export const putUserPageSlice = createAsyncThunk(
+  "userPage/putUserPageSlice",
+  putUserPage
 );
 
 export const userPageSlice = createSlice({
@@ -25,6 +30,18 @@ export const userPageSlice = createSlice({
       state.data = payload.data;
     },
     [fetchUserPage.rejected.type]: state => {
+      state.loading = true;
+    },
+
+    // put user page when change columns
+    [putUserPageSlice.pending.type]: state => {
+      state.loading = true;
+    },
+    [putUserPageSlice.fulfilled.type]: (state, { payload }) => {
+      state.loading = false;
+      state.data = payload.data;
+    },
+    [putUserPageSlice.rejected.type]: state => {
       state.loading = true;
     },
   },

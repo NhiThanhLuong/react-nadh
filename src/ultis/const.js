@@ -441,3 +441,74 @@ export const CPA = [
     color: "purple",
   },
 ];
+
+export const CUSTOM_COLUMNS = {
+  jobs: [
+    {
+      title: "job_id",
+      label: "ID",
+      disabled: true,
+    },
+    {
+      title: "title",
+      label: "Title",
+    },
+    {
+      title: "quantity",
+      label: "Quantity",
+    },
+    {
+      title: "target_date",
+      label: "Open Date",
+    },
+    {
+      title: "end_date",
+      label: "Expire Date",
+    },
+    {
+      title: "status",
+      label: "Status",
+    },
+    {
+      title: "client",
+      label: "Client",
+    },
+    {
+      title: "search_consultants",
+      label: "Search Consultant",
+    },
+    {
+      title: "candidate_flows_status",
+      label: "Activity",
+    },
+    {
+      title: "experience_level",
+      label: "Experience level",
+    },
+    {
+      title: "mapping_by",
+      label: "Mapping by",
+    },
+    {
+      title: "location",
+      label: "City",
+    },
+    {
+      title: "industry",
+      label: "Industry",
+    },
+    {
+      title: "industry_year",
+      label: "Year of services",
+    },
+    {
+      title: "salary",
+      label: "Salary Range",
+    },
+    {
+      title: "action",
+      label: "Action",
+      disabled: true,
+    },
+  ],
+};

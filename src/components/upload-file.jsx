@@ -18,7 +18,7 @@ const UploadFile = ({ upLoadingFile }) => {
     const { status } = info.file;
     switch (status) {
       case "removed": {
-        await dispatch(deleteFileSlice(info.file.id));
+        dispatch(deleteFileSlice(info.file.id));
         break;
       }
 
