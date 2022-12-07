@@ -11,6 +11,7 @@ import {
 } from "react-router-dom";
 import {
   ClearAllFilter,
+  CustomColumn,
   FilterDropdown2Select,
   FilterDropdown3Select,
   FilterDropdownRange,
@@ -22,13 +23,14 @@ import {
 import {
   ACCOUNT_STATUS,
   CPA,
+  CUSTOM_COLUMNS,
   defaultColor,
   key_of_keys,
   STATUS_CLIENT,
   TYPE_CLIENT,
 } from "ultis/const";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Row, Table, Tag, Typography } from "antd";
+import { Button, Form, Row, Table, Tag, Typography } from "antd";
 import styled from "styled-components";
 import { fetchUsers } from "features/userSlice";
 import { fetchCities } from "features/locationSlice";
@@ -38,14 +40,18 @@ import {
   fetchSectors,
 } from "features/categorySlice";
 import {
+  deleteKeyNull,
   formatFilterTagRange,
+  format_arr_to_obj_key_the_same_value,
   getLabelIndustry,
   get_obj_key_label_from_key,
 } from "ultis/func";
+import { fetchUserPage, putUserPageSlice } from "features/userPageSlice";
 
 const Clients = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [form] = Form.useForm();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const paramsRouter = Object.fromEntries([...searchParams]);
@@ -62,6 +68,8 @@ const Clients = () => {
   const sectors = useSelector(state => state.category.sectors);
   const categories = useSelector(state => state.category.categories);
 
+  const userPages = useSelector(state => state.userPage.data);
+
   const users = useSelector(state => state.user.users).map(
     ({ id, full_name }) => ({
       key: id,
@@ -70,24 +78,6 @@ const Clients = () => {
   );
 
   const filterTags = useMemo(() => ({ ...paramsRouter }), [searchParams]);
-
-  useEffect(() => {
-    dispatch(fetchUsers());
-    dispatch(
-      fetchIndustries({
-        type: 1,
-      })
-    );
-  }, []);
-
-  useEffect(() => {
-    // const newParamsRouter = { ...paramsRouter };
-    // delete newParamsRouter.industry;
-    // delete newParamsRouter.sector;
-    // delete newParamsRouter.category;
-    dispatch(fetchClients(paramsRouter));
-    setCurrentPage(+paramsRouter.page || 1);
-  }, [searchParams]);
 
   const resetPage = () => {
     delete paramsRouter.page;
@@ -455,6 +445,46 @@ const Clients = () => {
     },
   ];
 
+  const customColumns = useMemo(
+    () => columns.filter(({ dataIndex }) => userPages.includes(dataIndex)),
+
+    [columns, userPages]
+  );
+
+  const initValuesColumn = format_arr_to_obj_key_the_same_value(
+    userPages,
+    true
+  );
+
+  useEffect(() => {
+    form.setFieldsValue({
+      ...format_arr_to_obj_key_the_same_value(
+        CUSTOM_COLUMNS.clients.map(({ title }) => title),
+        false
+      ),
+      ...initValuesColumn,
+    });
+  }, [initValuesColumn]);
+
+  useEffect(() => {
+    dispatch(fetchUsers());
+    dispatch(
+      fetchIndustries({
+        type: 1,
+      })
+    );
+    dispatch(
+      fetchUserPage({
+        key_page: "clients",
+      })
+    );
+  }, []);
+
+  useEffect(() => {
+    dispatch(fetchClients(paramsRouter));
+    setCurrentPage(+paramsRouter.page || 1);
+  }, [searchParams]);
+
   const dataSource = useMemo(
     () =>
       data.map(item => ({
@@ -583,6 +613,22 @@ const Clients = () => {
           </Button>
         </div>
       </Row>
+      <Row justify="end" className="my-1">
+        <Form
+          form={form}
+          onValuesChange={(_, allValues) => {
+            const data = [...Object.keys(deleteKeyNull(allValues))];
+            dispatch(
+              putUserPageSlice({
+                key_page: "jobs",
+                data,
+              })
+            );
+          }}
+        >
+          <CustomColumn key_page="clients" />
+        </Form>
+      </Row>
       <FilterTags
         data={{
           client_id: filterTags.client_id,
@@ -604,10 +650,10 @@ const Clients = () => {
         onClose={onCloseFilterTag}
       />
       {loading ? (
-        <Table loading={loading} columns={columns} />
+        <Table loading={loading} columns={customColumns} />
       ) : (
         <StyledTable
-          columns={columns}
+          columns={customColumns}
           dataSource={dataSource}
           pagination={{
             showSizeChanger: false,

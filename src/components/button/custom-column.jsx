@@ -4,13 +4,13 @@ import { DownOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Dropdown, Form, Menu } from "antd";
 import { CUSTOM_COLUMNS } from "ultis/const";
 
-const CustomColumn = () => {
+const CustomColumn = ({ key_page }) => {
   const menu = (
     <Menu
       onClick={e => {
         e.stopPropagation();
       }}
-      items={CUSTOM_COLUMNS.jobs.map(item => ({
+      items={CUSTOM_COLUMNS[key_page].map(item => ({
         key: item.title,
         label: (
           <Form.Item name={item.title} className="m-0" valuePropName="checked">

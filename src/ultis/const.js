@@ -443,6 +443,24 @@ export const CPA = [
 ];
 
 export const CUSTOM_COLUMNS = {
+  clients: [
+    { title: "client_id", label: "ID", disabled: true },
+    { title: "name", label: "Trade Name", disabled: true },
+    { title: "location", label: "City" },
+    { title: "lead_consultants", label: "Lead Consultant" },
+    { title: "account_status", label: "Activity" },
+    { title: "tax_code", label: "Tax Code" },
+    { title: "cpa", label: "CPA" },
+    { title: "industry", label: "Industry" },
+    { title: "client_jobs", label: "Job(s)" },
+    { title: "type", label: "Type" },
+    { title: "status", label: "Status" },
+    { title: "contact_person_name", label: "Contact Person's Name" },
+    { title: "contact_person_title", label: "Contact Person's Title" },
+    { title: "update_last_by", label: "Updated by" },
+    { title: "updated_on", label: "Updated on" },
+    { title: "action", label: "Action", disabled: true },
+  ],
   jobs: [
     {
       title: "job_id",

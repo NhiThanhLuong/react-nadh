@@ -435,7 +435,7 @@ const Jobs = () => {
             );
           }}
         >
-          <CustomColumn form={form} initValues={initValuesColumn} />
+          <CustomColumn key_page="jobs" />
         </Form>
       </Row>
       <FilterTags
