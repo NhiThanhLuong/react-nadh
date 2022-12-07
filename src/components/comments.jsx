@@ -14,26 +14,28 @@ const Comments = ({ name = "comment", data, form, callBack }) => {
       <span className="text-neutral-700 font-medium">
         {data.length} Comments
       </span>
-      {data.map(comment => (
-        <StyledComment
-          key={comment.id}
-          author={comment.user?.full_name}
-          avatar={
-            <Avatar src={imgPath(comment?.user?.mediafiles?.avatar)} alt="" />
-          }
-          datetime={moment(comment?.updatedAt).format("DD/MM/YYYY HH:mm:ss")}
-          content={
-            <CKEditor
-              editor={ClassicEditor}
-              data={comment.content}
-              config={{
-                toolbar: [],
-              }}
-              disabled
-            />
-          }
-        />
-      ))}
+      <div className="max-h-[300px] overflow-y-auto">
+        {data.map(comment => (
+          <StyledComment
+            key={comment.id}
+            author={comment.user?.full_name}
+            avatar={
+              <Avatar src={imgPath(comment?.user?.mediafiles?.avatar)} alt="" />
+            }
+            datetime={moment(comment?.updatedAt).format("DD/MM/YYYY HH:mm:ss")}
+            content={
+              <CKEditor
+                editor={ClassicEditor}
+                data={comment.content}
+                config={{
+                  toolbar: [],
+                }}
+                disabled
+              />
+            }
+          />
+        ))}
+      </div>
     </>
   );
 };

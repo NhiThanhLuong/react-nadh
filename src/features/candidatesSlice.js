@@ -82,7 +82,7 @@ export const getObjAssessmentsCompare = createAsyncThunk(
 
 export const putCandidateFlowIDSlice = createAsyncThunk(
   "candidates/putCandidateFlowIDSlice",
-  async ({ job_id, status }) => await putCandidateFlowID(job_id, status)
+  async ({ job_id, params }) => await putCandidateFlowID(job_id, params)
 );
 
 export const postCommentFlow = createAsyncThunk(

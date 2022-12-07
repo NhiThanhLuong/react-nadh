@@ -609,7 +609,7 @@ const Clients = () => {
             const data = [...Object.keys(deleteKeyNull(allValues))];
             dispatch(
               putUserPageSlice({
-                key_page: "jobs",
+                key_page: "clients",
                 data,
               })
             );
