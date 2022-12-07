@@ -349,43 +349,26 @@ const Jobs = () => {
   );
 
   // Filter Quantity
-  useMemo(
-    () =>
-      formatFilterTagRange(
-        "quantity",
-        filterTags,
-        "quantity_from",
-        "quantity_to"
-      ),
+  filterTags.quantity = useMemo(
+    () => formatFilterTagRange(filterTags, "quantity_from", "quantity_to"),
     [paramsRouter.quantity_from, paramsRouter.quantity_to]
   );
 
   // Filter Open date
-  useMemo(
+  filterTags.target_date = useMemo(
     () =>
-      formatFilterTagRange(
-        "target_date",
-        filterTags,
-        "target_date_from",
-        "target_date_to"
-      ),
+      formatFilterTagRange(filterTags, "target_date_from", "target_date_to"),
     [paramsRouter.target_date_from, paramsRouter.target_date_to]
   );
 
   // Filter Expire date
-  useMemo(
-    () =>
-      formatFilterTagRange(
-        "end_date",
-        filterTags,
-        "end_date_from",
-        "end_date_to"
-      ),
+  filterTags.end_date = useMemo(
+    () => formatFilterTagRange(filterTags, "end_date_from", "end_date_to"),
     [paramsRouter.end_date_from, paramsRouter.end_date_to]
   );
 
   // Filter search consultant
-  filterTags.search_consultants = useMemo(() => {
+  const filterTags_search_consultants = useMemo(() => {
     if (paramsRouter.search_consultants)
       return paramsRouter.search_consultants
         ?.split(",")
@@ -394,7 +377,7 @@ const Jobs = () => {
   }, [paramsRouter.search_consultants, users]);
 
   // Filter Activity
-  filterTags.candidate_flows_status = useMemo(() => {
+  const filterTags_candidate_flows_status = useMemo(() => {
     if (paramsRouter.candidate_flows_status)
       return paramsRouter.candidate_flows_status
         .split(",")
@@ -440,16 +423,16 @@ const Jobs = () => {
       </Row>
       <FilterTags
         data={{
+          ...filterTags,
           job_id: filterTags.job_id,
           title: filterTags.title,
           quantity: filterTags.quantity,
           target_date: filterTags.target_date,
           end_date: filterTags.end_date,
           client: filterTags.client,
-          search_consultants: filterTags.search_consultants,
-          candidate_flows_status: filterTags.candidate_flows_status,
+          search_consultants: filterTags_search_consultants,
+          candidate_flows_status: filterTags_candidate_flows_status,
           mapping_by: filterTags.mapping_by,
-          ...filterTags,
         }}
         onClose={onCloseFilterTag}
       />

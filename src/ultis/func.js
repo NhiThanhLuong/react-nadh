@@ -87,10 +87,10 @@ export function clearEmpties(o) {
   }
 }
 
-export const formatFilterTagRange = (sharedKey, obj, from, to) => {
+export const formatFilterTagRange = (obj, from, to) => {
   const filterYearFrom = obj[from] ? `from ${obj[from]} ` : "";
   const filterYearTo = obj[to] ? `to ${obj[to]}` : "";
-  obj[sharedKey] = filterYearFrom + filterYearTo;
+  return filterYearFrom + filterYearTo;
 };
 
 export function pad2(number) {

@@ -2,7 +2,8 @@ import { DeleteOutlined } from "@ant-design/icons";
 import { Col, Modal, Row, Select, Typography } from "antd";
 import { fetchCandidates } from "features/candidatesSlice";
 import { postJobCandidateFlows } from "features/jobSlice";
-import React, { useEffect, useState } from "react";
+import useFecthApi from "hooks/useFecthApi";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { get_text_obj_industry } from "ultis/func";
@@ -15,14 +16,12 @@ const ModalCandidateList = ({ data, openModal, setOpenModal }) => {
 
   const candidates = useSelector(state => state.candidates.data);
 
-  useEffect(() => {
-    openModal &&
-      dispatch(
-        fetchCandidates({
-          perPage: 20,
-        })
-      );
-  }, [openModal]);
+  useFecthApi(
+    fetchCandidates({
+      perPage: 20,
+    }),
+    openModal
+  );
 
   const onOK = async () => {
     try {

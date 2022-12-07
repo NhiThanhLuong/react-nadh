@@ -532,14 +532,9 @@ const Clients = () => {
   }, [paramsRouter.cpa]);
 
   // Filter Job(s)
-  useMemo(
+  filterTags.client_jobs = useMemo(
     () =>
-      formatFilterTagRange(
-        "client_jobs",
-        filterTags,
-        "client_jobs_from",
-        "client_jobs_to"
-      ),
+      formatFilterTagRange(filterTags, "client_jobs_from", "client_jobs_to"),
     [paramsRouter.client_jobs_from, paramsRouter.client_jobs_to]
   );
 
@@ -562,14 +557,8 @@ const Clients = () => {
   }, [paramsRouter.type]);
 
   // Filter Updated on
-  useMemo(
-    () =>
-      formatFilterTagRange(
-        "updated_on",
-        filterTags,
-        "updated_on_from",
-        "updated_on_to"
-      ),
+  filterTags.updated_on = useMemo(
+    () => formatFilterTagRange(filterTags, "updated_on_from", "updated_on_to"),
     [paramsRouter.updated_on_from, paramsRouter.updated_on_to]
   );
 

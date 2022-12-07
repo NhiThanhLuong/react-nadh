@@ -169,16 +169,15 @@ const Candidates = () => {
   }, [paramsRouter.country, paramsRouter.city]);
 
   // Filter YOB
-  useMemo(
-    () => formatFilterTagRange("yob", filterTags, "yob_from", "yob_to"),
+  filterTags.yob = useMemo(
+    () => formatFilterTagRange(filterTags, "yob_from", "yob_to"),
     [paramsRouter.yob_from, paramsRouter.yob_to]
   );
 
   // Filter Year of service
-  useMemo(
+  filterTags.industry_years = useMemo(
     () =>
       formatFilterTagRange(
-        "industry_years",
         filterTags,
         "industry_years_from",
         "industry_years_to"
@@ -187,10 +186,9 @@ const Candidates = () => {
   );
 
   // Filter Year of management
-  useMemo(
+  filterTags.management_years = useMemo(
     () =>
       formatFilterTagRange(
-        "management_years",
         filterTags,
         "management_years_from",
         "management_years_to"
